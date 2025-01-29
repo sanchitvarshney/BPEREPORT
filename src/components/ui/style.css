@@ -1,0 +1,16 @@
+.range-picker {
+    width: 100%;
+    height: 50px;
+    border: 2px solid rgba(156, 163, 175, 0.7); /* Equivalent to border-neutral-400/70 */
+    border-radius: 5px; /* Adjusted to a rounded style */
+    transition: border-color 0.2s;
+  }
+  
+  .range-picker:hover {
+    border-color: rgba(156, 163, 175, 1); /* Equivalent to hover:border-neutral-400 */
+  }
+  
+  .range-picker input {
+    padding: 10px; /* Added padding for input */
+  }
+  
