@@ -27,11 +27,10 @@ const TotalMaterialInCompany = () => {
           label="From Date"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          maxDate={dayjs()} // Disable future dates for From Date
         />
 
         {/* To Date Picker */}
-        <DatePicker label="To Date" value={value1} onChange={(newValue) => setValue1(newValue)} maxDate={value ? dayjs(value) : dayjs()} />
+        <DatePicker label="To Date" value={value1} onChange={(newValue) => setValue1(newValue)} />
 
         <LoadingButton
           loading={totalComponentLoading}

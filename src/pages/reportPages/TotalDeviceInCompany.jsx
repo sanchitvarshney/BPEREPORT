@@ -5,38 +5,42 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, InputLabel } from '@mui/material';
 import TotalDEviceInCompanyTable from 'components/table/TotalDEviceInCompanyTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalProduct } from 'features/reports/reportSlice';
 import { exportToExcel } from 'helper/excelExport';
 import { Download } from '@mui/icons-material';
-
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 const TotalDeviceInCompany = () => {
   const { totalProductLoading, totalProduct } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [value, setValue] = useState(null); // From Date
   const [value1, setValue1] = useState(null); // To Date
+  const [type, setType] = React.useState('both');
 
+  const handleChange = (event) => {
+    setType(event.target.value);
+  };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
         {/* From Date Picker */}
-        <DatePicker
-          label="From Date"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          maxDate={dayjs()} // Disable future dates for From Date
-        />
+        <DatePicker label="From Date" value={value} onChange={(newValue) => setValue(newValue)} />
 
         {/* To Date Picker */}
-        <DatePicker
-          label="To Date"
-          value={value1}
-          onChange={(newValue) => setValue1(newValue)}
-          maxDate={value ? dayjs(value) : dayjs()} // Disable future dates based on From Date
-        />
+        <DatePicker label="To Date" value={value1} onChange={(newValue) => setValue1(newValue)} />
+        <FormControl fullWidth sx={{ maxWidth: '250px' }}>
+          <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Type" onChange={handleChange}>
+            <MenuItem value={'both'}>All</MenuItem>
+            <MenuItem value={'withoutv2'}> Without AWB</MenuItem>
+            <MenuItem value={'onlyv2'}> Only AWB</MenuItem>
+          </Select>
+        </FormControl>
 
         <LoadingButton
           loading={totalProductLoading}
@@ -45,7 +49,8 @@ const TotalDeviceInCompany = () => {
               dispatch(
                 getTotalProduct({
                   from: dayjs(value).format('DD-MM-YYYY'),
-                  to: dayjs(value1).format('DD-MM-YYYY')
+                  to: dayjs(value1).format('DD-MM-YYYY'),
+                  type
                 })
               );
             } else {
