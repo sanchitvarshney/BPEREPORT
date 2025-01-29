@@ -7,7 +7,11 @@ const initialState = {
   totalComponentLoading: false,
   totalComponent: null,
   deviceOnLocation: null,
-  deviceOnLocationLoading: false
+  deviceOnLocationLoading: false,
+  totalComponentInBPE: null,
+  totalComponentInBPELoading: false,
+  totalComponentInMSC: null,
+  totalComponentInMSCLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -22,6 +26,14 @@ export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent
 });
 export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLocation', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceLocation?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+export const getTotalComponentInBPE = createAsyncThunk('totalDevice/getTotalComponentInBPE', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInBPE?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+export const getTotalComponentInMSC = createAsyncThunk('totalDevice/getTotalComponentInMSC', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInMsc?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
 const reportSlice = createSlice({
@@ -75,6 +87,34 @@ const reportSlice = createSlice({
       .addCase(getdeviceOnLocation.rejected, (state) => {
         state.deviceOnLocationLoading = false;
         state.deviceOnLocation = null;
+      })
+      .addCase(getTotalComponentInBPE.pending, (state) => {
+        state.totalComponentInBPELoading = true;
+        state.totalComponentInBPE = null;
+      })
+      .addCase(getTotalComponentInBPE.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.totalComponentInBPE = action.payload.data.data;
+        }
+        state.totalComponentInBPELoading = false;
+      })
+      .addCase(getTotalComponentInBPE.rejected, (state) => {
+        state.totalComponentInBPELoading = false;
+        state.totalComponentInBPE = null;
+      })
+      .addCase(getTotalComponentInMSC.pending, (state) => {
+        state.totalComponentInMSCLoading = true;
+        state.totalComponentInMSC = null;
+      })
+      .addCase(getTotalComponentInMSC.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.totalComponentInMSC = action.payload.data.data;
+        }
+        state.totalComponentInMSCLoading = false;
+      })
+      .addCase(getTotalComponentInMSC.rejected, (state) => {
+        state.totalComponentInMSCLoading = false;
+        state.totalComponentInMSC = null;
       });
   }
 });

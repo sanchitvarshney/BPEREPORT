@@ -21,7 +21,7 @@ export default function DynamicTable({ rowdata }) {
   }));
 
   return (
-    <Box sx={{ height: 500, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: "calc(100vh - 170px)", width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={productsLoading}
         rows={rows || []}

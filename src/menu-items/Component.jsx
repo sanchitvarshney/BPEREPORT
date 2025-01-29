@@ -16,12 +16,29 @@ const Component = {
   title: 'Component',
   type: 'group',
   children: [
-   
     {
       id: 'total-material-in-company',
-      title: 'Total Material In Company',
+      title: 'Total Component In Company',
       type: 'item',
       url: '/total-material-in-company',
+      icon: icons.DashboardOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'total-material-in-bpe-company',
+      title: 'Total Component In BPE',
+      type: 'item',
+      url: '/total-material-in-bpe',
+      icon: icons.DashboardOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'total-material-in-msc-company',
+      title: 'Total Component In MSC',
+      type: 'item',
+      url: '/total-material-in-msc',
       icon: icons.DashboardOutlinedIcon,
       target: false,
       breadcrumbs: false

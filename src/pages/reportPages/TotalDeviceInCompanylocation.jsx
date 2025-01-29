@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
@@ -16,7 +15,8 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomNoRowsOverlay } from 'components/table/CustomNoRowsOverlay';
-
+import { DatePicker } from 'antd';
+const { RangePicker } = DatePicker;
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Download } from '@mui/icons-material';
@@ -129,31 +129,38 @@ export function LocationAccordion({ data }) {
 const TotalDeviceInCompanylocation = () => {
   const { deviceOnLocationLoading, deviceOnLocation } = useSelector((state) => state.report);
   const dispatch = useDispatch();
-  const [value, setValue] = useState(null); // From Date
-  const [value1, setValue1] = useState(null); // To Date
+  const [dateRange, setDateRange] = useState({
+    from: null,
+    to: null
+  });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
-        {/* From Date Picker */}
-        <DatePicker
-          label="From Date"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+        <RangePicker
+          format={'DD/MM/YYYY'}
+          value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
+          onChange={(range) => {
+            if (range) {
+              setDateRange({ from: range[0], to: range[1] });
+            } else {
+              setDateRange({ from: null, to: null });
+            }
+          }}
+          presets={[
+            { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
+            { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
+            { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+            { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] }
+          ]}
         />
-
-        {/* To Date Picker */}
-        <DatePicker label="To Date" value={value1} onChange={(newValue) => setValue1(newValue)}  />
 
         <LoadingButton
           loading={deviceOnLocationLoading}
           onClick={() => {
-            if (value && value1) {
+            if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({
-                  from: dayjs(value).format('DD-MM-YYYY'),
-                  to: dayjs(value1).format('DD-MM-YYYY')
-                })
+                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
               );
             } else {
               showToast('Please select date', 'error');

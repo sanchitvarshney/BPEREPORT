@@ -29,7 +29,7 @@ export default function TotalComponentInCompanyTable() {
   }));
 
   return (
-    <Box sx={{ height: '500px', minHeight: 300, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 170px)', minHeight: 300, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={totalComponentLoading}
         rows={rows}
@@ -44,9 +44,9 @@ export default function TotalComponentInCompanyTable() {
             borderRight: '1px solid #ddd', // Vertical column borders
             backgroundColor: '#f2f2f2'
           },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "1px solid #ddd", // Add a top border
-          },
+          '& .MuiDataGrid-footerContainer': {
+            borderTop: '1px solid #ddd' // Add a top border
+          }
         }}
         initialState={{
           pagination: {

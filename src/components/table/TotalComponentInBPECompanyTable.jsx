@@ -2,25 +2,26 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
   { field: 'id', headerName: '#', width: 90 },
-  { field: 'SKU', headerName: 'SKU', width: 150 },
-  { field: 'productName', headerName: 'Product Name', width: 200 },
+  { field: 'partNo', headerName: 'Part No', width: 150 },
+  { field: 'componentName', headerName: 'Component Name', width: 400 },
   { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
   { field: 'balance', headerName: 'Balance', type: 'number', width: 130 }
 ];
 
-export default function TotalDeviceInCompanyTable() {
-  const { totalProduct, totalProductLoading } = useSelector((state) => state.report);
-  const rows = totalProduct?.map((item, index) => ({
+export default function TotalComponentInBPECompanyTable() {
+  const { totalComponentInBPELoading, totalComponentInBPE } = useSelector((state) => state.report);
+
+  // Map the rows to match the new data structure
+  const rows = totalComponentInBPE?.map((item, index) => ({
     id: index + 1,
-    SKU: item.SKU,
-    productName: item['Product Name'],
+    partNo: item['Part No'],
+    componentName: item['Component Name'],
     opening: item.Opening,
     inward: item.Inward,
     outward: item.Outward,
@@ -28,10 +29,10 @@ export default function TotalDeviceInCompanyTable() {
   }));
 
   return (
-    <Box sx={{ height: "calc(100vh - 170px)", width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: "calc(100vh - 170px)",  width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
-        loading={totalProductLoading}
-        rows={rows || []}
+        loading={totalComponentInBPELoading}
+        rows={rows}
         columns={columns}
         sx={{
           '& .MuiDataGrid-cell': {
@@ -40,7 +41,8 @@ export default function TotalDeviceInCompanyTable() {
           },
           '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid #ddd', // Header separator
-            background: '#1976d2 !important'
+            borderRight: '1px solid #ddd', // Vertical column borders
+            backgroundColor: '#f2f2f2'
           },
           '& .MuiDataGrid-footerContainer': {
             borderTop: '1px solid #ddd' // Add a top border
