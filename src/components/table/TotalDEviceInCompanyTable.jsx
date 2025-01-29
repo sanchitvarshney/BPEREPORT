@@ -2,9 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
+import { Typography } from '@mui/material';
+import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'id', headerName: '#', width: 90 },
   { field: 'SKU', headerName: 'SKU', width: 150 },
   { field: 'productName', headerName: 'Product Name', width: 200 },
   { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
@@ -29,14 +31,30 @@ export default function TotalDeviceInCompanyTable() {
     <Box sx={{ height: 500, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={totalProductLoading}
-        rows={rows}
+        rows={rows || []}
         columns={columns}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            borderBottom: '1px solid #ddd', // Horizontal row borders
+            borderRight: '1px solid #ddd' // Vertical column borders
+          },
+          '& .MuiDataGrid-columnHeaders': {
+            borderBottom: '1px solid #ddd', // Header separator
+            background: '#1976d2 !important'
+          },
+          '& .MuiDataGrid-footerContainer': {
+            borderTop: '1px solid #ddd' // Add a top border
+          }
+        }}
         initialState={{
           pagination: {
             paginationModel: {
               pageSize: 30
             }
           }
+        }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
         }}
         pageSizeOptions={[20]}
       />

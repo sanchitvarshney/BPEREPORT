@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
-export default function DynamicTable({rowdata}) {
-
+export default function DynamicTable({ rowdata }) {
   // Dynamically generate columns based on keys of the first object in the array
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
@@ -26,12 +26,26 @@ export default function DynamicTable({rowdata}) {
         loading={productsLoading}
         rows={rows || []}
         columns={columns}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            borderBottom: '1px solid #ddd', // Horizontal row borders
+            borderRight: '1px solid #ddd' // Vertical column borders
+          },
+          '& .MuiDataGrid-columnHeaders': {
+            borderBottom: '1px solid #ddd', // Header separator
+            borderRight: '1px solid #ddd',
+            backgroundColor: '#f2f2f2'
+          }
+        }}
         initialState={{
           pagination: {
             paginationModel: {
               pageSize: 30
             }
           }
+        }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
         }}
         pageSizeOptions={[30, 50, 70, 100]}
         pagination

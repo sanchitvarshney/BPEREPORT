@@ -2,9 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
+import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'id', headerName: '#', width: 90 },
   { field: 'partNo', headerName: 'Part No', width: 150 },
   { field: 'componentName', headerName: 'Component Name', width: 200 },
   { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
@@ -33,12 +34,29 @@ export default function TotalComponentInCompanyTable() {
         loading={totalComponentLoading}
         rows={rows}
         columns={columns}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            borderBottom: '1px solid #ddd', // Horizontal row borders
+            borderRight: '1px solid #ddd' // Vertical column borders
+          },
+          '& .MuiDataGrid-columnHeaders': {
+            borderBottom: '1px solid #ddd', // Header separator
+            borderRight: '1px solid #ddd', // Vertical column borders
+            backgroundColor: '#f2f2f2'
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "1px solid #ddd", // Add a top border
+          },
+        }}
         initialState={{
           pagination: {
             paginationModel: {
               pageSize: 30
             }
           }
+        }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
         }}
         pageSizeOptions={[20]}
       />

@@ -5,14 +5,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalComponent } from 'features/reports/reportSlice';
 import TotalComponentInCompanyTable from 'components/table/TotalComponentInCompanyTable';
+import { Download } from '@mui/icons-material';
+import { exportToExcel } from 'helper/excelExport';
 
 const TotalMaterialInCompany = () => {
-  const { totalComponentLoading } = useSelector((state) => state.report);
+  const { totalComponentLoading, totalComponent } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [value, setValue] = useState(null); // From Date
   const [value1, setValue1] = useState(null); // To Date
@@ -29,12 +31,7 @@ const TotalMaterialInCompany = () => {
         />
 
         {/* To Date Picker */}
-        <DatePicker
-          label="To Date"
-          value={value1}
-          onChange={(newValue) => setValue1(newValue)}
-          maxDate={value ? dayjs(value) : dayjs()} 
-        />
+        <DatePicker label="To Date" value={value1} onChange={(newValue) => setValue1(newValue)} maxDate={value ? dayjs(value) : dayjs()} />
 
         <LoadingButton
           loading={totalComponentLoading}
@@ -53,8 +50,21 @@ const TotalMaterialInCompany = () => {
           variant="contained"
         >
           <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
-          button
+          Search
         </LoadingButton>
+        <Button
+          disabled={!totalComponent}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            if (totalComponent) {
+              exportToExcel(totalComponent, 'Total Material In Company');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
       </Box>
       <TotalComponentInCompanyTable />
     </LocalizationProvider>

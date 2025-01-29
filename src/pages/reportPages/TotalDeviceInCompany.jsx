@@ -5,14 +5,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import TotalDEviceInCompanyTable from 'components/table/TotalDEviceInCompanyTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalProduct } from 'features/reports/reportSlice';
+import { exportToExcel } from 'helper/excelExport';
+import { Download } from '@mui/icons-material';
 
 const TotalDeviceInCompany = () => {
-  const { totalProductLoading } = useSelector((state) => state.report);
+  const { totalProductLoading, totalProduct } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [value, setValue] = useState(null); // From Date
   const [value1, setValue1] = useState(null); // To Date
@@ -37,7 +39,6 @@ const TotalDeviceInCompany = () => {
         />
 
         <LoadingButton
-        
           loading={totalProductLoading}
           onClick={() => {
             if (value && value1) {
@@ -54,8 +55,21 @@ const TotalDeviceInCompany = () => {
           variant="contained"
         >
           <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
-          button
+          Search
         </LoadingButton>
+        <Button
+          disabled={!totalProduct}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            if (totalProduct) {
+              exportToExcel(totalProduct, 'Total Device In Company');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
       </Box>
       <TotalDEviceInCompanyTable />
     </LocalizationProvider>
