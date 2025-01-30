@@ -11,7 +11,9 @@ const initialState = {
   totalComponentInBPE: null,
   totalComponentInBPELoading: false,
   totalComponentInMSC: null,
-  totalComponentInMSCLoading: false
+  totalComponentInMSCLoading: false,
+  totalDispatchDevices: null,
+  totalDispatchDevicesLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -34,6 +36,10 @@ export const getTotalComponentInBPE = createAsyncThunk('totalDevice/getTotalComp
 });
 export const getTotalComponentInMSC = createAsyncThunk('totalDevice/getTotalComponentInMSC', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentInMsc?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDispatchDevices', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
 const reportSlice = createSlice({
@@ -115,6 +121,20 @@ const reportSlice = createSlice({
       .addCase(getTotalComponentInMSC.rejected, (state) => {
         state.totalComponentInMSCLoading = false;
         state.totalComponentInMSC = null;
+      })
+      .addCase(getTotalDispatchDevices.pending, (state) => {
+        state.totalDispatchDevicesLoading = true;
+        state.totalDispatchDevices = null;
+      })
+      .addCase(getTotalDispatchDevices.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.totalDispatchDevices = action.payload.data.data;
+        }
+        state.totalDispatchDevicesLoading = false;
+      })
+      .addCase(getTotalDispatchDevices.rejected, (state) => {
+        state.totalDispatchDevicesLoading = false;
+        state.totalDispatchDevices = null;
       });
   }
 });

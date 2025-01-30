@@ -20,37 +20,35 @@ const { RangePicker } = DatePicker;
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Download } from '@mui/icons-material';
-
 export const exportToExcel = (jsonData) => {
-  let worksheetData = [];
-
+  const wb = XLSX.utils.book_new();
+  const wsData = [];
+  
   jsonData.forEach((location) => {
-    worksheetData.push([{ Location: location.locationName }]);
-    worksheetData.push([
-      { Location: 'Location', SKU: 'SKU', Name: 'Name', Opening: 'Opening', Inward: 'Inward', Outward: 'Outward', Closing: 'Closing' }
-    ]);
+    wsData.push([location.locationName]); 
+    wsData.push(['SKU', 'Name', 'Opening', 'Inward', 'Outward', 'Closing']); 
+
     location.products.forEach((product) => {
-      worksheetData.push([
-        {
-          Location: location.locationName,
-          SKU: product.SKU,
-          Name: product.Name,
-          Opening: product.Opening,
-          Inward: product.Inward,
-          Outward: product.Outward,
-          Closing: product.Closing
-        }
+      wsData.push([
+        product.SKU,
+        product.Name,
+        product.Opening,
+        product.Inward,
+        product.Outward,
+        product.Closing,
       ]);
     });
-    worksheetData.push([]);
+
+    wsData.push([]); 
   });
-  const ws = XLSX.utils.json_to_sheet(worksheetData.flat(1), { skipHeader: true });
-  const wb = XLSX.utils.book_new();
+
+  const ws = XLSX.utils.aoa_to_sheet(wsData);  
   XLSX.utils.book_append_sheet(wb, ws, 'Stock Report');
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   saveAs(data, 'Stock_Report.xlsx');
 };
+
 
 const DynamicTable = ({ rowdata }) => {
   const columns = rowdata?.length
@@ -101,8 +99,6 @@ const DynamicTable = ({ rowdata }) => {
     </Box>
   );
 };
-
-// Main component to map data into accordions with tables
 export function LocationAccordion({ data }) {
   return (
     <div>
@@ -201,7 +197,6 @@ const TotalDeviceInCompanylocation = () => {
           </Box>
         )}
       </Box>
-      {/* <TotalComponentInCompanyTable /> */}
     </LocalizationProvider>
   );
 };

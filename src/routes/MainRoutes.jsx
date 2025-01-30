@@ -8,6 +8,7 @@ const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/Tot
 const TotalDeviceInCompanylocation = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompanylocation')));
 const TotalMaterialInBPECompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInBPECompany')));
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
+const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
 const MainRoutes = {
   path: '/',
   element: (
@@ -43,6 +44,10 @@ const MainRoutes = {
     {
       path: '/total-material-in-msc',
       element: <TotalMaterialInMSCCompany />
+    },
+    {
+      path: '/total-dispatch-device',
+      element: <TotalDispatchdevices />
     }
   ]
 };
