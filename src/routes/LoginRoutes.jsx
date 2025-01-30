@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import Protected from 'components/shared/Protected';
+import ForgotPassword from 'pages/authentication/ForgotPassword';
 const AuthLogin = Loadable(lazy(() => import('pages/authentication/login')));
 const AuthRegister = Loadable(lazy(() => import('pages/authentication/register')));
 const LoginRoutes = {
@@ -19,6 +20,10 @@ const LoginRoutes = {
     {
       path: '/register',
       element: <AuthRegister />
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPassword />
     }
   ]
 };

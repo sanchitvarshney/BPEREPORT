@@ -78,7 +78,7 @@ export default function AuthLogin() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                  <InputLabel htmlFor="email-login">Username</InputLabel>
                   <OutlinedInput
                     id="email-login"
                     type="email"
@@ -86,7 +86,7 @@ export default function AuthLogin() {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter email address"
+                    placeholder="Enter Username"
                     fullWidth
                     error={Boolean(touched.email && errors.email)}
                   />
@@ -146,7 +146,7 @@ export default function AuthLogin() {
                     }
                     label={<Typography variant="h6">Keep me sign in</Typography>}
                   />
-                  <Link variant="h6" component={RouterLink} color="text.primary">
+                  <Link variant="h6" component={RouterLink} to={'/forgot-password'} color="text.primary">
                     Forgot Password?
                   </Link>
                 </Stack>
