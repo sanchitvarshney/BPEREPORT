@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Grid, Stack, InputLabel, OutlinedInput, FormHelperText, Button, InputAdornment, IconButton } from '@mui/material';
+import { Grid, Stack, InputLabel, OutlinedInput, FormHelperText, InputAdornment, IconButton } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { sendVerificationCodeAsync, resetPasswordAsync } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
