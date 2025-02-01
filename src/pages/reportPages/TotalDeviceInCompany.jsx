@@ -53,8 +53,8 @@ const TotalDeviceInCompany = () => {
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
           <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Type" onChange={handleChange}>
             <MenuItem value={'both'}>All</MenuItem>
-            <MenuItem value={'withoutv2'}> Without AWB</MenuItem>
-            <MenuItem value={'onlyv2'}> Only AWB</MenuItem>
+            <MenuItem value={'onlyv2'}> AWB</MenuItem>
+            <MenuItem value={'withoutv2'}> Non-AWB</MenuItem>
           </Select>
         </FormControl>
 
