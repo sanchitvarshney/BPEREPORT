@@ -32,7 +32,6 @@ export default function AuthForgotPassword() {
       setSubmitting(false);
     }
   };
-
   const handleResetPassword = async (values, { setSubmitting, setErrors }) => {
     try {
       dispatch(resetPasswordAsync({ emailId: values.email, otp: values.code, password: values.newPassword })).then((response) => {
@@ -157,18 +156,23 @@ export default function AuthForgotPassword() {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <LoadingButton type='button' loading={sendVarificationcodeloading} fullWidth variant="outlined" color="secondary" onClick={() => {
-                   
-                   dispatch(sendVerificationCodeAsync({ emailId: values.email })).then((response) => {
-                    if (response.payload?.data.success) {
-                      setStep(2);
-                      showToast('Verification code sent successfully', 'success');
-                    } else {
-                      showToast(response.payload.message, 'error');
-                    }
-                  });
-                  
-                  }}>
+                  <LoadingButton
+                    type="button"
+                    loading={sendVarificationcodeloading}
+                    fullWidth
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      dispatch(sendVerificationCodeAsync({ emailId: values.email })).then((response) => {
+                        if (response.payload?.data.success) {
+                          setStep(2);
+                          showToast('Verification code sent successfully', 'success');
+                        } else {
+                          showToast(response.payload.message, 'error');
+                        }
+                      });
+                    }}
+                  >
                     Resend Verification Code
                   </LoadingButton>
                 </Grid>
