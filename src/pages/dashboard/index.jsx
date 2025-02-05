@@ -1,11 +1,98 @@
-import React from 'react'
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import React from 'react';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useNavigate } from 'react-router';
 
 const index = () => {
+  const navigate = useNavigate();
   return (
-    <div>
-      Dashboard
-    </div>
-  )
-}
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        height: '70vh'
+      }}
+    >
+      <Typography variant="h1">Dashboard</Typography>
+      <Grid
+        container
+        spacing={5}
+        sx={{
+          padding: '0 100px',
+          mt: 5
+        }}
+      >
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardMedia
+              component="img"
+              width={'100px'}
+              image="/device.svg"
+              alt="Device"
+              sx={{ width: '150px', height: '150px', objectFit: 'contain', margin: '0 auto' }}
+            />
+            <CardActions>
+              <Button
+                size="small"
+                color="primary"
+                endIcon={<OpenInNewIcon />}
+                sx={{ width: '100%' }}
+                onClick={() => navigate('/total-device-in-company')}
+              >
+                Device Report
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardMedia
+              component="img"
+              width={'100px'}
+              image="/raw.svg"
+              alt="Device"
+              sx={{ width: '150px', height: '150px', objectFit: 'contain', margin: '0 auto' }}
+            />
+            <CardActions>
+              <Button
+                size="small"
+                color="primary"
+                endIcon={<OpenInNewIcon />}
+                sx={{ width: '100%' }}
+                onClick={() => navigate('/total-material-in-company')}
+              >
+                Raw Material Report
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardMedia
+              component="img"
+              width={'100px'}
+              image="/dispatch.svg"
+              alt="Device"
+              sx={{ width: '150px', height: '150px', objectFit: 'contain', margin: '0 auto' }}
+            />
+            <CardActions>
+              <Button
+                size="small"
+                color="primary"
+                endIcon={<OpenInNewIcon />}
+                sx={{ width: '100%' }}
+                onClick={() => navigate('/total-dispatch-device')}
+              >
+                Dispatch Report
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
 
-export default index
+export default index;

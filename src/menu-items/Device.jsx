@@ -1,9 +1,7 @@
-// assets
 import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
 import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-// icons
 const icons = {
   LoginOutlined,
   ProfileOutlined,
@@ -18,7 +16,7 @@ const Device = {
   children: [
     {
       id: 'total-device-in-company',
-      title: 'Total Device In Company',
+      title: 'Total Device In Warehouse',
       type: 'item',
       url: '/total-device-in-company',
       icon: icons.OnDeviceTrainingOutlinedIcon,
