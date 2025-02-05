@@ -18,7 +18,7 @@ const Component = {
   children: [
     {
       id: 'total-material-in-company',
-      title: 'Total Component In Company',
+      title: 'Total Component In Warehouse',
       type: 'item',
       url: '/total-material-in-company',
       icon: icons.DashboardOutlinedIcon,
