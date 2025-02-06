@@ -22,7 +22,6 @@ import Transitions from 'components/@extended/Transitions';
 
 // assets
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
-import avatar1 from 'assets/images/users/avatar-1.png';
 import { useDispatch } from 'react-redux';
 import { logout } from 'features/auth/authSlice';
 import { useUser } from 'hooks/useUser';
@@ -76,7 +75,7 @@ export default function Profile() {
         onClick={handleToggle}
       >
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
-          <Avatar alt="profile user" src={avatar1} size="sm" />
+          <Avatar alt="profile user"  size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
             {user?.username}
           </Typography>
@@ -109,7 +108,7 @@ export default function Profile() {
                     <Grid container justifyContent="space-between" alignItems="center">
                       <Grid item>
                         <Stack direction="row" spacing={1.25} alignItems="center">
-                          <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                          <Avatar alt="profile user" sx={{ width: 32, height: 32 }} />
                           <Stack>
                             <Typography variant="h6">{user?.username}</Typography>
                             <Typography variant="body2" color="text.secondary">

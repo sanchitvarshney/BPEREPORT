@@ -13,8 +13,6 @@ export default function ProfileTab() {
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
-     
-    
       <ListItemButton onClick={() => dispatch(logout())} selected={selectedIndex === 2}>
         <ListItemIcon>
           <LogoutOutlined />
