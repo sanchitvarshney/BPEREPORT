@@ -5,15 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import { Button } from '@mui/material';
-import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
+import DeviceDetailsModal from 'components/table/DeviceDetailsDrawer';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
-import { getDispatchDeviceSerialNo } from 'features/reports/reportSlice';
+import { getBERDeviceSerialNo } from 'features/reports/reportSlice';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
-  const { dispatchDataReportLoading, dispatchDataReport,totalDispatchDevicesLoading, totalDispatchDevices } = useSelector((state) => state.report);
+  const { totalBERReportLoading, BERReportData,totalBERDevices,totalBERDevicesLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
-  const rows = dispatchDataReport?.map((item, index) => ({
+  const rows = BERReportData?.map((item, index) => ({
     id: index + 1,
     SKU: item.SKU,
     productName: item['Product Name'],
@@ -21,7 +21,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     inward: item.Inward,
     outward: item.Outward,
     balance: item.Balance,
-    key: item.SKUKEY
+    key:item.SKUKEY,
   }));
 
   const [openModal, setOpenModal] = useState(false);
@@ -44,13 +44,13 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
           <Button
             variant="contained"
             onClick={() => {
-              console.log(dateRange,params?.row?.key)
+              console.log(params.row)
               setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {
                 dispatch(
-                  getDispatchDeviceSerialNo({
+                  getBERDeviceSerialNo({
                     from: dayjs(dateRange.from).format('DD-MM-YYYY'),
                     to: dayjs(dateRange.to).format('DD-MM-YYYY'),
                     deviceKey: params?.row?.key
@@ -66,16 +66,16 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
       }
     }
   ];
-
+console.log(totalBERDevices)
   const handleCloseModal = () => {
     setOpenModal(false);
     setModalData(null);
   };
-
+ 
   return (
     <Box sx={{ height: 'calc(100vh - 170px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
-        loading={dispatchDataReportLoading}
+        loading={totalBERReportLoading}
         rows={rows || []}
         columns={columns}
         sx={{
@@ -103,7 +103,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
         }}
         pageSizeOptions={[20]}
       />
-      <DeviceDetailsDrawer open={openModal} onClose={handleCloseModal} data={totalDispatchDevices} loading={totalDispatchDevicesLoading} />
+      <DeviceDetailsModal open={openModal} onClose={handleCloseModal} data={totalBERDevices} loading={totalBERDevicesLoading}/>
     </Box>
   );
 }

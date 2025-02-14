@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Modal, Box, Button,CircularProgress,Typography  } from '@mui/material';
+import { Modal, Box, Button, CircularProgress, Typography } from '@mui/material';
+import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import { DataGrid } from '@mui/x-data-grid';
 
-const DeviceDetailsModal = ({ open, data, onClose,loading }) => {
+const DeviceDetailsModal = ({ open, data, onClose, loading }) => {
   // Check if data exists and is not empty before rendering the DataGrid
   const rows = data?.map((item, index) => ({
     id: index + 1,
@@ -31,7 +32,9 @@ const DeviceDetailsModal = ({ open, data, onClose,loading }) => {
           p: 4
         }}
       >
-        <Typography variant="h3" id="device-details-modal">Device Details</Typography>
+        <Typography variant="h3" id="device-details-modal">
+          Device Details
+        </Typography>
         {/* Only show the DataGrid if data exists */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
@@ -44,6 +47,30 @@ const DeviceDetailsModal = ({ open, data, onClose,loading }) => {
               columns={columns}
               pageSize={5}
               rowsPerPageOptions={[5]}
+              sx={{
+                '& .MuiDataGrid-cell': {
+                  borderBottom: '1px solid #ddd', // Horizontal row borders
+                  borderRight: '1px solid #ddd' // Vertical column borders
+                },
+                '& .MuiDataGrid-columnHeaders': {
+                  borderBottom: '1px solid #ddd', // Header separator
+                  background: '#1976d2 !important'
+                },
+                '& .MuiDataGrid-footerContainer': {
+                  borderTop: '1px solid #ddd' // Add a top border
+                }
+              }}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 30
+                  }
+                }
+              }}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay
+              }}
+              pageSizeOptions={[20]}
             />
           </Box>
         ) : (

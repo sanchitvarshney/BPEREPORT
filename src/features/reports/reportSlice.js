@@ -16,7 +16,10 @@ const initialState = {
   totalDispatchDevicesLoading: false,
   componentReportLoading: false,
   serialNoForCompanyData: null ,
-  serialNoForCompanyDataLoading: false
+  serialNoForCompanyDataLoading: false,
+  totalBERDevices: null,
+  totalBERDevicesLoading: false,
+  dispatchDataReport:null,  
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -45,6 +48,10 @@ export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDis
   const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
+export const getTotalBERDevices = createAsyncThunk('totalDevice/getTotalBERDevices', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceInBer?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
 export const getComponentReport = createAsyncThunk('totalDevice/getComponentReport', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
@@ -53,6 +60,16 @@ export const getDeviceSerialNoForCompany = createAsyncThunk('totalDevice/getDevi
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`);
   return response;
 });
+export const getDispatchDeviceSerialNo = createAsyncThunk('totalDevice/getDispatchDeviceSerialNo', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/deviceSerialNoForDispatch?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
+  return response;
+});
+
+export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSerialNo', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForBer?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
+  return response;
+});
+
 const reportSlice = createSlice({
   name: 'totalDevice',
   initialState,
@@ -148,18 +165,61 @@ const reportSlice = createSlice({
         state.totalComponentInMSC = null;
       })
       .addCase(getTotalDispatchDevices.pending, (state) => {
+        state.dispatchDataReportLoading = true;
+        state.dispatchDataReport = null;
+      })
+      .addCase(getTotalDispatchDevices.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.dispatchDataReport = action.payload.data.data;
+        }
+        state.dispatchDataReportLoading = false;
+      })
+      .addCase(getTotalDispatchDevices.rejected, (state) => {
+        state.dispatchDataReport = false;
+        state.dispatchDataReportLoading = null;
+      })
+      .addCase(getDispatchDeviceSerialNo.pending, (state) => {
         state.totalDispatchDevicesLoading = true;
         state.totalDispatchDevices = null;
       })
-      .addCase(getTotalDispatchDevices.fulfilled, (state, action) => {
+      .addCase(getDispatchDeviceSerialNo.fulfilled, (state, action) => {
         if (action.payload.data.success) {
           state.totalDispatchDevices = action.payload.data.data;
         }
         state.totalDispatchDevicesLoading = false;
       })
-      .addCase(getTotalDispatchDevices.rejected, (state) => {
+      .addCase(getDispatchDeviceSerialNo.rejected, (state) => {
         state.totalDispatchDevicesLoading = false;
         state.totalDispatchDevices = null;
+      })
+      .addCase(getTotalBERDevices.pending, (state) => {
+        state.totalBERReportLoading = true;
+        state.BERReportData = null;
+      })
+      .addCase(getTotalBERDevices.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.BERReportData = action.payload.data.data;
+        }
+        state.totalBERReportLoading = false;
+      })
+      .addCase(getTotalBERDevices.rejected, (state) => {
+        state.totalBERReportLoading = false;
+        state.BERReportData = null;
+      })
+      .addCase(getBERDeviceSerialNo.pending, (state) => {
+        state.totalBERDevicesLoading = true;
+        state.totalBERDevices = null;
+      })
+      .addCase(getBERDeviceSerialNo.fulfilled, (state, action) => {
+        console.log(action.payload.data);
+        if (action.payload.data.success) {
+          state.totalBERDevices = action.payload.data.data;
+        }
+        state.totalBERDevicesLoading = false;
+      })
+      .addCase(getBERDeviceSerialNo.rejected, (state) => {
+        state.totalBERDevicesLoading = false;
+        state.totalBERDevices = null;
       })
       .addCase(getComponentReport.pending, (state) => {
         state.componentReportLoading = true;

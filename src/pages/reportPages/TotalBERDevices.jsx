@@ -7,14 +7,14 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import {getTotalDispatchDevices } from 'features/reports/reportSlice';
+import { getTotalBERDevices } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
-import TotalDispatchDEviceTable from 'components/table/TotalDispatchDEviceTable';
+import TotalBERDeviceTable from 'components/table/TotalBERDeviceTable';
 const { RangePicker } = DatePicker;
-const TotalDispatchdevices = () => {
-  const { dispatchDataReport, dispatchDataReportLoading } = useSelector((state) => state.report);
+const TotalBERDevices = () => {
+  const { BERReportData, totalBERReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -43,11 +43,11 @@ const TotalDispatchdevices = () => {
         />
 
         <LoadingButton
-          loading={dispatchDataReportLoading}
+          loading={totalBERReportLoading}
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalDispatchDevices({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getTotalBERDevices({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
               );
             } else {
               showToast('Please select date', 'error');
@@ -59,12 +59,12 @@ const TotalDispatchdevices = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!dispatchDataReport}
+          disabled={!BERReportData}
           variant="contained"
           color="success"
           onClick={() => {
-            if (dispatchDataReport) {
-              exportToExcel(dispatchDataReport, 'Total Material In BPE ');
+            if (BERReportData) {
+              exportToExcel(BERReportData, 'Total BER Details In BPE ');
             }
           }}
         >
@@ -72,9 +72,9 @@ const TotalDispatchdevices = () => {
           Download
         </Button>
       </Box>
-      <TotalDispatchDEviceTable dateRange={dateRange}  />
+      <TotalBERDeviceTable dateRange={dateRange}  />
     </LocalizationProvider>
   );
 };
 
-export default TotalDispatchdevices;
+export default TotalBERDevices;
