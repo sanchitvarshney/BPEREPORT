@@ -101,7 +101,7 @@ export default function TotalDeviceInCompanyTable({ dateRange,type }) {
         }}
         pageSizeOptions={[20]}
       />
-      <DeviceDetailsDrawer open={openModal} onClose={handleCloseModal} data={serialNoForCompanyData} />
+      <DeviceDetailsDrawer open={openModal} onClose={handleCloseModal} data={serialNoForCompanyData} loading ={serialNoForCompanyDataLoading} />
     </Box>
   );
 }

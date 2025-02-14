@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Modal, Box, Button } from '@mui/material';
+import { Modal, Box, Button,CircularProgress,Typography  } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-const DeviceDetailsModal = ({ open, data, onClose }) => {
+const DeviceDetailsModal = ({ open, data, onClose,loading }) => {
   // Check if data exists and is not empty before rendering the DataGrid
   const rows = data?.map((item, index) => ({
     id: index + 1,
@@ -31,13 +31,25 @@ const DeviceDetailsModal = ({ open, data, onClose }) => {
           p: 4
         }}
       >
+        <Typography variant="h3" id="device-details-modal">Device Details</Typography>
         {/* Only show the DataGrid if data exists */}
-        {data && data.length > 0 ? (
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <CircularProgress />
+          </Box>
+        ) : data && data.length > 0 ? (
           <Box sx={{ height: 600, width: '100%' }}>
-            <DataGrid rows={rows || []} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
+            <DataGrid
+              rows={rows || []}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+            />
           </Box>
         ) : (
-          <div>No data available</div>
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div>No data available</div>
+          </Box>
         )}
         <Button onClick={onClose} variant="contained" sx={{ mb: 2 }}>
           Close

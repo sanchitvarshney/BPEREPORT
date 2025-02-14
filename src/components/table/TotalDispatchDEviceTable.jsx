@@ -9,7 +9,6 @@ import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
 import { getDeviceSerialNoForCompany } from 'features/reports/reportSlice';
-import { useDispatch } from 'react-redux';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
   const { totalDispatchDevicesLoading, totalDispatchDevices } = useSelector((state) => state.report);
