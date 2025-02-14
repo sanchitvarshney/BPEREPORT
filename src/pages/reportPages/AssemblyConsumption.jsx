@@ -7,19 +7,34 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getTotalComponentInBPE, getTotalDispatchDevices } from 'features/reports/reportSlice';
+import { getComponentReport } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
-import TotalDispatchDEviceTable from 'components/table/TotalDispatchDEviceTable';
+import DynamicComponentTable from 'components/table/DynamicAssemblyTable';
 const { RangePicker } = DatePicker;
 const AssemblyConsumption = () => {
-  const { totalDispatchDevices, totalDispatchDevicesLoading } = useSelector((state) => state.report);
+  const { componentReport, componentReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
+
+  const handleDownload = () => {
+    // Prepare data for export
+    const dataForExport = componentReport?.data?.map((device) => ({
+      "IMEI No": device["IMEI No"],
+      "Serial No": device["Serial No"],
+      ...device.Components.reduce((acc, component) => {
+      acc[component["Part Name"] + " (" + component["Part No"]+")"] = component.Quantity;
+        return acc;
+      }, {})
+    }));
+
+    // Call the exportToExcel function (pass data for export and filename)
+    exportToExcel(dataForExport, 'Assembly_Consumption_Report');
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -43,11 +58,11 @@ const AssemblyConsumption = () => {
         />
 
         <LoadingButton
-          loading={totalDispatchDevicesLoading}
+          loading={componentReportLoading}
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalDispatchDevices({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
               );
             } else {
               showToast('Please select date', 'error');
@@ -59,20 +74,16 @@ const AssemblyConsumption = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!totalDispatchDevices}
+          disabled={!componentReport}
           variant="contained"
           color="success"
-          onClick={() => {
-            if (totalDispatchDevices) {
-              exportToExcel(totalDispatchDevices, 'Total Material In BPE ');
-            }
-          }}
+          onClick={handleDownload} 
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
           Download
         </Button>
       </Box>
-      <TotalDispatchDEviceTable />
+      <DynamicComponentTable data={componentReport?.data || []} components={componentReport?.components || []} />
     </LocalizationProvider>
   );
 };
