@@ -1,6 +1,8 @@
 import ReportOutlinedIcon from '@mui/icons-material/ReportOutlined';
+import SyncProblemOutlinedIcon from '@mui/icons-material/SyncProblemOutlined';
 const icons = {
-  ReportOutlinedIcon
+  ReportOutlinedIcon,
+  SyncProblemOutlinedIcon
 };
 const Other = {
   id: 'other',
@@ -13,6 +15,15 @@ const Other = {
       type: 'item',
       url: '/rejection-report',
       icon: icons.ReportOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'bpe-issue',
+      title: 'Bpe Issue',
+      type: 'item',
+      url: '/bpe-issue',
+      icon: icons.SyncProblemOutlinedIcon,
       target: false,
       breadcrumbs: false
     }

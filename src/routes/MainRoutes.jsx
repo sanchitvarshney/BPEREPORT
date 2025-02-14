@@ -13,6 +13,7 @@ const AssemblyConsumption = Loadable(lazy(() => import('pages/reportPages/Assemb
 const BERDetails = Loadable(lazy(() => import('pages/reportPages/TotalBERDevices')));
 const ComponentUsed = Loadable(lazy(() => import('pages/reportPages/ComponentUsed')));
 const RejectionReport = Loadable(lazy(() => import('pages/reportPages/RejectionReport')));
+const BPEIssue = Loadable(lazy(() => import('pages/reportPages/BPEIssue')));
 
 const MainRoutes = {
   path: '/',
@@ -69,6 +70,10 @@ const MainRoutes = {
     {
       path:"/rejection-report",
       element:<RejectionReport/>
+    },
+    {
+      path:"/bpe-issue",
+      element:<BPEIssue/>
     }
   ]
 };

@@ -23,7 +23,9 @@ const initialState = {
   componentSummaryLoading: false,
   componentSummary: null,
   rejectionReportLoading: false,
-  rejectionReport: null
+  rejectionReport: null,
+  bpeIssue: null,
+  bpeIssueLoading: false,
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -77,6 +79,11 @@ export const getDispatchDeviceSerialNo = createAsyncThunk('totalDevice/getDispat
   return response;
 });
 
+export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async () => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssue`);
+  return response;
+});
+
 export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSerialNo', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForBer?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
   return response;
@@ -119,6 +126,20 @@ const reportSlice = createSlice({
       .addCase(getTotalComponent.rejected, (state) => {
         state.totalComponentLoading = false;
         state.totalComponent = null;
+      })
+      .addCase(getBpeIssue.pending, (state) => {
+        state.bpeIssueLoading = true;
+        state.bpeIssue = null;
+      })
+      .addCase(getBpeIssue.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.bpeIssue = action.payload.data.data;
+        }
+        state.bpeIssueLoading = false;
+      })
+      .addCase(getBpeIssue.rejected, (state) => {
+        state.bpeIssueLoading = false;
+        state.bpeIssue = null;
       })
       .addCase(getDeviceSerialNoForCompany.pending, (state) => {
         state.serialNoForCompanyDataLoading = true;
