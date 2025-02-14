@@ -20,7 +20,7 @@ const Other = {
     },
     {
       id: 'bpe-issue',
-      title: 'Bpe Issue',
+      title: 'BPe Issue',
       type: 'item',
       url: '/bpe-issue',
       icon: icons.SyncProblemOutlinedIcon,

@@ -13,7 +13,7 @@ export default function ComponentSummaryTable() {
     componentName: item.component,
     totalQuantiity: item.total_quantity,
     category: item.category,
-  }));
+  }))||[];
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },

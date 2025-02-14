@@ -26,7 +26,7 @@ export default function TotalComponentInCompanyTable() {
     inward: item.Inward,
     outward: item.Outward,
     balance: item.Balance
-  }));
+  }))||[];
 
   return (
     <Box sx={{ height: 'calc(100vh - 170px)', minHeight: 300, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>

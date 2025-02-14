@@ -30,7 +30,7 @@ export default function TotalDeviceInCompanyTable({ dateRange,type }) {
     outward: item.Outward,
     balance: item.Balance,
     key:item.SKUKEY,
-  }));
+  }))||[];
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
     { field: 'SKU', headerName: 'SKU', width: 150 },

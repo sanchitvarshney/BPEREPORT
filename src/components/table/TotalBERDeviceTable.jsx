@@ -22,7 +22,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     outward: item.Outward,
     balance: item.Balance,
     key:item.SKUKEY,
-  }));
+  }))||[];
 
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);

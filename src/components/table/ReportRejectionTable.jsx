@@ -13,7 +13,7 @@ export default function () {
     outward: item.TotalOut,
     issue: item.issue,
     closing:item.ClosingBalance,
-  }));
+  }))||[];
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },

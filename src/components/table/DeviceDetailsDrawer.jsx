@@ -9,7 +9,7 @@ const DeviceDetailsModal = ({ open, data, onClose, loading }) => {
     id: index + 1,
     imei_no: item.imei_no,
     serial_no: item.serial_no
-  }));
+  }))||[];
 
   const columns = [
     { field: 'id', headerName: '#', flex: 1 },
