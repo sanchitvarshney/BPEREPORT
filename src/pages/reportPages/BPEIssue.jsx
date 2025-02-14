@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography, TextField, Modal, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
-import dayjs from 'dayjs';
+import { CustomNoRowsOverlay } from '../../components/table/CustomNoRowsOverlay';
 import { showToast } from 'utils/ToastProvider';
 import { solvedBpeIssue } from 'features/reports/reportSlice';
 import { getBpeIssue } from 'features/reports/reportSlice';
 
-export default function TotalDispatchDEviceTable({ dateRange }) {
+export default function TotalDispatchDEviceTable() {
   const { bpeIssue, bpeIssueLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows = bpeIssue?.map((item, index) => ({
@@ -26,8 +26,9 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
   const [comment, setComment] = useState(''); // For storing the reject comment
 
   const handleApproveClick = (txnId) => {
-    dispatch(solvedBpeIssue({ txn: txnId, status: "Y" })).then((res) => {
-      console.log(res);
+    dispatch(solvedBpeIssue({ txn: txnId, status: "Y", remark:"" })).then((res) => {
+      
+        dispatch(getBpeIssue());
     });
   };
 
@@ -43,9 +44,10 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     }
 
     dispatch(solvedBpeIssue({ txn: modalData, status: "REJ", remark:comment })).then((res) => {
-      console.log(res);
-      setOpenModal(false);
-      setComment(''); // Reset comment after submit
+      // if(res.payload.data.status === 'success'){
+        setOpenModal(false);
+        setComment(''); // Reset comment after submit
+      // }
     });
   };
 
@@ -75,7 +77,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
               color="success"  // Green color for approve button
               onClick={() => handleApproveClick(params.row.txnId).then((res)=>{
                 console.log(res)
-                if(res.payload.status === 'success'){
+                if(res.payload.data.status === 'success'){
                   showToast('BPE Issue approved successfully', 'success');
                   dispatch(getBpeIssue());
                 }
@@ -91,8 +93,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
               variant="contained"
               color="error"  // Red color for reject button
               onClick={() => handleRejectClick(params.row.txnId).then((res)=>{
-                console.log(res)
-                if(res.payload.status === 'success'){
+                if(res.payload.data.status === 'success'||res.payload.data.success === true){
                   showToast('BPE Issue rejected successfully', 'success');
                   dispatch(getBpeIssue());
                 }
@@ -134,6 +135,9 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
             }
           }
         }}
+         slots={{
+                  noRowsOverlay: CustomNoRowsOverlay
+                }}
         pageSizeOptions={[20]}
       />
 

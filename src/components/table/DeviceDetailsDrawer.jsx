@@ -2,14 +2,17 @@ import * as React from 'react';
 import { Modal, Box, Button, CircularProgress, Typography } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import { DataGrid } from '@mui/x-data-grid';
+import { Download } from '@mui/icons-material';
+import { exportToExcel } from 'helper/excelExport';
 
 const DeviceDetailsModal = ({ open, data, onClose, loading }) => {
   // Check if data exists and is not empty before rendering the DataGrid
-  const rows = data?.map((item, index) => ({
-    id: index + 1,
-    imei_no: item.imei_no,
-    serial_no: item.serial_no
-  }))||[];
+  const rows =
+    data?.map((item, index) => ({
+      id: index + 1,
+      imei_no: item.imei_no,
+      serial_no: item.serial_no
+    })) || [];
 
   const columns = [
     { field: 'id', headerName: '#', flex: 1 },
@@ -32,9 +35,26 @@ const DeviceDetailsModal = ({ open, data, onClose, loading }) => {
           p: 4
         }}
       >
-        <Typography variant="h3" id="device-details-modal">
-          Device Details
-        </Typography>
+         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h3" id="device-details-modal">
+            Device Details
+          </Typography>
+          
+          <Button
+            disabled={!data}
+            variant="contained"
+            color="success"
+            onClick={() => {
+              if (data) {
+                exportToExcel(data, 'Device_Details');
+              }
+            }}
+            sx={{ display: 'flex', alignItems: 'center' }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
+        </Box>
         {/* Only show the DataGrid if data exists */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
