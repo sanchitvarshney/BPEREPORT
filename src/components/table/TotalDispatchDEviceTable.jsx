@@ -44,7 +44,6 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
           <Button
             variant="contained"
             onClick={() => {
-              console.log(dateRange,params?.row?.key)
               setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');

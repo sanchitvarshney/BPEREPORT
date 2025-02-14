@@ -3,13 +3,15 @@ import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
 import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import DisplaySettingsOutlinedIcon from '@mui/icons-material/DisplaySettingsOutlined';
 // icons
 const icons = {
   LoginOutlined,
   ProfileOutlined,
   OnDeviceTrainingOutlinedIcon,
   DashboardOutlinedIcon,
-  LocationOnOutlinedIcon
+  LocationOnOutlinedIcon,
+  DisplaySettingsOutlinedIcon
 };
 const Component = {
   id: 'component',
@@ -40,6 +42,15 @@ const Component = {
       type: 'item',
       url: '/total-material-in-msc',
       icon: icons.DashboardOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id:'component-used',
+      title: 'Component Used',
+      type: 'item',
+      url: '/component-used',
+      icon: icons.DisplaySettingsOutlinedIcon,
       target: false,
       breadcrumbs: false
     }

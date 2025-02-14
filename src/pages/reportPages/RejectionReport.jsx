@@ -1,0 +1,97 @@
+import React, { useState } from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { LoadingButton } from '@mui/lab';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import { Box, Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { showToast } from 'utils/ToastProvider';
+import {getRejectionReport } from 'features/reports/reportSlice';
+import { Download } from '@mui/icons-material';
+import { exportToExcel } from 'helper/excelExport';
+import { DatePicker } from 'antd';
+import RejectionReportTable from 'components/table/ReportRejectionTable';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+const { RangePicker } = DatePicker;
+const RejectionReport = () => {
+  const { rejectionReport, rejectionReportLoading } = useSelector((state) => state.report);
+  const dispatch = useDispatch();
+  const [type, setType] = React.useState('U');
+  const [dateRange, setDateRange] = useState({
+    from: null,
+    to: null
+  });
+console.log(rejectionReport)
+
+  const handleChange = (event) => {
+    setType(event.target.value);
+  };
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box sx={{ display: 'flex', gap: '10px' }}>
+        <RangePicker
+          format={'DD/MM/YYYY'}
+          value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
+          onChange={(range) => {
+            if (range) {
+              setDateRange({ from: range[0], to: range[1] });
+            } else {
+              setDateRange({ from: null, to: null });
+            }
+          }}
+          presets={[
+            { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
+            { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
+            { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+            { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] }
+          ]}
+        />
+        <FormControl fullWidth sx={{ maxWidth: '250px' }}>
+          <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Issue Type" onChange={handleChange}>
+            <MenuItem value={'U'}>Upper</MenuItem>
+            <MenuItem value={'B'}> Bottom</MenuItem>
+          </Select>
+        </FormControl>
+
+        <LoadingButton
+          loading={rejectionReportLoading}
+          onClick={() => {
+            if (dateRange.from && dateRange.to) {
+              dispatch(
+                getRejectionReport({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), issueType:type })
+              );
+            } else {
+              showToast('Please select date', 'error');
+            }
+          }}
+          variant="contained"
+        >
+          <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
+          Search
+        </LoadingButton>
+        <Button
+          disabled={!rejectionReport}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            if (rejectionReport) {
+              exportToExcel(rejectionReport, 'Rejection Report');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
+      </Box>
+      <RejectionReportTable  />
+    </LocalizationProvider>
+  );
+};
+
+export default RejectionReport;
