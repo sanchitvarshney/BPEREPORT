@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
-const DynamicAssemblyTable = ({ data, components }) => {
+const DynamicAssemblyTable = ({ data, components,loading }) => {
   // Create dynamic columns based on the `components` array
   const columns = [
     { field: 'IMEI No', headerName: 'IMEI No', width: 150 },
@@ -31,6 +31,7 @@ const DynamicAssemblyTable = ({ data, components }) => {
   return (
     <Box sx={{ height: 'calc(100vh - 170px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
+      loading={loading}
         rows={rows || []}
         columns={columns}
         pageSize={5}

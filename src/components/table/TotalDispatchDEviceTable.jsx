@@ -1,15 +1,19 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import { Button} from '@mui/material';
+import { Button } from '@mui/material';
 import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
+import dayjs from 'dayjs';
+import { showToast } from 'utils/ToastProvider';
+import { getDeviceSerialNoForCompany } from 'features/reports/reportSlice';
+import { useDispatch } from 'react-redux';
 
-
-export default function TotalDispatchDEviceTable() {
+export default function TotalDispatchDEviceTable({ dateRange }) {
   const { totalDispatchDevicesLoading, totalDispatchDevices } = useSelector((state) => state.report);
+  const dispatch = useDispatch();
   const rows = totalDispatchDevices?.map((item, index) => ({
     id: index + 1,
     SKU: item.SKU,
@@ -22,21 +26,6 @@ export default function TotalDispatchDEviceTable() {
 
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-
-  const handleShowData = (id, productName) => {
-    // Here you can replace with your actual API call
-    const date = new Date().toLocaleDateString(); // Example: Get current date
-    // Example API call:
-    fetch(`/api/getDeviceDetails?id=${id}&date=${date}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setModalData(data); // Set the data you want to show in the modal
-        setOpenModal(true); // Open the modal
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  };
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
@@ -54,8 +43,20 @@ export default function TotalDispatchDEviceTable() {
         return (
           <Button
             variant="contained"
-            onClick={() => {setOpenModal(true)}}
-            size='small'
+            onClick={() => {
+              if (!dateRange.from || !dateRange.to) {
+                showToast('Please select a date range', 'error');
+              } else {
+                dispatch(
+                  getDeviceSerialNoForCompany({
+                    from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                    to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                    deviceKey: params?.row?.SKU
+                  })
+                );
+              }
+            }}
+            size="small"
           >
             View Details
           </Button>

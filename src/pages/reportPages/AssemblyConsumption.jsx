@@ -83,7 +83,7 @@ const AssemblyConsumption = () => {
           Download
         </Button>
       </Box>
-      <DynamicComponentTable data={componentReport?.data || []} components={componentReport?.components || []} />
+      <DynamicComponentTable data={componentReport?.data || []} components={componentReport?.components || []} loading={componentReportLoading} />
     </LocalizationProvider>
   );
 };

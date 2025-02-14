@@ -88,7 +88,7 @@ const TotalDeviceInCompany = () => {
           Download
         </Button>
       </Box>
-      <TotalDEviceInCompanyTable />
+      <TotalDEviceInCompanyTable dateRange = {dateRange}  type = {type} />
     </LocalizationProvider>
   );
 };

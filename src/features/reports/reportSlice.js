@@ -15,6 +15,8 @@ const initialState = {
   totalDispatchDevices: null,
   totalDispatchDevicesLoading: false,
   componentReportLoading: false,
+  serialNoForCompanyData: null ,
+  serialNoForCompanyDataLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -45,6 +47,10 @@ export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDis
 });
 export const getComponentReport = createAsyncThunk('totalDevice/getComponentReport', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+export const getDeviceSerialNoForCompany = createAsyncThunk('totalDevice/getDeviceSerialNoForCompany', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`);
   return response;
 });
 const reportSlice = createSlice({
@@ -84,6 +90,20 @@ const reportSlice = createSlice({
       .addCase(getTotalComponent.rejected, (state) => {
         state.totalComponentLoading = false;
         state.totalComponent = null;
+      })
+      .addCase(getDeviceSerialNoForCompany.pending, (state) => {
+        state.serialNoForCompanyDataLoading = true;
+        state.serialNoForCompanyData = null;
+      })
+      .addCase(getDeviceSerialNoForCompany.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.serialNoForCompanyData = action.payload.data.data;
+        }
+        state.serialNoForCompanyDataLoading = false;
+      })
+      .addCase(getDeviceSerialNoForCompany.rejected, (state) => {
+        state.serialNoForCompanyDataLoading = false;
+        state.serialNoForCompanyData = null;
       })
       .addCase(getdeviceOnLocation.pending, (state) => {
         state.deviceOnLocationLoading = true;
