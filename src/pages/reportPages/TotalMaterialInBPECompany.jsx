@@ -64,7 +64,7 @@ const TotalMaterialInBPECompany = () => {
           color="success"
           onClick={() => {
             if (totalComponentInBPE) {
-              exportToExcel(totalComponentInBPE, 'Total Material In BPE ');
+              exportToExcel(totalComponentInBPE, 'Total Material In BPe ');
             }
           }}
         >

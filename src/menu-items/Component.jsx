@@ -20,7 +20,7 @@ const Component = {
   children: [
     {
       id: 'total-material-in-company',
-      title: 'Total Component In Warehouse',
+      title: 'Components In Warehouse',
       type: 'item',
       url: '/total-material-in-company',
       icon: icons.DashboardOutlinedIcon,
@@ -29,7 +29,7 @@ const Component = {
     },
     {
       id: 'total-material-in-bpe-company',
-      title: 'Total Component In BPE',
+      title: 'Components In BPe',
       type: 'item',
       url: '/total-material-in-bpe',
       icon: icons.DashboardOutlinedIcon,
@@ -38,7 +38,7 @@ const Component = {
     },
     {
       id: 'total-material-in-msc-company',
-      title: 'Total Component In MSC',
+      title: 'Total Component In MsC',
       type: 'item',
       url: '/total-material-in-msc',
       icon: icons.DashboardOutlinedIcon,

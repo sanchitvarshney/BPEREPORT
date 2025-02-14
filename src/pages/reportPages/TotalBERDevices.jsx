@@ -64,7 +64,7 @@ const TotalBERDevices = () => {
           color="success"
           onClick={() => {
             if (BERReportData) {
-              exportToExcel(BERReportData, 'Total BER Details In BPE ');
+              exportToExcel(BERReportData, 'Total BER Details In BPe ');
             }
           }}
         >

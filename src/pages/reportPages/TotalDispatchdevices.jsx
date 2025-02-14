@@ -64,7 +64,7 @@ const TotalDispatchdevices = () => {
           color="success"
           onClick={() => {
             if (dispatchDataReport) {
-              exportToExcel(dispatchDataReport, 'Total Material In BPE ');
+              exportToExcel(dispatchDataReport, 'Total Material In BPe ');
             }
           }}
         >

@@ -9,7 +9,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
-import { getBERDeviceSerialNo } from 'features/reports/reportSlice';
+import { solvedBpeIssue } from 'features/reports/reportSlice';
 import {getBpeIssue} from 'features/reports/reportSlice';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
@@ -19,7 +19,8 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     id: index + 1,
     imei: item.imei,
     serialNo: item.serial,
-    issue: item.issue
+    issue: item.issue,
+    txnId:item.transaction
   }))||[];
 
   const [openModal, setOpenModal] = useState(false);
@@ -41,9 +42,9 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
               variant="contained"
               color="success"  // Green color for approve button
               onClick={() => {
-                // Handle approve action
-                console.log('Approved:', params?.row?.key);
-                // Add additional logic for approval, if necessary
+                dispatch(solvedBpeIssue({txn:params.row.txnId,status:"Y"})).then((res) => {
+                  console.log(res)
+                })
               }}
               size="medium"
               style={{ marginRight: '8px' }} // Add some space between buttons
@@ -56,9 +57,9 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
               variant="contained"
               color="error"  // Red color for reject button
               onClick={() => {
-                // Handle reject action
-                console.log('Rejected:', params?.row?.key);
-                // Add additional logic for rejection, if necessary
+                dispatch(solvedBpeIssue({txn:params.row.txnId,status:"REJ"})).then((res) => {
+                  console.log(res)
+                })
               }}
               size="medium"
               startIcon={<CancelIcon />} 

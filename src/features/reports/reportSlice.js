@@ -84,6 +84,11 @@ export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async () 
   return response;
 });
 
+export const solvedBpeIssue = createAsyncThunk('totalDevice/solvedBpeIssue', async (payload) => {
+  const response = await axiosInstance.post(`/bpeIssue/solvedIssue`, payload);
+  return response;
+});
+
 export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSerialNo', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForBer?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
   return response;
