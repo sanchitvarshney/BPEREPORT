@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
@@ -12,7 +12,23 @@ const columns = [
   { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
-  { field: 'balance', headerName: 'Balance', type: 'number', width: 130 }
+  { field: 'balance', headerName: 'Balance', type: 'number', width: 130 },
+  {
+    field: 'action',
+    headerName: 'Action',
+    width: 150,
+    renderCell: (params) => {
+      return (
+        <Button
+          variant="contained"
+          onClick={() => {console.log(params.row)}}
+          size='small'
+        >
+          View Details
+        </Button>
+      );
+    }
+  }
 ];
 
 export default function TotalDeviceInCompanyTable() {
