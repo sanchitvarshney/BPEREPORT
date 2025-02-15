@@ -26,6 +26,7 @@ const initialState = {
   rejectionReport: null,
   bpeIssue: null,
   bpeIssueLoading: false,
+  bpeIssueResolveLoading: false,
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -158,6 +159,17 @@ const reportSlice = createSlice({
       })
       .addCase(getDeviceSerialNoForCompany.rejected, (state) => {
         state.serialNoForCompanyDataLoading = false;
+        state.serialNoForCompanyData = null;
+      })
+      .addCase(solvedBpeIssue.pending, (state) => {
+        state.bpeIssueResolveLoading = true;
+        state.serialNoForCompanyData = null;
+      })
+      .addCase(solvedBpeIssue.fulfilled, (state) => {
+        state.bpeIssueResolveLoading = false;
+      })
+      .addCase(solvedBpeIssue.rejected, (state) => {
+        state.bpeIssueResolveLoading = false;
         state.serialNoForCompanyData = null;
       })
       .addCase(getdeviceOnLocation.pending, (state) => {

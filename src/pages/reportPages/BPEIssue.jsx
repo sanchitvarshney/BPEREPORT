@@ -11,7 +11,7 @@ import { solvedBpeIssue } from 'features/reports/reportSlice';
 import { getBpeIssue } from 'features/reports/reportSlice';
 
 export default function TotalDispatchDEviceTable() {
-  const { bpeIssue, bpeIssueLoading } = useSelector((state) => state.report);
+  const { bpeIssue, bpeIssueLoading ,bpeIssueResolveLoading} = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows = bpeIssue?.map((item, index) => ({
     id: index + 1,
@@ -44,10 +44,13 @@ export default function TotalDispatchDEviceTable() {
     }
 
     dispatch(solvedBpeIssue({ txn: modalData, status: "REJ", remark:comment })).then((res) => {
-      // if(res.payload.data.status === 'success'){
+      console.log(res)
+      if(res.payload.data.status === 'success'|| res.payload.data.success === true){
+        showToast(res.payload.data.message ||'BPE Issue rejected successfully', 'success');
+        dispatch(getBpeIssue());
         setOpenModal(false);
         setComment(''); // Reset comment after submit
-      // }
+      }
     });
   };
 
@@ -92,12 +95,7 @@ export default function TotalDispatchDEviceTable() {
             <Button
               variant="contained"
               color="error"  // Red color for reject button
-              onClick={() => handleRejectClick(params.row.txnId).then((res)=>{
-                if(res.payload.data.status === 'success'||res.payload.data.success === true){
-                  showToast('BPE Issue rejected successfully', 'success');
-                  dispatch(getBpeIssue());
-                }
-              })}
+              onClick={() => handleRejectClick(params.row.txnId)}
               size="medium"
               startIcon={<CancelIcon />}
             >
@@ -112,7 +110,7 @@ export default function TotalDispatchDEviceTable() {
   return (
     <Box sx={{ height: 'calc(100vh - 170px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
-        loading={bpeIssueLoading}
+        loading={bpeIssueLoading||bpeIssueResolveLoading}
         rows={rows || []}
         columns={columns}
         sx={{
@@ -182,7 +180,7 @@ export default function TotalDispatchDEviceTable() {
             <Button onClick={handleCloseModal} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleSubmitReject} variant="contained" color="error">
+            <Button onClick={handleSubmitReject} variant="contained" color="error" loading={bpeIssueResolveLoading}>
               Submit
             </Button>
           </Box>

@@ -25,7 +25,6 @@ const RejectionReport = () => {
     from: null,
     to: null
   });
-console.log(rejectionReport)
 
   const handleChange = (event) => {
     setType(event.target.value);

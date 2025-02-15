@@ -17,10 +17,10 @@ export default function ComponentSummaryTable() {
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
-    { field: 'partNo', headerName: 'Part No', width: 150 },
-    { field: 'componentName', headerName: 'Component Name', width: 200 },
-    { field: 'totalQuantiity', headerName: 'Total Quantity', width: 130 },
-    { field: 'category', headerName: 'Category', type: 'number', width: 130 },
+    { field: 'partNo', headerName: 'Part No', width:150 },
+    { field: 'componentName', headerName: 'Part Name', width: 450 },
+    { field: 'totalQuantiity', headerName: 'Total Quantity',width: 130 },
+    { field: 'category', headerName: 'Category', type: 'number',width: 130 },
   ];
 
   return (

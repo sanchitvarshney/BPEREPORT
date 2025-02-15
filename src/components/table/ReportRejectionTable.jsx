@@ -17,11 +17,11 @@ export default function () {
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
+    { field: 'issue', headerName: 'Issue', width: 230 },
     { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
     { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
     { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
     { field: 'closing', headerName: 'Closing', type: 'number', width: 130 },
-    { field: 'issue', headerName: 'Issue', type: 'number', width: 130 },
   ];
 
   return (

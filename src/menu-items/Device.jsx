@@ -18,7 +18,7 @@ const Device = {
   children: [
     {
       id: 'total-device-in-company',
-      title: 'Total Device In Warehouse',
+      title: 'Devices In Warehouse',
       type: 'item',
       url: '/total-device-in-company',
       icon: icons.OnDeviceTrainingOutlinedIcon,

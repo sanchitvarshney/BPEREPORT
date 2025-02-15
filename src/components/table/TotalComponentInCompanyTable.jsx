@@ -6,8 +6,8 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
   { field: 'id', headerName: '#', width: 90 },
-  { field: 'partNo', headerName: 'Component No', width: 150 },
-  { field: 'componentName', headerName: 'Component Name', width: 200 },
+  { field: 'partNo', headerName: 'Part No', width: 150 },
+  { field: 'componentName', headerName: 'Part Name', width: 200 },
   { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },

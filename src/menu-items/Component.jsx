@@ -38,7 +38,7 @@ const Component = {
     },
     {
       id: 'total-material-in-msc-company',
-      title: 'Total Component In MsC',
+      title: 'Components In MsC',
       type: 'item',
       url: '/total-material-in-msc',
       icon: icons.DashboardOutlinedIcon,

@@ -34,7 +34,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
     { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
     { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
-    { field: 'balance', headerName: 'Balace', type: 'number', width: 130 },
+    { field: 'balance', headerName: 'Balance', type: 'number', width: 130 },
     {
       field: 'action',
       headerName: 'Action',
