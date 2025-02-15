@@ -114,7 +114,7 @@ export function LocationAccordion({ data }) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DynamicTable rowdata={location.products} />
+            <DynamicTable rowdata={location?.products?.map(({ SKUKEY, ...product }) => product)}/>
           </AccordionDetails>
         </Accordion>
       ))}

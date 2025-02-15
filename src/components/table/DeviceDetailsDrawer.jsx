@@ -15,7 +15,7 @@ const DeviceDetailsModal = ({ open, data, onClose, loading }) => {
     })) || [];
 
   const columns = [
-    { field: 'id', headerName: '#', flex: 1 },
+    { field: 'id', headerName: '#' },
     { field: 'imei_no', headerName: 'IMEI No', flex: 1 },
     { field: 'serial_no', headerName: 'Serial No', flex: 1 }
   ];

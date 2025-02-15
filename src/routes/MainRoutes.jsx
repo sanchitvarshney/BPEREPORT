@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 import Protected from 'components/shared/Protected';
+import NotFoundPage from 'pages/NotFoundPage';
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
@@ -74,6 +75,10 @@ const MainRoutes = {
     {
       path:"/bpe-issue",
       element:<BPEIssue/>
+    },
+    {
+      path: '*',
+      element: <NotFoundPage /> // Display the 404 page for all unmatched routes
     }
   ]
 };
