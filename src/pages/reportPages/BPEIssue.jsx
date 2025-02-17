@@ -11,7 +11,7 @@ import { solvedBpeIssue } from 'features/reports/reportSlice';
 import { getBpeIssue } from 'features/reports/reportSlice';
 
 export default function TotalDispatchDEviceTable() {
-  const { bpeIssue, bpeIssueLoading ,bpeIssueResolveLoading} = useSelector((state) => state.report);
+  const { bpeIssue, bpeIssueLoading, bpeIssueResolveLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows = bpeIssue?.map((item, index) => ({
     id: index + 1,
@@ -21,20 +21,30 @@ export default function TotalDispatchDEviceTable() {
     txnId: item.transaction
   })) || [];
 
-  const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState(null); // For storing the selected row data
-  const [comment, setComment] = useState(''); // For storing the reject comment
+  const [openRejectModal, setOpenRejectModal] = useState(false);
+  const [openApproveModal, setOpenApproveModal] = useState(false);
+  const [modalData, setModalData] = useState(null); 
+  const [comment, setComment] = useState(''); 
 
-  const handleApproveClick = (txnId) => {
-    dispatch(solvedBpeIssue({ txn: txnId, status: "Y", remark:"" })).then((res) => {
-      
-        dispatch(getBpeIssue());
-    });
+  const handleApproveClick = (rowData) => {
+    setModalData(rowData); 
+    setOpenApproveModal(true); 
   };
 
-  const handleRejectClick = (txnId) => {
-    setModalData(txnId); // Store the txnId for rejection
-    setOpenModal(true);  // Open modal for rejection
+  const handleRejectClick = (rowData) => {
+    setModalData(rowData); 
+    setOpenRejectModal(true);  
+  };
+
+  const handleSubmitApprove = () => {
+    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: "Y", remark: comment })).then((res) => {
+      if (res.payload.data.status === 'success' || res.payload.data.success === true) {
+        showToast(res.payload.data.message || 'BPE Issue approved successfully', 'success');
+        dispatch(getBpeIssue());
+        setOpenApproveModal(false);
+        setComment(''); 
+      }
+    });
   };
 
   const handleSubmitReject = () => {
@@ -43,19 +53,19 @@ export default function TotalDispatchDEviceTable() {
       return;
     }
 
-    dispatch(solvedBpeIssue({ txn: modalData, status: "REJ", remark:comment })).then((res) => {
-      console.log(res)
-      if(res.payload.data.status === 'success'|| res.payload.data.success === true){
-        showToast(res.payload.data.message ||'BPE Issue rejected successfully', 'success');
+    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: "REJ", remark: comment })).then((res) => {
+      if (res.payload.data.status === 'success' || res.payload.data.success === true) {
+        showToast(res.payload.data.message || 'BPE Issue rejected successfully', 'success');
         dispatch(getBpeIssue());
-        setOpenModal(false);
-        setComment(''); // Reset comment after submit
+        setOpenRejectModal(false);
+        setComment(''); 
       }
     });
   };
 
   const handleCloseModal = () => {
-    setOpenModal(false);
+    setOpenRejectModal(false);
+    setOpenApproveModal(false);
     setComment('');
   };
 
@@ -71,22 +81,16 @@ export default function TotalDispatchDEviceTable() {
     {
       field: 'action',
       headerName: 'Action',
-      width: 250,  // Increased width to accommodate both buttons
+      width: 250,  
       renderCell: (params) => {
         return (
           <>
             <Button
               variant="contained"
-              color="success"  // Green color for approve button
-              onClick={() => handleApproveClick(params.row.txnId).then((res)=>{
-                console.log(res)
-                if(res.payload.data.status === 'success'){
-                  showToast('BPE Issue approved successfully', 'success');
-                  dispatch(getBpeIssue());
-                }
-              })}
+              color="success"  
+              onClick={() => handleApproveClick(params.row)}
               size="medium"
-              style={{ marginRight: '8px' }} // Add some space between buttons
+              style={{ marginRight: '8px' }} 
               startIcon={<CheckIcon />}
             >
               Approve
@@ -94,8 +98,8 @@ export default function TotalDispatchDEviceTable() {
 
             <Button
               variant="contained"
-              color="error"  // Red color for reject button
-              onClick={() => handleRejectClick(params.row.txnId)}
+              color="error" 
+              onClick={() => handleRejectClick(params.row)} 
               size="medium"
               startIcon={<CancelIcon />}
             >
@@ -110,7 +114,7 @@ export default function TotalDispatchDEviceTable() {
   return (
     <Box sx={{ height: 'calc(100vh - 170px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
-        loading={bpeIssueLoading||bpeIssueResolveLoading}
+        loading={bpeIssueLoading || bpeIssueResolveLoading}
         rows={rows || []}
         columns={columns}
         sx={{
@@ -133,18 +137,18 @@ export default function TotalDispatchDEviceTable() {
             }
           }
         }}
-         slots={{
-                  noRowsOverlay: CustomNoRowsOverlay
-                }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
+        }}
         pageSizeOptions={[20]}
       />
 
-      {/* Modal for Reject Action */}
+      {/* Modal for Approve Action */}
       <Modal
-        open={openModal}
+        open={openApproveModal}
         onClose={handleCloseModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
+        aria-labelledby="approve-modal-title"
+        aria-describedby="approve-modal-description"
       >
         <Box
           sx={{
@@ -159,10 +163,88 @@ export default function TotalDispatchDEviceTable() {
             borderRadius: 2,
           }}
         >
-          <Typography id="modal-title" variant="h6" component="h2">
+          <Typography id="approve-modal-title" variant="h6" component="h2">
+            Approve Action
+          </Typography>
+
+          {modalData && (
+            <>
+              <Typography sx={{ mt: 2 }}>
+                <strong>IMEI:</strong> {modalData.imei}
+              </Typography>
+              <Typography sx={{ mt: 1 }}>
+                <strong>Serial No:</strong> {modalData.serialNo}
+              </Typography>
+              <Typography sx={{ mt: 1 }}>
+                <strong>Issue:</strong> {modalData.issue}
+              </Typography>
+            </>
+          )}
+
+          <Typography id="approve-modal-description" sx={{ mt: 2 }}>
+            Optional: Provide a comment for approval:
+          </Typography>
+
+          <TextField
+            label="Comment"
+            multiline
+            fullWidth
+            rows={4}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+            <Button onClick={handleCloseModal} variant="outlined">
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitApprove} variant="contained" color="success" loading={bpeIssueResolveLoading}>
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Modal for Reject Action */}
+      <Modal
+        open={openRejectModal}
+        onClose={handleCloseModal}
+        aria-labelledby="reject-modal-title"
+        aria-describedby="reject-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography id="reject-modal-title" variant="h6" component="h2">
             Reject Action
           </Typography>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
+
+          {modalData && (
+            <>
+              <Typography sx={{ mt: 2 }}>
+                <strong>IMEI:</strong> {modalData.imei}
+              </Typography>
+              <Typography sx={{ mt: 1 }}>
+                <strong>Serial No:</strong> {modalData.serialNo}
+              </Typography>
+              <Typography sx={{ mt: 1 }}>
+                <strong>Issue:</strong> {modalData.issue}
+              </Typography>
+            </>
+          )}
+
+          <Typography id="reject-modal-description" sx={{ mt: 2 }}>
             Please provide a comment for rejection:
           </Typography>
 

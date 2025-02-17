@@ -53,8 +53,8 @@ const RejectionReport = () => {
         <FormControl fullWidth sx={{ maxWidth: '250px' }}>
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
           <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Issue Type" onChange={handleChange}>
-            <MenuItem value={'U'}>Upper</MenuItem>
-            <MenuItem value={'B'}> Bottom</MenuItem>
+            <MenuItem value={'U'}>Upper Shell Housing (P0007)</MenuItem>
+            <MenuItem value={'B'}> Bottom Shell (P0008)</MenuItem>
           </Select>
         </FormControl>
 

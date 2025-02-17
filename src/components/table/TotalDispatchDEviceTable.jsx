@@ -31,10 +31,44 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     { field: 'id', headerName: '#', width: 90 },
     { field: 'SKU', headerName: 'SKU', width: 150 },
     { field: 'productName', headerName: 'Product Name', width: 200 },
-    { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
-    { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
-    { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
-    { field: 'balance', headerName: 'Balance', type: 'number', width: 130 },
+    { 
+      field: 'opening', 
+      headerName: 'Opening', 
+      type: 'number', 
+      width: 130 
+    },
+    { 
+      field: 'inward', 
+      type: 'number', 
+      width: 130,
+      headerName: 'Inward',
+      renderHeader: () => (
+        <div style={{ textAlign: 'center' }}>
+          <span>Inward</span>
+          <br />
+          <small style={{ color: 'darkgray', fontSize: '12px' }}>(FG Location)</small>
+        </div>
+      )
+    },
+    { 
+      field: 'outward', 
+      type: 'number', 
+      width: 130,
+      headerName: 'Outward',
+      renderHeader: () => (
+        <div style={{ textAlign: 'center' }}>
+          <span>Outward</span>
+          <br />
+          <small style={{ color: 'darkgray', fontSize: '12px' }}>(Dispatched)</small>
+        </div>
+      )
+    },
+    { 
+      field: 'balance', 
+      headerName: 'Balance', 
+      type: 'number', 
+      width: 130 
+    },
     {
       field: 'action',
       headerName: 'Action',
@@ -65,6 +99,7 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
       }
     }
   ];
+  
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -79,15 +114,15 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
         columns={columns}
         sx={{
           '& .MuiDataGrid-cell': {
-            borderBottom: '1px solid #ddd', // Horizontal row borders
-            borderRight: '1px solid #ddd' // Vertical column borders
+            borderBottom: '1px solid #ddd', 
+            borderRight: '1px solid #ddd' 
           },
           '& .MuiDataGrid-columnHeaders': {
-            borderBottom: '1px solid #ddd', // Header separator
+            borderBottom: '1px solid #ddd', 
             background: '#1976d2 !important'
           },
           '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd' // Add a top border
+            borderTop: '1px solid #ddd' 
           }
         }}
         initialState={{

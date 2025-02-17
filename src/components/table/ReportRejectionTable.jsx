@@ -11,13 +11,13 @@ export default function () {
     opening: item.OpeningBalance,
     inward: item.TotalIn,
     outward: item.TotalOut,
-    issue: item.issue,
+    issue_label: item.issue_label,
     closing:item.ClosingBalance,
   }))||[];
 
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
-    { field: 'issue', headerName: 'Issue', width: 230 },
+    { field: 'issue_label', headerName: 'Issue', width: 230 },
     { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
     { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
     { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },

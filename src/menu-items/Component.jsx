@@ -15,7 +15,7 @@ const icons = {
 };
 const Component = {
   id: 'component',
-  title: 'Component',
+  title: 'Component at Locations',
   type: 'group',
   children: [
     {

@@ -9,7 +9,7 @@ const Dispatch = {
   children: [
     {
       id: 'total-dispatch-device',
-      title: 'Total Dispatch Device',
+      title: 'FG & Dispatches',
       type: 'item',
       url: '/total-dispatch-device',
       icon: icons.WarehouseOutlinedIcon,
