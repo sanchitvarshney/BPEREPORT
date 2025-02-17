@@ -33,8 +33,8 @@ export default function ComponentSummaryTable() {
         columns={columns}
         sx={{
           '& .MuiDataGrid-cell': {
-            borderBottom: '1px solid #ddd', // Horizontal row borders
-            borderRight: '1px solid #ddd' // Vertical column borders
+            borderBottom: '1px solid #ddd', 
+            borderRight: '1px solid #ddd'
           },
           '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid #ddd', // Header separator
