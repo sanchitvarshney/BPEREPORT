@@ -23,30 +23,52 @@ import { Download } from '@mui/icons-material';
 export const exportToExcel = (jsonData) => {
   const wb = XLSX.utils.book_new();
   const wsData = [];
-  
-  jsonData.forEach((location) => {
-    wsData.push([location.locationName]); 
-    wsData.push(['SKU', 'Name', 'Opening', 'Inward', 'Outward', 'Closing']); 
 
-    location.products.forEach((product) => {
+  // Define the order of locations
+  const locationsOrder = [
+    'Inward Store (MsC)',
+    'Total Repairing Centre (TRC)- MSC',
+    'Assembly-MsC',
+    'Finish Goods store-MsC'
+  ];
+
+  // Create a copy of the data array to avoid mutating the prop directly
+  const sortedData = [...jsonData].sort((a, b) => {
+    const aIndex = locationsOrder.indexOf(a?.locationName || ''); // Safe access with optional chaining
+    const bIndex = locationsOrder.indexOf(b?.locationName || ''); // Safe access with optional chaining
+
+    // If the location is not in the predefined order, assign it a large index value
+    const defaultIndex = 999; // You can adjust this value if needed
+
+    // Return the sorted result, places unknown locations after known ones
+    return (aIndex !== -1 ? aIndex : defaultIndex) - (bIndex !== -1 ? bIndex : defaultIndex);
+  });
+
+  // Loop through the sorted data to build the Excel sheet data
+  sortedData.forEach((location) => {
+    wsData.push([location?.locationName || 'Unknown Location']); // Push location name
+    wsData.push(['SKU', 'Name', 'Opening', 'Inward', 'Outward', 'Closing']); // Add column headers
+
+    // Loop through products of each location
+    location?.products?.forEach((product) => {
       wsData.push([
-        product.SKU,
-        product.Name,
-        product.Opening,
-        product.Inward,
-        product.Outward,
-        product.Closing,
+        product?.SKU,
+        product?.Name,
+        product?.Opening,
+        product?.Inward,
+        product?.Outward,
+        product?.Closing,
       ]);
     });
 
-    wsData.push([]); 
+    wsData.push([]); // Add an empty row after each location
   });
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);  
-  XLSX.utils.book_append_sheet(wb, ws, 'Stock Report');
-  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  XLSX.utils.book_append_sheet(wb, ws, 'Stock Report'); // Append sheet to workbook
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }); // Generate Excel file
   const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(data, 'Stock_Report.xlsx');
+  saveAs(data, 'Stock_Report.xlsx'); // Save as Excel file
 };
 
 
@@ -100,9 +122,34 @@ const DynamicTable = ({ rowdata }) => {
   );
 };
 export function LocationAccordion({ data }) {
+  // Define the order of locations
+  const locationsOrder = [
+    'Inward Store (MsC)',
+    'Total Repairing Centre (TRC)- MSC',
+    'Assembly-MsC',
+    'Finish Goods store-MsC'
+  ];
+
+  // If 'data' is not provided or is empty, return nothing
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return null; // Or return some fallback UI (e.g., "No Data Available")
+  }
+
+  // Create a copy of the data array to avoid mutating the prop directly
+  const sortedData = [...data].sort((a, b) => {
+    const aIndex = locationsOrder.indexOf(a?.locationName || ''); // Safe access with optional chaining
+    const bIndex = locationsOrder.indexOf(b?.locationName || ''); // Safe access with optional chaining
+
+    // If the location is not in the predefined order, assign it a large index value
+    const defaultIndex = 999; // You can adjust this value if needed
+
+    // Return the sorted result, places unknown locations after known ones
+    return (aIndex !== -1 ? aIndex : defaultIndex) - (bIndex !== -1 ? bIndex : defaultIndex);
+  });
+
   return (
     <div>
-      {data.map((location, i) => (
+      {sortedData?.map((location, i) => (
         <Accordion key={location.locationCode} defaultExpanded={i === 0}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
