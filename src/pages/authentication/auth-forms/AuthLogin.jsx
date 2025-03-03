@@ -35,6 +35,8 @@ export default function AuthLogin() {
   const [isOtpPage, setIsOtpPage] = React.useState(false); // State for OTP Page visibility
   const [showPassword, setShowPassword] = React.useState(false);
   const [recaptchaValue, setRecaptchaValue] = React.useState(null);
+  const [recaptchaInstance, setRecaptchaInstance] = React.useState(null); // To store the recaptcha instance for resetting
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -45,6 +47,10 @@ export default function AuthLogin() {
 
   const handleRecaptchaChange = (value) => {
     setRecaptchaValue(value);
+  };
+
+  const handleRecaptchaLoad = (recaptcha) => {
+    setRecaptchaInstance(recaptcha); // Save reCAPTCHA instance for reset
   };
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
@@ -68,6 +74,10 @@ export default function AuthLogin() {
           }
         } else {
           showToast(res?.payload?.data?.message, 'error');
+          if (recaptchaInstance) {
+            recaptchaInstance.reset();
+          }
+          setRecaptchaValue(null);
         }
       });
     } catch (error) {
@@ -176,7 +186,7 @@ export default function AuthLogin() {
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   {/* <div className="mt-[30px] flex justify-center items-center"> */}
-                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} />
+                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} onLoad={handleRecaptchaLoad} />
                   {/* </div> */}
                 </Stack>
               </Grid>
