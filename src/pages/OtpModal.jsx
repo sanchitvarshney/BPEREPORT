@@ -58,7 +58,7 @@ const OtpModal = ({ open, handleClose }) => {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle className="flex justify-between items-center p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-lg shadow-lg">
-        <Typography variant="h5" fontWeight={700}>
+        <Typography variant="h3" fontWeight={700}>
           Two-Factor Authentication
         </Typography>
         <Button
@@ -69,12 +69,23 @@ const OtpModal = ({ open, handleClose }) => {
             window.location.reload();
           }}
           className="text-white hover:bg-transparent transition-all duration-300 ease-in-out"
+          sx={{
+            color: 'red', // Red color for the button
+            '&:hover': {
+              backgroundColor: 'transparent',
+              color: 'darkred',
+            },
+            position: 'absolute', // Positioned at the right corner
+            right: 16, // Pushes the button to the right edge
+          }}
         >
           Logout <LogoutIcon />
         </Button>
       </DialogTitle>
 
-      <DialogContent className="px-8 py-6 bg-gray-50 rounded-b-lg shadow-xl">
+      <DialogContent className="px-8 py-6 bg-gray-50 rounded-b-lg shadow-xl" 
+      onInteractOutside={(e) => e.preventDefault()}>
+
         <Typography variant="body1" fontSize={18} className="mb-6 text-gray-800">
           MsCorpres Automation
         </Typography>
@@ -131,11 +142,14 @@ const OtpModal = ({ open, handleClose }) => {
             onClick={handleOtpSubmit}
             variant="contained"
             color="primary"
-            className="w-full rounded-full mt-4 py-3 text-lg font-semibold text-white hover:bg-cyan-700 disabled:bg-neutral-300 disabled:text-slate-400 transition-all duration-300 ease-in-out"
+            // className="w-full rounded-full mt-4 py-3 text-lg font-semibold text-white hover:bg-cyan-700 disabled:bg-neutral-300 disabled:text-slate-400 transition-all duration-300 ease-in-out"
+            sx={{
+                margin: '10px 20px',
+                right: 16,
+            }}
           >
             {qrCodeLoading ? <CircularProgress size={25} /> : 'Verify OTP'}
-          </LoadingButton>
-        </div>
+          </LoadingButton></div>
       </DialogContent>
     </Dialog>
   );
