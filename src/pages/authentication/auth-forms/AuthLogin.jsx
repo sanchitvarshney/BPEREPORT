@@ -21,6 +21,7 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUserAsync } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function AuthLogin() {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ export default function AuthLogin() {
   const [checked, setChecked] = React.useState(false);
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const [recaptchaValue, setRecaptchaValue] = React.useState(null);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -37,8 +39,16 @@ export default function AuthLogin() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
+  };
+
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-   
+    if (!recaptchaValue) {
+      showToast("Please verify the reCAPTCHA", "error");
+      return;
+    }
     try {
       const payload = {
         username: values.email,
@@ -156,6 +166,14 @@ export default function AuthLogin() {
                   <FormHelperText error>{errors.submit}</FormHelperText>
                 </Grid>
               )}
+              <Grid item xs={12} sx={{ mt: -1 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                  
+              {/* <div className="mt-[30px] flex justify-center items-center"> */}
+              <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} />
+            {/* </div> */}
+                </Stack>
+              </Grid>
               <Grid item xs={12}>
                 <AnimateButton>
                   <LoadingButton
