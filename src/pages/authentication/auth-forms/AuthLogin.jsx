@@ -52,7 +52,7 @@ export default function AuthLogin() {
   const handleRecaptchaLoad = (recaptcha) => {
     setRecaptchaInstance(recaptcha); // Save reCAPTCHA instance for reset
   };
-
+console.log(recaptchaInstance, 'recaptchaInstance');
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     if (!recaptchaValue) {
       showToast("Please verify the reCAPTCHA", "error");
@@ -76,6 +76,9 @@ export default function AuthLogin() {
           showToast(res?.payload?.data?.message, 'error');
           if (recaptchaInstance) {
             recaptchaInstance.reset();
+          }
+          else{
+            console.log('ReCAPTCHA instance not found');
           }
           setRecaptchaValue(null);
         }
