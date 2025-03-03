@@ -8,7 +8,8 @@ const initialState = {
   loading: false,
   token: getToken(),
   sendVarificationcodeloading: false,
-  resetPasswordLoading: false
+  resetPasswordLoading: false,
+  qrStatus: null
 };
 
 export const loginUserAsync = createAsyncThunk('auth/loginUser', async (loginCredential) => {
@@ -26,6 +27,16 @@ export const sendVerificationCodeAsync = createAsyncThunk('auth/getPasswordOtp',
       emailId: payload.emailId
     }
   });
+  return response;
+});
+
+export const verifyOtpAsync = createAsyncThunk("auth/verifyOtpAsync", async (paylaod) => {
+  const response = await axiosInstance.post("/auth/verify", paylaod);
+  return response;
+})
+
+export const getQRStatus = createAsyncThunk("auth/getQRStatus", async () => {
+  const response = await axiosInstance.get(`auth/qrCode`);
   return response;
 });
 
@@ -51,10 +62,31 @@ const authSlice = createSlice({
           localStorage.setItem('loggedinUser', btoa(JSON.stringify(action.payload.data.data)));
           showToast(action?.payload?.data?.message, 'success');
         }
+        if(!action.payload.data.data){
+          state.qrStatus = action.payload.data;
+          localStorage.setItem('qrStatus', (JSON.stringify(action.payload.data)));
+        }
         state.loading = false;
       })
       .addCase(loginUserAsync.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(verifyOtpAsync.pending, (state) => {
+        state.qrCodeLoading = true;
+      })
+      .addCase(verifyOtpAsync.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          setToken(action.payload.data.data?.token);
+
+          localStorage.setItem("loggedinUser", btoa(JSON.stringify(action.payload.data.data)));
+        }
+        if(!action.payload.data.data){
+          state.qrStatus = action.payload.data;
+        }
+        state.qrCodeLoading = false;
+      })
+      .addCase(verifyOtpAsync.rejected, (state) => {
+        state.qrCodeLoading = false;
       })
       .addCase(resetPasswordAsync.pending, (state) => {
         state.resetPasswordLoading = true;

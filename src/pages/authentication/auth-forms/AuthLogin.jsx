@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useUser } from 'hooks/useUser';
 import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
@@ -21,17 +22,20 @@ import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUserAsync } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA from 'react-google-recaptcha';
+import OtpModal from 'pages/OtpModal';
 
 export default function AuthLogin() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
-
+  const { clearUser } = useUser();
+  const [recaptchaKey, setRecaptchaKey] = React.useState(Math.random());
   const [checked, setChecked] = React.useState(false);
-
+  const [isOtpPage, setIsOtpPage] = React.useState(false); // State for OTP Page visibility
   const [showPassword, setShowPassword] = React.useState(false);
   const [recaptchaValue, setRecaptchaValue] = React.useState(null);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -43,6 +47,7 @@ export default function AuthLogin() {
   const handleRecaptchaChange = (value) => {
     setRecaptchaValue(value);
   };
+
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     if (!recaptchaValue) {
@@ -57,10 +62,16 @@ export default function AuthLogin() {
 
       dispatch(loginUserAsync(payload)).then((res) => {
         if (res.payload.data.success) {
-          console.log("lgoin")
+          if (res.payload.data.isTwoStep === 'Y') {
+            setIsOtpPage(true);
+          }
+          else{
           navigate('/dashboard');
+          }
         } else {
           showToast(res?.payload?.data?.message, 'error');
+          setRecaptchaValue(null);
+          setRecaptchaKey(Math.random());
         }
       });
     } catch (error) {
@@ -168,10 +179,9 @@ export default function AuthLogin() {
               )}
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                  
-              {/* <div className="mt-[30px] flex justify-center items-center"> */}
-              <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} />
-            {/* </div> */}
+                  {/* <div className="mt-[30px] flex justify-center items-center"> */}
+                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange}  key={recaptchaKey} />
+                  {/* </div> */}
                 </Stack>
               </Grid>
               <Grid item xs={12}>
@@ -193,6 +203,14 @@ export default function AuthLogin() {
           </form>
         )}
       </Formik>
+      <OtpModal
+        open={isOtpPage}
+        handleClose={() => {
+          setIsOtpPage(false);
+          clearUser();
+          localStorage.setItem('token', '');
+        }}
+      />
     </>
   );
 }
