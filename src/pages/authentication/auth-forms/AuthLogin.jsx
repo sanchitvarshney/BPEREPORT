@@ -30,7 +30,7 @@ export default function AuthLogin() {
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
   const { clearUser } = useUser();
-
+  const [recaptchaKey, setRecaptchaKey] = React.useState(Math.random());
   const [checked, setChecked] = React.useState(false);
   const [isOtpPage, setIsOtpPage] = React.useState(false); // State for OTP Page visibility
   const [showPassword, setShowPassword] = React.useState(false);
@@ -81,6 +81,7 @@ console.log(recaptchaInstance, 'recaptchaInstance');
             console.log('ReCAPTCHA instance not found');
           }
           setRecaptchaValue(null);
+          setRecaptchaKey(Math.random());
         }
       });
     } catch (error) {
@@ -189,7 +190,7 @@ console.log(recaptchaInstance, 'recaptchaInstance');
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   {/* <div className="mt-[30px] flex justify-center items-center"> */}
-                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} onLoad={handleRecaptchaLoad} />
+                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange} onLoad={handleRecaptchaLoad}  key={recaptchaKey} />
                   {/* </div> */}
                 </Stack>
               </Grid>
