@@ -51,7 +51,7 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
           <Button
             variant="contained"
             onClick={() => {
-              setOpenModal(true);
+              // setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {

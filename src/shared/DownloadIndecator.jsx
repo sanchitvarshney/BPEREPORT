@@ -1,14 +1,14 @@
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import { Badge, IconButton } from "@mui/material";
-import FileDownloadSharpIcon from "@mui/icons-material/FileDownloadSharp";
-import React, { useEffect } from "react";
-import Link from "@mui/material/Link";
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import { Badge, IconButton } from '@mui/material';
+import FileDownloadSharpIcon from '@mui/icons-material/FileDownloadSharp';
+import React, { useEffect } from 'react';
+import Link from '@mui/material/Link';
 import DownloadIcon from '@mui/icons-material/Download';
-import { useSocketContext } from "../contexts/SocketContext";
-import ProgressWithParcentage from "../reusable/ProgressWithParcentage";
+import { useSocketContext } from '../contexts/SocketContext';
+import ProgressWithParcentage from '../reusable/ProgressWithParcentage';
 import Tooltip from '@mui/material/Tooltip';
-import { ScrollArea } from "../components/ui/scroll-area";
+import { ScrollArea } from '../components/ui/scroll-area';
 
 const DownloadIndecator = () => {
   const { onDownloadReport, off, onnotification } = useSocketContext();
@@ -25,7 +25,7 @@ const DownloadIndecator = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
     const handlenotification = (data) => {
@@ -33,12 +33,12 @@ const DownloadIndecator = () => {
         setNotification(data);
         console.log(data);
       } else {
-        console.error("Expected an array but got:", data);
+        console.error('Expected an array but got:', data);
       }
     };
 
     onnotification(handlenotification);
-    return () => off("socket_receive_notification");
+    return () => off('socket_receive_notification');
   }, [onnotification]);
 
   useEffect(() => {
@@ -46,12 +46,12 @@ const DownloadIndecator = () => {
       setProgress(data);
       console.log(data);
       if (Number(data.percent) === 100) {
-        showToast("Download completed", "success");
+        showToast('Download completed', 'success');
       }
     };
 
     onDownloadReport(handleDownloadReport);
-    return () => off("progress");
+    return () => off('progress');
   }, [onDownloadReport]);
 
   return (
@@ -59,11 +59,11 @@ const DownloadIndecator = () => {
       <Tooltip title="Download" placement="bottom">
         <IconButton
           sx={{
-            color: open ? "black" : "#525252",
-            p: "12px",
-            background: open ? "#e5e5e5" : "",
-            border: "none",
-            borderRadius: 0,
+            color: open ? 'black' : '#525252',
+            p: '12px',
+            background: open ? '#e5e5e5' : '',
+            border: 'none',
+            borderRadius: 0
           }}
           aria-describedby={id}
           onClick={handleClick}
@@ -81,63 +81,79 @@ const DownloadIndecator = () => {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right'
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right'
         }}
         PaperProps={{
           sx: {
-            border: "none", // Remove border
-            borderTopRightRadius: 0, // Remove border radius
-            boxShadow: 2, // Optional: remove shadow
-          },
+            border: 'none',
+            borderTopRightRadius: 0,
+            boxShadow: 2,
+            width: '380px', // Adjust width of the popover
+            padding: '8px'
+          }
         }}
       >
-        <div className="w-[350px] bg-neutral-200 p-[10px]">
-          <div className="min-h-[50px] max-h-[50px] flex justify-between">
-            <Typography sx={{ p: 2 }}>Downloads</Typography>
+        <div className="bg-neutral-100 p-3 rounded-md">
+          <div className="flex justify-between items-center">
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              Downloads
+            </Typography>
             <Link
               component="button"
               variant="body2"
-              sx={{ color: "black" }}
+              sx={{ color: '#007bff', cursor: 'pointer' }}
               onClick={() => {
-                console.info("I'm a button.");
+                console.info('Clear All Clicked');
+                setNotification([]); // Clear all notifications
               }}
             >
               Clear All
             </Link>
           </div>
-          <div className="bg-white rounded justify-center gap-[10px] overflow-y-auto">
-            <ScrollArea className="w-full flex flex-col gap-[10px] h-[300px] p-[10px] pr-[15px]">
-              {Array.isArray(notification) && notification?.map((item, index) => (
-                <div key={index} className="w-full p-[5px] border rounded-md mb-[10px]">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Typography fontSize={14} variant="body2">
-                        {item.req_code}
-                      </Typography>
-                      <Typography color="text.secondary" fontSize={12} variant="body2">
-                        {item.insert_date}
-                      </Typography>
+          <div className="bg-white rounded-md mt-2">
+            <ScrollArea className="w-full h-[300px] p-2 pr-3 overflow-auto">
+              {Array.isArray(notification) &&
+                notification?.map((item, index) => (
+                  <div key={index} className="w-full p-2 border-b border-gray-300 mb-2 rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Typography variant="body2" sx={{ fontSize: '14px', fontWeight: '500' }}>
+                          {item.req_code}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'gray', fontSize: '12px' }}>
+                          {item.insert_date}
+                        </Typography>
+                      </div>
+                      {item.status === 'complete' && item.msg_type === 'file' && (
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => {
+                            // window.open(`https://bpe.apisite.in/${JSON.parse(item.other_data)?.fileUrl}`, "_blank");
+                            const fileUrl = JSON.parse(item.other_data)?.fileUrl;
+                            if (fileUrl) {
+                              window.open(`https://bpe.apisite.in/${fileUrl}`, '_blank'); // Open in new tab
+                            } else {
+                              console.log('File URL not found');
+                            }
+                          }}
+                        >
+                          <DownloadIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </div>
-                    {item.status === "complete" && item.msg_type === "file" && (
-                      <IconButton
-                        size="small"
-                        color="success"
-                        onClick={() => {
-                          window.location.href = `${import.meta.env.VITE_SOKET_URL}/${JSON.parse(item.other_data)?.fileUrl}`;
-                        }}
-                      >
-                        <DownloadIcon fontSize="small" />
-                      </IconButton>
+                    {item.status !== 'complete' && (
+                      <ProgressWithParcentage
+                        value={item.reactNotificationId === progress?.notificationId ? parseInt(progress?.percent) : 0}
+                      />
                     )}
                   </div>
-                  {item.status !== "complete" && <ProgressWithParcentage value={item.reactNotificationId === progress?.notificationId ? parseInt(progress?.percent) : 0} />}
-                </div>
-              ))}
+                ))}
             </ScrollArea>
           </div>
         </div>
