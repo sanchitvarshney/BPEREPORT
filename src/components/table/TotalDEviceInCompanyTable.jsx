@@ -6,12 +6,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import { getDeviceSerialNoForCompany } from 'features/reports/reportSlice';
+import DownloadIcon from '@mui/icons-material/Download';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
 import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
+import { useSocketContext } from '../../contexts/SocketContext';
 
-export default function TotalDeviceInCompanyTable({ dateRange,type }) {
+export default function TotalDeviceInCompanyTable({ dateRange, type }) {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -19,18 +20,20 @@ export default function TotalDeviceInCompanyTable({ dateRange,type }) {
   const handleCloseModal = () => {
     setOpenModal(false);
     setModalData(null);
-  }
-  const { totalProduct, totalProductLoading,serialNoForCompanyData,serialNoForCompanyDataLoading } = useSelector((state) => state.report);
-  const rows = totalProduct?.map((item, index) => ({
-    id: index + 1,
-    SKU: item.SKU,
-    productName: item['Product Name'],
-    opening: item.Opening,
-    inward: item.Inward,
-    outward: item.Outward,
-    balance: item.Balance,
-    key:item.SKUKEY,
-  }))||[];
+  };
+  const { emitDeviceInWareHouseDownload } = useSocketContext();
+  const { totalProduct, totalProductLoading, serialNoForCompanyData, serialNoForCompanyDataLoading } = useSelector((state) => state.report);
+  const rows =
+    totalProduct?.map((item, index) => ({
+      id: index + 1,
+      SKU: item.SKU,
+      productName: item['Product Name'],
+      opening: item.Opening,
+      inward: item.Inward,
+      outward: item.Outward,
+      balance: item.Balance,
+      key: item.SKUKEY
+    })) || [];
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
     { field: 'SKU', headerName: 'SKU', width: 150 },
@@ -52,19 +55,17 @@ export default function TotalDeviceInCompanyTable({ dateRange,type }) {
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {
-                dispatch(
-                  getDeviceSerialNoForCompany({
-                    from: dayjs(dateRange.from).format('DD-MM-YYYY'),
-                    to: dayjs(dateRange.to).format('DD-MM-YYYY'),
-                    deviceKey: params?.row?.key,
-                    type:type
-                  })
-                );
+                emitDeviceInWareHouseDownload({
+                  startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                  endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                  device_key: params?.row?.key,
+                  type: type
+                });
               }
             }}
             size="small"
           >
-            View Details
+            Download <DownloadIcon fontSize="small" />
           </Button>
         );
       }
@@ -101,7 +102,12 @@ export default function TotalDeviceInCompanyTable({ dateRange,type }) {
         }}
         pageSizeOptions={[20]}
       />
-      <DeviceDetailsDrawer open={openModal} onClose={handleCloseModal} data={serialNoForCompanyData} loading ={serialNoForCompanyDataLoading} />
+      <DeviceDetailsDrawer
+        open={openModal}
+        onClose={handleCloseModal}
+        data={serialNoForCompanyData}
+        loading={serialNoForCompanyDataLoading}
+      />
     </Box>
   );
 }
