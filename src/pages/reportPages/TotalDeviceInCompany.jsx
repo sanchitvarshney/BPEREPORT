@@ -4,11 +4,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button, InputLabel } from '@mui/material';
+import { Box, Button, InputLabel, Typography } from '@mui/material';
 import TotalDEviceInCompanyTable from 'components/table/TotalDEviceInCompanyTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getTotalProduct } from 'features/reports/reportSlice';
+import { getTotalProduct, getWrongDeviceDetail } from 'features/reports/reportSlice';
 import { exportToExcel } from 'helper/excelExport';
 import { Download } from '@mui/icons-material';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
+
 const TotalDeviceInCompany = () => {
   const { totalProductLoading, totalProduct } = useSelector((state) => state.report);
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const TotalDeviceInCompany = () => {
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px' }}>
+      <Box sx={{ display: 'flex', gap: '10px',paddingTop:"20px" }}>
         <RangePicker
           format={'DD/MM/YYYY'}
           value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -88,7 +89,11 @@ const TotalDeviceInCompany = () => {
           Download
         </Button>
       </Box>
-      <TotalDEviceInCompanyTable dateRange = {dateRange}  type = {type} />
+
+      <TotalDEviceInCompanyTable
+        dateRange={dateRange}
+        type={type}
+      />
     </LocalizationProvider>
   );
 };

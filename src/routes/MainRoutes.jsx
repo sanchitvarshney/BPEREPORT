@@ -3,6 +3,7 @@ import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 import Protected from 'components/shared/Protected';
 import NotFoundPage from 'pages/NotFoundPage';
+import DeviceInCompanyLayout from 'layout/WarehouseLayout/DispatchLayout';
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
@@ -15,6 +16,8 @@ const BERDetails = Loadable(lazy(() => import('pages/reportPages/TotalBERDevices
 const ComponentUsed = Loadable(lazy(() => import('pages/reportPages/ComponentUsed')));
 const RejectionReport = Loadable(lazy(() => import('pages/reportPages/RejectionReport')));
 const BPEIssue = Loadable(lazy(() => import('pages/reportPages/BPEIssue')));
+const TotalWrongDevice = Loadable(lazy(() => import('pages/reportPages/TotalWrongDevice')));
+const TotalMINDevice = Loadable(lazy(() => import('pages/reportPages/TotalMINDevice')));
 
 const MainRoutes = {
   path: '/',
@@ -34,7 +37,27 @@ const MainRoutes = {
     },
     {
       path: '/total-device-in-company',
-      element: <TotalDeviceInCompany />
+      element: (
+        <DeviceInCompanyLayout>
+          <TotalDeviceInCompany />
+        </DeviceInCompanyLayout>
+      )
+    },
+    {
+      path: '/wrong-device',
+      element: (
+        <DeviceInCompanyLayout>
+          <TotalWrongDevice />
+        </DeviceInCompanyLayout>
+      )
+    },
+    {
+      path: '/min-device',
+      element: (
+        <DeviceInCompanyLayout>
+          <TotalMINDevice />
+        </DeviceInCompanyLayout>
+      )
     },
     {
       path: '/total-material-in-company',
@@ -65,16 +88,16 @@ const MainRoutes = {
       element: <BERDetails />
     },
     {
-      path:"/component-used",
-      element:<ComponentUsed/>
+      path: '/component-used',
+      element: <ComponentUsed />
     },
     {
-      path:"/rejection-report",
-      element:<RejectionReport/>
+      path: '/rejection-report',
+      element: <RejectionReport />
     },
     {
-      path:"/bpe-issue",
-      element:<BPEIssue/>
+      path: '/bpe-issue',
+      element: <BPEIssue />
     },
     {
       path: '*',
