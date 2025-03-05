@@ -27,6 +27,10 @@ const initialState = {
   bpeIssue: null,
   bpeIssueLoading: false,
   bpeIssueResolveLoading: false,
+  wrongDeviceDetail: null,
+  wrongDeviceDetailLoading: false,
+  getMINReportData:null,
+  minReportLoading:false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -35,6 +39,19 @@ export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', as
   );
   return response;
 });
+
+export const getWrongDeviceDetail = createAsyncThunk('totalDevice/getWrongDeviceDetail', async (payload) => {
+  const response = await axiosInstance.get(
+    `/wrongDevice/fetch/?fromDate=${payload?.from}&toDate=${payload?.to}&deliveryPartner=${payload?.partner}`
+  );
+  return response;
+});
+
+export const getMINReport = createAsyncThunk("report/getMINReport", async (payload) => {
+  const response = await axiosInstance.get(`/deviceMinV2/deviceInwardReport?fromDt=${payload.from}&toDt=${payload.to}&partner=${payload.partner}`);
+  return response;
+});
+
 export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentInCompany?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
@@ -118,6 +135,34 @@ const reportSlice = createSlice({
       .addCase(getTotalProduct.rejected, (state) => {
         state.totalProductLoading = false;
         state.totalProduct = null;
+      })
+      .addCase(getWrongDeviceDetail.pending, (state) => {
+        state.wrongDeviceDetailLoading = true;
+        state.wrongDeviceDetail = null;
+      })
+      .addCase(getWrongDeviceDetail.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.wrongDeviceDetail = action.payload.data.data;
+        }
+        state.wrongDeviceDetailLoading = false;
+      })
+      .addCase(getWrongDeviceDetail.rejected, (state) => {
+        state.wrongDeviceDetailLoading = false;
+        state.wrongDeviceDetail = null;
+      })
+      .addCase(getMINReport.pending, (state) => {
+        state.minReportLoading = true;
+        state.getMINReportData = null;
+      })
+      .addCase(getMINReport.fulfilled, (state, action) => {
+        state.minReportLoading = false;
+        if (action.payload.data.success) {
+          state.getMINReportData = action.payload.data.data;
+        }
+      })
+      .addCase(getMINReport.rejected, (state) => {
+        state.minReportLoading = false;
+        state.getMINReportData = null;
       })
       .addCase(getTotalComponent.pending, (state) => {
         state.totalComponentLoading = true;
