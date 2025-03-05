@@ -55,6 +55,27 @@ const OtpModal = ({ open, handleClose }) => {
     });
   };
 
+  useEffect(() => {
+    if (open) {
+      const handleBeforeUnload = (e) => {
+        // Clear localStorage before the page reloads
+        localStorage.setItem('token', '');
+        localStorage.clear();
+
+        // Prevent reload behavior (optional)
+        e.preventDefault();
+        e.returnValue = '';  // Standard for some browsers
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      // Cleanup event listener when modal is closed
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle className="flex justify-between items-center p-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-t-lg shadow-lg">

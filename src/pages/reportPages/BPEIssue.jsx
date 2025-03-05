@@ -98,12 +98,12 @@ export default function TotalDispatchDEviceTable() {
 
             <Button
               variant="contained"
-              color="error" 
+              color="warning" 
               onClick={() => handleRejectClick(params.row)} 
               size="medium"
               startIcon={<CancelIcon />}
             >
-              Reject
+              Pending
             </Button>
           </>
         );
@@ -227,7 +227,7 @@ export default function TotalDispatchDEviceTable() {
           }}
         >
           <Typography id="reject-modal-title" variant="h6" component="h2">
-            Reject Action
+            Pending Action
           </Typography>
 
           {modalData && (
@@ -262,7 +262,7 @@ export default function TotalDispatchDEviceTable() {
             <Button onClick={handleCloseModal} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleSubmitReject} variant="contained" color="error" loading={bpeIssueResolveLoading}>
+            <Button onClick={handleSubmitReject} variant="contained" color="primary" loading={bpeIssueResolveLoading}>
               Submit
             </Button>
           </Box>
