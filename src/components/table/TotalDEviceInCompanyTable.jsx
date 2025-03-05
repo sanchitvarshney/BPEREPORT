@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
@@ -13,7 +12,6 @@ import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
 import { useSocketContext } from '../../contexts/SocketContext';
 
 export default function TotalDeviceInCompanyTable({ dateRange, type }) {
-  const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
 

@@ -1,20 +1,11 @@
 import { getToken } from "../../utils/tokenUtills";
 import { io, Socket } from "socket.io-client";
 
-interface ISocketService {
-  socket: Socket | null;
-  connect: () => void;
-  disconnect: () => void;
-  on: <T>(event: string, callback: (data: T) => void) => void;
-  off: (event: string) => void;
-  emit: <T>(event: string, data: T) => void;
-  isConnected: () => boolean;
-}
 
-class SocketService implements ISocketService {
-  socket: Socket | null = null;
+class SocketService {
+  socket= null;
   isLoading = false;
-  constructor(private url: string) {}
+  constructor(url) {}
 
   connect() {
     if (this.socket?.connected) return;
@@ -45,19 +36,19 @@ class SocketService implements ISocketService {
     this.socket = null;
   }
 
-  on<T>(event: string, callback: (data: T) => void) {
+  on(event, callback) {
     this.socket?.on(event, callback);
   }
 
-  off(event: string) {
+  off(event) {
     this.socket?.off(event);
   }
 
-  emit<T>(event: string, data: T) {
+  emit(event, data) {
     this.socket?.emit(event, data);
   }
 
-  isConnected(): boolean {
+  isConnected() {
     return this.socket?.connected ?? false;
   }
   refreshConnection() {
@@ -67,4 +58,4 @@ class SocketService implements ISocketService {
   }
 }
 
-export const socketService = new SocketService("https://bpe.apisite.in/");
+export const socketService = new SocketService(import.meta.env.VITE_SOCKET_URL);

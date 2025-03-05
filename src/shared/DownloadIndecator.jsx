@@ -137,7 +137,7 @@ const DownloadIndecator = () => {
                             // window.open(`https://bpe.apisite.in/${JSON.parse(item.other_data)?.fileUrl}`, "_blank");
                             const fileUrl = JSON.parse(item.other_data)?.fileUrl;
                             if (fileUrl) {
-                              window.open(`https://bpe.apisite.in/${fileUrl}`, '_blank'); // Open in new tab
+                              window.open(`${import.meta.env.VITE_SOKET_URL}/${fileUrl}`, '_blank'); // Open in new tab
                             } else {
                               console.log('File URL not found');
                             }
