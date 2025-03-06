@@ -3,6 +3,13 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet";
 
 export default function () {
@@ -26,6 +33,33 @@ export default function () {
     closing: item.ClosingBalance
   }))||[];
 
+const [openModal, setOpenModal] = useState(false); // Modal visibility state
+  const [selectedIssues, setSelectedIssues] = useState(null);
+  const handleOpenModal = (issues) => {
+    setSelectedIssues(issues); // Set issues data for modal
+    setOpenModal(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false); // Close the modal
+    setSelectedIssues(null); // Clear selected issues
+  };
+
+  const issuesColumns = [
+    { field: "item", headerName: "Item", minWidth: 200 },
+    { field: "status", headerName: "Status", minWidth: 150 }
+  ];
+
+  // Transform the issues object into an array of objects for the DataGrid
+  const issuesRows = selectedIssues
+    ? Object.entries(selectedIssues).map(([key, value]) => ({
+        id: key,
+        item: key,
+        status: String(value)
+      }))
+    : [];
+
+
   const columns = [
     // { headerName: "#", field: "id", valueGetter: "node.rowIndex+1", maxWidth: 100 },
     { headerName: "Vendor Code", field: "vendorCode" },
@@ -38,48 +72,18 @@ export default function () {
     { headerName: "Quantity", field: "quantity" },
     { headerName: "Product", field: "product" },
     { headerName: "Total Debit", field: "totalDebit" },
-    // {
-    //   headerName: "",
-    //   field: "issues",
-    //   pinned: "right",
-    //   cellRenderer: (params) => {
-    //     return (
-    //       <div className="flex items-center h-full gap-2">
-    //         <Sheet>
-    //           <SheetTrigger asChild>
-    //             <Button startIcon={<Icons.documentDetail />} className="btn-primary">
-    //               Item Detail
-    //             </Button>
-    //           </SheetTrigger>
-    //           <SheetContent className="p-0 min-w-[40%]">
-    //             <SheetHeader className="h-[50px] flex flex-row items-center px-[10px] bg-hbg border-b border-neutral-300">
-    //               <SheetTitle>Item Detail</SheetTitle>
-    //             </SheetHeader>
-    //             <div className="h-[calc(100vh-50px)] ag-theme-quartz p-[20px] space-y-2">
-    //               <table className="w-full text-left border border-collapse border-gray-300">
-    //               <thead>
-    //                     <tr>
-    //                       <th className="border border-gray-300 p-2  text-[17px] font-bold">Items</th>
-    //                       <th className="border border-gray-300 p-2  text-[17px] font-bold">Status</th>
-    //                     </tr>
-    //                   </thead>
-    //                 <tbody>
-                     
-    //                   {Object.entries(params.value).map(([key, value]) => (
-    //                     <tr key={key}>
-    //                       <td className="border border-gray-300 p-2 text-[17px] font-[500]">{key}</td>
-    //                       <td className="border border-gray-300 p-2 text-[17px] font-[500]"> {String(value)}</td>
-    //                     </tr>
-    //                   ))}
-    //                 </tbody>
-    //               </table>
-    //             </div>
-    //           </SheetContent>
-    //         </Sheet>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      headerName: "Issues",
+      field: "issues",
+      renderCell: (params) => (
+        <IconButton
+        onClick={() => handleOpenModal(params.value)} 
+        color="primary"
+      >
+        <VisibilityIcon />
+      </IconButton>
+      )
+    },
   ];
 
   return (
@@ -113,6 +117,50 @@ export default function () {
         }}
         pageSizeOptions={[20]}
       />
+     <Dialog open={openModal} onClose={handleCloseModal} maxWidth="sm" fullWidth>
+        <DialogTitle>Device Issues</DialogTitle>
+        <DialogContent>
+          <div className="issues-table">
+            <DataGrid
+              rows={issuesRows}
+              columns={issuesColumns}
+              pageSize={5}
+              autoHeight
+              hideFooterPagination
+              disableSelectionOnClick
+              sx={{
+                '& .MuiDataGrid-cell': {
+                  borderBottom: '1px solid #ddd', // Horizontal row borders
+                  borderRight: '1px solid #ddd' // Vertical column borders
+                },
+                '& .MuiDataGrid-columnHeaders': {
+                  borderBottom: '1px solid #ddd', // Header separator
+                  background: '#1976d2 !important'
+                },
+                '& .MuiDataGrid-footerContainer': {
+                  borderTop: '1px solid #ddd' // Add a top border
+                }
+              }}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 30
+                  }
+                }
+              }}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay
+              }}
+              pageSizeOptions={[20]}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary" style={{ padding: '8px 16px', background: '#1976d2', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

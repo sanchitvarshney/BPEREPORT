@@ -31,7 +31,6 @@ const DownloadIndecator = () => {
     const handlenotification = (data) => {
       if (Array.isArray(data)) {
         setNotification(data);
-        console.log(data);
       } else {
         console.error('Expected an array but got:', data);
       }
@@ -44,7 +43,6 @@ const DownloadIndecator = () => {
   useEffect(() => {
     const handleDownloadReport = (data) => {
       setProgress(data);
-      console.log(data);
       if (Number(data.percent) === 100) {
         showToast('Download completed', 'success');
       }

@@ -70,14 +70,15 @@ const DynamicTable = ({ rowdata, dateRange }) => {
         field: key,
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
         flex: 1,
-        type: typeof rowdata[0][key] === 'number' ? 'number' : 'string'
+        type: typeof rowdata[0][key] === 'number' ? 'number' : 'string',
+        hide: key === 'SKUKEY' || key === 'locationCode', // Hide SKUKEY and locationCode columns
       }))
     : [];
 
   // Add a column for the download button
   columns.push({
     field: 'download',
-    headerName: 'Download',
+    headerName: 'Action',
     width: 120,
     renderCell: (params) => {
       return (
@@ -87,6 +88,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
       );
     }
   });
+  const visibleColumns = columns.filter((col) => !col.hide);  // Manually filter out hidden columns
 
   const rows = rowdata?.map((item, index) => ({
     id: index + 1,
@@ -110,7 +112,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
     <Box sx={{ minHeight: 200, maxHeight: 500, width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
         rows={rows || []}
-        columns={columns}
+        columns={visibleColumns}
         pageSizeOptions={[10, 20, 50]}
         initialState={{
           pagination: {
