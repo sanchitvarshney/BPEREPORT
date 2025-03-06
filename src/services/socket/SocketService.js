@@ -5,7 +5,7 @@ import { io, Socket } from "socket.io-client";
 class SocketService {
   socket= null;
   isLoading = false;
-  constructor(url) {}
+  constructor(url) { this.url = url;}
 
   connect() {
     if (this.socket?.connected) return;
