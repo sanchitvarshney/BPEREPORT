@@ -7,7 +7,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getdeviceOnLocation } from 'features/reports/reportSlice';
+import { getComponentsOnLocation } from 'features/reports/reportSlice';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -50,7 +50,7 @@ export const exportToExcel = (jsonData) => {
     wsData.push(['SKU', 'Name', 'Opening', 'Inward', 'Outward', 'Closing']); // Add column headers
 
     // Loop through products of each location
-    location?.products?.forEach((product) => {
+    location?.components?.forEach((product) => {
       wsData.push([
         product?.SKU,
         product?.Name,
@@ -72,7 +72,7 @@ export const exportToExcel = (jsonData) => {
 };
 
 
-const DynamicTable = ({ rowdata }) => {
+const DynamicTable = ({ rowdata,loading }) => {
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
         field: key,
@@ -86,23 +86,22 @@ const DynamicTable = ({ rowdata }) => {
     id: index + 1,
     ...item
   }));
-  const { deviceOnLocationLoading } = useSelector((state) => state.report);
 
   return (
-    <Box sx={{ minHeight: 200, maxHeight: 500, width: '100%', mt: 2, border: '1px solid #ddd' }}>
+    <Box sx={{ width: '100%', width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
-      loading={deviceOnLocationLoading}
+      loading={loading}
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd',
-            borderRight: '1px solid #ddd'
+            borderRight: '1px solid #ddd',
           },
           '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid #ddd',
-            borderRight: '1px solid #ddd'
+            borderRight: '1px solid #ddd',
           },
           '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd'
+            borderTop: '1px solid #ddd',
           }
         }}
         slots={{
@@ -123,7 +122,7 @@ const DynamicTable = ({ rowdata }) => {
     </Box>
   );
 };
-export function LocationAccordion({ data }) {
+export function LocationAccordion({ data ,loading}) {
   // Define the order of locations
   const locationsOrder = [
     'Inward Store (MsC)',
@@ -163,7 +162,7 @@ export function LocationAccordion({ data }) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DynamicTable rowdata={location?.products?.map(({ SKUKEY, ...product }) => product)}/>
+            <DynamicTable rowdata={location?.components?.map(({ SKUKEY, ...components }) => components)} loading={loading}/>
           </AccordionDetails>
         </Accordion>
       ))}
@@ -172,7 +171,7 @@ export function LocationAccordion({ data }) {
 }
 
 const TotalDeviceInCompanylocation = () => {
-  const { deviceOnLocationLoading, deviceOnLocation } = useSelector((state) => state.report);
+  const { componentsOnLocation, componentOnLocationLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -201,11 +200,11 @@ const TotalDeviceInCompanylocation = () => {
         />
 
         <LoadingButton
-          loading={deviceOnLocationLoading}
+          loading={componentOnLocationLoading}
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getComponentsOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
               );
             } else {
               showToast('Please select date', 'error');
@@ -217,13 +216,13 @@ const TotalDeviceInCompanylocation = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!deviceOnLocation}
+          disabled={!componentsOnLocation}
           variant="contained"
           color="success"
           onClick={() => {
-            if (deviceOnLocation) {
-              if (Array.isArray(deviceOnLocation) && deviceOnLocation.length > 0) {
-                exportToExcel(deviceOnLocation, 'deviceOnLocation');
+            if (componentsOnLocation) {
+              if (Array.isArray(componentsOnLocation) && componentsOnLocation.length > 0) {
+                exportToExcel(componentsOnLocation, 'componentsOnLocation');
               }
             }
           }}
@@ -234,8 +233,8 @@ const TotalDeviceInCompanylocation = () => {
       </Box>
 
       <Box sx={{ mt: '10px' }}>
-        {Array.isArray(deviceOnLocation) && deviceOnLocation.length > 0 ? (
-          <LocationAccordion data={deviceOnLocation} />
+        {Array.isArray(componentsOnLocation) && componentsOnLocation.length > 0 ? (
+          <LocationAccordion data={componentsOnLocation} loading={componentOnLocationLoading} />
         ) : (
           <Box
             sx={{

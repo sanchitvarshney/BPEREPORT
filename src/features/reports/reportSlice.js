@@ -30,7 +30,9 @@ const initialState = {
   wrongDeviceDetail: null,
   wrongDeviceDetailLoading: false,
   getMINReportData:null,
-  minReportLoading:false
+  minReportLoading:false,
+  componentsOnLocation: null,
+  componentsOnLocationLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -58,6 +60,10 @@ export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent
 });
 export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLocation', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceLocation?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponentsOnLocation', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentDepartmentWiseStock?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
 export const getTotalComponentInBPE = createAsyncThunk('totalDevice/getTotalComponentInBPE', async (payload) => {
@@ -230,6 +236,20 @@ const reportSlice = createSlice({
       .addCase(getdeviceOnLocation.rejected, (state) => {
         state.deviceOnLocationLoading = false;
         state.deviceOnLocation = null;
+      })
+      .addCase(getComponentsOnLocation.pending, (state) => {
+        state.componentOnLocationLoading = true;
+        state.componentsOnLocation = null;
+      })
+      .addCase(getComponentsOnLocation.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.componentsOnLocation = action.payload.data.data;
+        }
+        state.componentOnLocationLoading = false;
+      })
+      .addCase(getComponentsOnLocation.rejected, (state) => {
+        state.componentOnLocationLoading = false;
+        state.componentsOnLocation = null;
       })
       .addCase(getTotalComponentInBPE.pending, (state) => {
         state.totalComponentInBPELoading = true;

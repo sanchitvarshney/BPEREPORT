@@ -28,6 +28,15 @@ const Component = {
       breadcrumbs: false
     },
     {
+      id: 'components-on-locaton',
+      title: 'Components On Locaton',
+      type: 'item',
+      url: '/components-on-company-locations',
+      icon: icons.LocationOnOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
       id: 'total-material-in-bpe-company',
       title: 'Components In BPe',
       type: 'item',
@@ -46,7 +55,7 @@ const Component = {
       breadcrumbs: false
     },
     {
-      id:'component-used',
+      id: 'component-used',
       title: 'Component Used',
       type: 'item',
       url: '/component-used',
