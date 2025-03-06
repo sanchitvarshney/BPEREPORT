@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getdeviceOnLocation } from 'features/reports/reportSlice';
@@ -21,7 +21,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Download } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
-
+import { useSocketContext } from '../../contexts/SocketContext'; // Ensure this import matches your actual file structure
 
 export const exportToExcel = (jsonData) => {
   const wb = XLSX.utils.book_new();
@@ -62,28 +62,64 @@ export const exportToExcel = (jsonData) => {
   saveAs(data, 'Stock_Report.xlsx'); // Save as Excel file
 };
 
-const DynamicTable = ({ rowdata }) => {
+const DynamicTable = ({ rowdata, dateRange }) => {
+  const { emitDeviceOnLocation } = useSocketContext(); // Access the socket context
+
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
         field: key,
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
-
         flex: 1,
         type: typeof rowdata[0][key] === 'number' ? 'number' : 'string'
       }))
     : [];
 
+  // Add a column for the download button
+  columns.push({
+    field: 'download',
+    headerName: 'Download',
+    width: 120,
+    renderCell: (params) => {
+      return (
+        <IconButton onClick={() => handleDownloadClick(params?.row)} color="primary">
+          <Download />
+        </IconButton>
+      );
+    }
+  });
+
   const rows = rowdata?.map((item, index) => ({
     id: index + 1,
     ...item
   }));
-  
-  const { deviceOnLocationLoading } = useSelector((state) => state.report);
+
+  // Download handler
+  const handleDownloadClick = (data) => {
+    if (dateRange.from && dateRange.to) {
+      emitDeviceOnLocation({
+        startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+        endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+        device_key: data?.SKUKEY,
+        type: 'both',
+        location: data?.locationCode // or any other type you want,
+      });
+    }
+  };
 
   return (
     <Box sx={{ minHeight: 200, maxHeight: 500, width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
-        loading={deviceOnLocationLoading}
+        rows={rows || []}
+        columns={columns}
+        pageSizeOptions={[10, 20, 50]}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10
+            }
+          }
+        }}
+        disableRowSelectionOnClick
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd',
@@ -100,22 +136,12 @@ const DynamicTable = ({ rowdata }) => {
         slots={{
           noRowsOverlay: CustomNoRowsOverlay
         }}
-        rows={rows || []}
-        columns={columns}
-        pageSizeOptions={[10, 20, 50]}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10
-            }
-          }
-        }}
-        disableRowSelectionOnClick
       />
     </Box>
   );
 };
-export function LocationAccordion({ data }) {
+
+export function LocationAccordion({ data, dateRange }) {
   // Define the order of locations
   const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
@@ -150,7 +176,14 @@ export function LocationAccordion({ data }) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DynamicTable rowdata={location?.products?.map(({ SKUKEY, ...product }) => product)} />
+            <DynamicTable
+              // rowdata={location?.products?.map(({ ...product, locationName: location.locationCode }) => product)} />
+              rowdata={location?.products?.map((product) => ({
+                ...product, // Spread the product properties
+                locationCode: location.locationCode // Add the locationCode to each product
+              }))}
+              dateRange={dateRange}
+            />
           </AccordionDetails>
         </Accordion>
       ))}
@@ -226,7 +259,7 @@ const TotalDeviceInCompanylocation = () => {
             <CircularProgress />
           </Box>
         ) : Array.isArray(deviceOnLocation) && deviceOnLocation.length > 0 ? (
-          <LocationAccordion data={deviceOnLocation} />
+          <LocationAccordion data={deviceOnLocation} dateRange={dateRange} />
         ) : (
           <Box
             sx={{

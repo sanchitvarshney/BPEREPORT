@@ -36,9 +36,9 @@ export const SocketProvider = ({ children }) => {
     console.log("clicked",payload);
     socketService.emit("deviceInWarehouse", payload);
   };
-  const emitDownloadR4Report = (payload) => {
-    console.log("clicked");
-    socketService.emit("r4Download", payload);
+  const emitDeviceOnLocation = (payload) => {
+    console.log("clicked",payload);
+    socketService.emit("deviceOnLocation", payload);
   };
 
   const emitDownloadR2Report = (payload) => {
@@ -68,5 +68,5 @@ export const SocketProvider = ({ children }) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{ emitDeviceInWareHouseDownload, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDownloadR4Report,emitDownloadR2Report,emitDownloadR10Report,emitDownloadr5Report }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{ emitDeviceInWareHouseDownload, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitDownloadR2Report,emitDownloadR10Report,emitDownloadr5Report }}>{children}</SocketContext.Provider>;
 };
