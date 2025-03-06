@@ -3,9 +3,9 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import DownloadIcon from '@mui/icons-material/Download';
+import { Download } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
 import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
@@ -46,8 +46,7 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
       width: 150,
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={() => {
               // setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
@@ -61,10 +60,10 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
                 });
               }
             }}
-            size="small"
+            color="primary"
           >
-            Download <DownloadIcon fontSize="small" />
-          </Button>
+            <Download />
+          </IconButton>
         );
       }
     }

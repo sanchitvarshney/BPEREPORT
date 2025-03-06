@@ -4,13 +4,15 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { Download } from '@mui/icons-material';
 import DeviceDetailsModal from 'components/table/DeviceDetailsDrawer';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
-import { getBERDeviceSerialNo } from 'features/reports/reportSlice';
+import { useSocketContext } from '../../contexts/SocketContext';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
+  const { emitBERDeviceReport } = useSocketContext();
   const { totalBERReportLoading, BERReportData,totalBERDevices,totalBERDevicesLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows = BERReportData?.map((item, index) => ({
@@ -41,26 +43,24 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
       width: 150,
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={() => {
-              setOpenModal(true);
+              // setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {
-                dispatch(
-                  getBERDeviceSerialNo({
-                    from: dayjs(dateRange.from).format('DD-MM-YYYY'),
-                    to: dayjs(dateRange.to).format('DD-MM-YYYY'),
-                    deviceKey: params?.row?.key
-                  })
-                );
+                emitBERDeviceReport({
+                  startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                  endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                  device_key: params?.row?.key,
+                  type: "both",
+                });
               }
             }}
-            size="small"
+            color="primary"
           >
-            View Details
-          </Button>
+            <Download />
+          </IconButton>
         );
       }
     }
