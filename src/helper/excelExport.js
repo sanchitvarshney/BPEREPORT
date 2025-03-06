@@ -18,17 +18,18 @@ export const exportDynamicDataToExcel = (data, fileName) => {
     console.error('Invalid data for export');
     return;
   }
+  let headers = [...data?.header]; 
+  const dataRows = [...data?.data];
+  const filteredHeaders = headers.filter(header => header !== 'Attchments');
+  
+  const filteredData = dataRows?.map(row => {
+    const { Attchments, ...rest } = row;
+    return rest; 
+  });
+  const worksheet = XLSX.utils.json_to_sheet(filteredData, { header: filteredHeaders });
 
-  // Directly use the 'header' array for the columns
-  const headers = data?.header; // Header is already an array, no need for Object.keys()
-
-  // Create a worksheet with dynamic headers
-  const worksheet = XLSX.utils.json_to_sheet(data?.data, { header: headers });
-
-  // Create a workbook and append the worksheet
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
-  // Write the workbook and trigger the download
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
 };

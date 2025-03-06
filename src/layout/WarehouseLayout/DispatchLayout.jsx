@@ -9,7 +9,7 @@ const DeviceInCompanyLayout = ({ children }) => {
   const location = useLocation();
 
   // Define tab routes
-  const tabRoutes = ["/total-device-in-company", "/wrong-device", "/min-device"];
+  const tabRoutes = ["/total-device-in-company", "/wrong-device", "/awb-device"];
 
   // Determine the active tab based on the current route
   const currentTabIndex = tabRoutes.indexOf(location.pathname);

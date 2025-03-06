@@ -53,7 +53,7 @@ const MainRoutes = {
       )
     },
     {
-      path: '/min-device',
+      path: '/awb-device',
       element: (
         <DeviceInCompanyLayout>
           <TotalMINDevice />
