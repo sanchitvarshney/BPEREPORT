@@ -72,10 +72,12 @@ const DynamicTable = ({ rowdata }) => {
         type: typeof rowdata[0][key] === 'number' ? 'number' : 'string'
       }))
     : [];
+
   const rows = rowdata?.map((item, index) => ({
     id: index + 1,
     ...item
   }));
+  
   const { deviceOnLocationLoading } = useSelector((state) => state.report);
 
   return (

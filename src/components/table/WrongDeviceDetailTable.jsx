@@ -4,15 +4,12 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import { useSocketContext } from '../../contexts/SocketContext';
 
 export default function TotalDeviceInCompanyTable() {
   const { wrongDeviceDetail, wrongDeviceDetailLoading } = useSelector((state) => state.report);
 
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
-
-  console.log(wrongDeviceDetail, "wrongDeviceDetail");
 
   // Effect to handle dynamic columns and rows based on backend response
   useEffect(() => {

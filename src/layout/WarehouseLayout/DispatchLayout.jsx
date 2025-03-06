@@ -68,10 +68,10 @@ const DeviceInCompanyLayout = ({ children }) => {
             label={
               <div className="flex items-center justify-center gap-[8px]">
                 {/* <SettingsIcon fontSize="small" /> */}
-                <span>Device MIN Report</span>
+                <span>Device AWB Report</span>
               </div>
             }
-            aria-label="Device MIN Report"
+            aria-label="Device AWB Report"
           />
         </Tabs>
       </div>

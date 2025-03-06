@@ -27,9 +27,9 @@ const Device = {
     },
     {
       id: 'devices-on-locaton',
-      title: 'Devices On Locaton',
+      title: 'Devices At Locaton',
       type: 'item',
-      url: '/total-device-in-company-locations',
+      url: '/total-device-at-company-locations',
       icon: icons.LocationOnOutlinedIcon,
       target: false,
       breadcrumbs: false
