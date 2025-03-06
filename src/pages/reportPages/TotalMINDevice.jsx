@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel } from '@mui/material';
+import { Box, InputLabel,Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getMINReport } from 'features/reports/reportSlice';
@@ -13,10 +13,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { DatePicker } from 'antd';
 import TotalMINDeviceTable from 'components/table/TotalMINDeviceTable';
-
 const { RangePicker } = DatePicker;
+import { Download } from '@mui/icons-material';
+import { exportToExcel } from 'helper/excelExport';
+
 const TotalMINDevice = () => {
-  const { wrongDeviceDetailLoading } = useSelector((state) => state.report);
+  const { wrongDeviceDetailLoading,getMINReportData } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
   const [wrongDeviceDateRange, setWrongDeviceDateRange] = useState({
@@ -75,6 +77,19 @@ const TotalMINDevice = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
+          <Button
+          disabled={!getMINReportData}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            if (getMINReportData) {
+              exportToExcel(getMINReportData, 'Device AWB Report');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
         </Box>
         <TotalMINDeviceTable/>
       </div>

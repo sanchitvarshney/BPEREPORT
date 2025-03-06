@@ -20,17 +20,14 @@ const { RangePicker } = DatePicker;
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Download } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
+
 export const exportToExcel = (jsonData) => {
   const wb = XLSX.utils.book_new();
   const wsData = [];
 
   // Define the order of locations
-  const locationsOrder = [
-    'Inward Store (MsC)',
-    'Total Repairing Centre (TRC)- MSC',
-    'Assembly-MsC',
-    'Finish Goods store-MsC'
-  ];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // Create a copy of the data array to avoid mutating the prop directly
   const sortedData = [...jsonData].sort((a, b) => {
@@ -51,28 +48,20 @@ export const exportToExcel = (jsonData) => {
 
     // Loop through products of each location
     location?.components?.forEach((product) => {
-      wsData.push([
-        product?.SKU,
-        product?.Name,
-        product?.Opening,
-        product?.Inward,
-        product?.Outward,
-        product?.Closing,
-      ]);
+      wsData.push([product?.SKU, product?.Name, product?.Opening, product?.Inward, product?.Outward, product?.Closing]);
     });
 
     wsData.push([]); // Add an empty row after each location
   });
 
-  const ws = XLSX.utils.aoa_to_sheet(wsData);  
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
   XLSX.utils.book_append_sheet(wb, ws, 'Stock Report'); // Append sheet to workbook
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }); // Generate Excel file
   const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   saveAs(data, 'Stock_Report.xlsx'); // Save as Excel file
 };
 
-
-const DynamicTable = ({ rowdata,loading }) => {
+const DynamicTable = ({ rowdata }) => {
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
         field: key,
@@ -90,18 +79,17 @@ const DynamicTable = ({ rowdata,loading }) => {
   return (
     <Box sx={{ width: '100%', width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
-      loading={loading}
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd',
-            borderRight: '1px solid #ddd',
+            borderRight: '1px solid #ddd'
           },
           '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid #ddd',
-            borderRight: '1px solid #ddd',
+            borderRight: '1px solid #ddd'
           },
           '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd',
+            borderTop: '1px solid #ddd'
           }
         }}
         slots={{
@@ -122,14 +110,9 @@ const DynamicTable = ({ rowdata,loading }) => {
     </Box>
   );
 };
-export function LocationAccordion({ data ,loading}) {
+export function LocationAccordion({ data }) {
   // Define the order of locations
-  const locationsOrder = [
-    'Inward Store (MsC)',
-    'Total Repairing Centre (TRC)- MSC',
-    'Assembly-MsC',
-    'Finish Goods store-MsC'
-  ];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // If 'data' is not provided or is empty, return nothing
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -162,7 +145,7 @@ export function LocationAccordion({ data ,loading}) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DynamicTable rowdata={location?.components?.map(({ SKUKEY, ...components }) => components)} loading={loading}/>
+            <DynamicTable rowdata={location?.components?.map(({ SKUKEY, ...components }) => components)} />
           </AccordionDetails>
         </Accordion>
       ))}
@@ -233,14 +216,17 @@ const TotalDeviceInCompanylocation = () => {
       </Box>
 
       <Box sx={{ mt: '10px' }}>
-        {Array.isArray(componentsOnLocation) && componentsOnLocation.length > 0 ? (
-          <LocationAccordion data={componentsOnLocation} loading={componentOnLocationLoading} />
+        {componentOnLocationLoading ? (
+          // Show loading spinner when data is loading
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px' }}>
+            <CircularProgress />
+          </Box>
+        ) : Array.isArray(componentsOnLocation) && componentsOnLocation.length > 0 ? (
+          // If data exists, show the LocationAccordion
+          <LocationAccordion data={componentsOnLocation} />
         ) : (
-          <Box
-            sx={{
-              height: '500px'
-            }}
-          >
+          // Show fallback overlay if no data is available
+          <Box sx={{ height: '500px' }}>
             <CustomNoRowsOverlay />
           </Box>
         )}

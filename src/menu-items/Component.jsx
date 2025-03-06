@@ -29,9 +29,9 @@ const Component = {
     },
     {
       id: 'components-on-locaton',
-      title: 'Components On Locaton',
+      title: 'Components At Locaton',
       type: 'item',
-      url: '/components-on-company-locations',
+      url: '/components-at-company-locations',
       icon: icons.LocationOnOutlinedIcon,
       target: false,
       breadcrumbs: false

@@ -4,18 +4,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel} from '@mui/material';
+import { Box, InputLabel,Button} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getWrongDeviceDetail } from 'features/reports/reportSlice';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
+import { Download } from '@mui/icons-material';
 import WrongDeviceDetailTable from 'components/table/WrongDeviceDetailTable';
 const { RangePicker } = DatePicker;
+
 const TotalWrongDevice = () => {
-  const { wrongDeviceDetailLoading } = useSelector((state) => state.report);
+  const { wrongDeviceDetailLoading,wrongDeviceDetail } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
   const [wrongDeviceDateRange, setWrongDeviceDateRange] = useState({
@@ -74,6 +77,19 @@ const TotalWrongDevice = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
+          <Button
+          disabled={!wrongDeviceDetail}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            if (wrongDeviceDetail) {
+              exportDynamicDataToExcel(wrongDeviceDetail, 'Wrong Device Detail');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
         </Box>
         <WrongDeviceDetailTable
         />

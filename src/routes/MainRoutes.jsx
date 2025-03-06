@@ -65,11 +65,11 @@ const MainRoutes = {
       element: <TotalMaterialInCompany />
     },
     {
-      path: '/total-device-in-company-locations',
+      path: '/total-device-at-company-locations',
       element: <TotalDeviceInCompanylocation />
     },
     {
-      path: '/components-on-company-locations',
+      path: '/components-at-company-locations',
       element: <TotalComponentsOnCompanyLocation />
     },
     {

@@ -20,17 +20,15 @@ const { RangePicker } = DatePicker;
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Download } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
+
+
 export const exportToExcel = (jsonData) => {
   const wb = XLSX.utils.book_new();
   const wsData = [];
 
   // Define the order of locations
-  const locationsOrder = [
-    'Inward Store (MsC)',
-    'Total Repairing Centre (TRC)- MSC',
-    'Assembly-MsC',
-    'Finish Goods store-MsC'
-  ];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // Create a copy of the data array to avoid mutating the prop directly
   const sortedData = [...jsonData].sort((a, b) => {
@@ -51,26 +49,18 @@ export const exportToExcel = (jsonData) => {
 
     // Loop through products of each location
     location?.products?.forEach((product) => {
-      wsData.push([
-        product?.SKU,
-        product?.Name,
-        product?.Opening,
-        product?.Inward,
-        product?.Outward,
-        product?.Closing,
-      ]);
+      wsData.push([product?.SKU, product?.Name, product?.Opening, product?.Inward, product?.Outward, product?.Closing]);
     });
 
     wsData.push([]); // Add an empty row after each location
   });
 
-  const ws = XLSX.utils.aoa_to_sheet(wsData);  
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
   XLSX.utils.book_append_sheet(wb, ws, 'Stock Report'); // Append sheet to workbook
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }); // Generate Excel file
   const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   saveAs(data, 'Stock_Report.xlsx'); // Save as Excel file
 };
-
 
 const DynamicTable = ({ rowdata }) => {
   const columns = rowdata?.length
@@ -82,16 +72,18 @@ const DynamicTable = ({ rowdata }) => {
         type: typeof rowdata[0][key] === 'number' ? 'number' : 'string'
       }))
     : [];
+
   const rows = rowdata?.map((item, index) => ({
     id: index + 1,
     ...item
   }));
+  
   const { deviceOnLocationLoading } = useSelector((state) => state.report);
 
   return (
     <Box sx={{ minHeight: 200, maxHeight: 500, width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
-      loading={deviceOnLocationLoading}
+        loading={deviceOnLocationLoading}
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd',
@@ -125,12 +117,7 @@ const DynamicTable = ({ rowdata }) => {
 };
 export function LocationAccordion({ data }) {
   // Define the order of locations
-  const locationsOrder = [
-    'Inward Store (MsC)',
-    'Total Repairing Centre (TRC)- MSC',
-    'Assembly-MsC',
-    'Finish Goods store-MsC'
-  ];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // If 'data' is not provided or is empty, return nothing
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -163,7 +150,7 @@ export function LocationAccordion({ data }) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <DynamicTable rowdata={location?.products?.map(({ SKUKEY, ...product }) => product)}/>
+            <DynamicTable rowdata={location?.products?.map(({ SKUKEY, ...product }) => product)} />
           </AccordionDetails>
         </Accordion>
       ))}
@@ -234,7 +221,11 @@ const TotalDeviceInCompanylocation = () => {
       </Box>
 
       <Box sx={{ mt: '10px' }}>
-        {Array.isArray(deviceOnLocation) && deviceOnLocation.length > 0 ? (
+        {deviceOnLocationLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '500px' }}>
+            <CircularProgress />
+          </Box>
+        ) : Array.isArray(deviceOnLocation) && deviceOnLocation.length > 0 ? (
           <LocationAccordion data={deviceOnLocation} />
         ) : (
           <Box
