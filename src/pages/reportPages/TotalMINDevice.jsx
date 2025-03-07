@@ -53,6 +53,7 @@ const TotalMINDevice = () => {
             <Select labelId="partner-select-label" value={partner} onChange={(e) => setPartner(e.target.value)} label="Partner">
               <MenuItem value="eKart">eKart</MenuItem>
               <MenuItem value="eCOM">eCOM</MenuItem>
+              <MenuItem value="DTDC">DTDC</MenuItem>
               <MenuItem value="dVery">Delhivery</MenuItem>
               {/* Add other partners as required */}
             </Select>
