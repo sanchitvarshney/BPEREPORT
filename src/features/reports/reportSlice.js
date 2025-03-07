@@ -32,7 +32,9 @@ const initialState = {
   getMINReportData:null,
   minReportLoading:false,
   componentsOnLocation: null,
-  componentsOnLocationLoading: false
+  componentsOnLocationLoading: false,
+  issueReportData: null,
+  issueReportLoading: false,
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -108,6 +110,11 @@ export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async (pa
   return response;
 });
 
+export const getBpeIssueReport = createAsyncThunk('totalDevice/getBpeIssueReport', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/report?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
 export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async (payload) => {
   const response = await axiosInstance.get(`/bpeIssue/getIssueExcel?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
@@ -175,6 +182,20 @@ const reportSlice = createSlice({
       .addCase(getWrongDeviceDetail.rejected, (state) => {
         state.wrongDeviceDetailLoading = false;
         state.wrongDeviceDetail = null;
+      })
+      .addCase(getBpeIssueReport.pending, (state) => {
+        state.issueReportDataLoading = true;
+        state.issueReportData = null;
+      })
+      .addCase(getBpeIssueReport.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.issueReportData = action.payload.data.data;
+        }
+        state.issueReportDataLoading = false;
+      })
+      .addCase(getBpeIssueReport.rejected, (state) => {
+        state.issueReportDataLoading = false;
+        state.issueReportData = null;
       })
       .addCase(getMINReport.pending, (state) => {
         state.minReportLoading = true;

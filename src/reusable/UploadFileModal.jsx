@@ -6,11 +6,12 @@ import { Typography, Modal, Button } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { showToast } from 'utils/ToastProvider';
 import { LoadingButton } from '@mui/lab';
-import { uploadIssueExcel, updateIssueExcel, getIssueExcel } from 'features/reports/reportSlice';
+import { uploadIssueExcel, updateIssueExcel } from 'features/reports/reportSlice';
 import ShowBERUploadData from 'components/table/ShowBERUploadData';
 
 export default function UploadFileModal({ open, onClose }) {
   const [importLoading, setImportLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [showUploadedData, setShowUploadedData] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
   const dispatch = useDispatch();
@@ -36,14 +37,15 @@ export default function UploadFileModal({ open, onClose }) {
   };
 
   const onSubmitData = () => {
+    setSubmitLoading(true);
     dispatch(updateIssueExcel(uploadedData)).then((res) => {
-      console.log(res);
       if(res.payload.data.status === 'success' || res.payload.data.success === true) {
         showToast(res.payload.data.message || 'BPE Issue updated successfully', 'success');
         setShowUploadedData(false);
+        onClose();
       }
-    }); 
-    setShowUploadedData(false);
+    });
+    setSubmitLoading(false);
   };
 
   return (
@@ -154,7 +156,7 @@ export default function UploadFileModal({ open, onClose }) {
           open={showUploadedData}
           onClose={setShowUploadedData}
           data={uploadedData || []}
-          loading={importLoading}
+          loading={submitLoading}
           onSubmitData={onSubmitData}
         />
         {/* Close Button Section */}

@@ -109,7 +109,7 @@ const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData }) => {
           <Button onClick={onClose} variant="outlined" sx={{ mb: 2 }}>
             Close
           </Button>
-          <Button onClick={onSubmitData} variant="contained" sx={{ mb: 2 }}>
+          <Button onClick={onSubmitData} variant="contained" sx={{ mb: 2 }} >
             Submit
           </Button>
         </Box>
