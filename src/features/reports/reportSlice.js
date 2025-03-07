@@ -108,6 +108,11 @@ export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async () 
   return response;
 });
 
+export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async () => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssueExcel`);
+  return response;
+});
+
 export const solvedBpeIssue = createAsyncThunk('totalDevice/solvedBpeIssue', async (payload) => {
   const response = await axiosInstance.post(`/bpeIssue/solvedIssue`, payload);
   return response;

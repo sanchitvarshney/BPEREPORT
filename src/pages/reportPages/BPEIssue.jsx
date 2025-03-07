@@ -9,7 +9,8 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { CustomNoRowsOverlay } from '../../components/table/CustomNoRowsOverlay';
 import { showToast } from 'utils/ToastProvider';
-import { solvedBpeIssue, getBpeIssue } from 'features/reports/reportSlice';
+import { LoadingButton } from '@mui/lab';
+import { solvedBpeIssue, getBpeIssue, getIssueExcel } from 'features/reports/reportSlice';
 
 export default function BPEIssue() {
   const { bpeIssue, bpeIssueLoading, bpeIssueResolveLoading } = useSelector((state) => state.report);
@@ -20,13 +21,17 @@ export default function BPEIssue() {
       imei: item.imei,
       serialNo: item.serial,
       issue: item.issue,
-      txnId: item.transaction
+      txnId: item.transaction,
+      insertBy: item.insertBy,
+      insertDate: item.insertDt,
+      fromLocation: item.fromLocation,
     })) || [];
 
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [openApproveModal, setOpenApproveModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [comment, setComment] = useState('');
+  const [exportLoading, setExportLoading] = useState(false);
 
   const handleApproveClick = (rowData) => {
     setModalData(rowData);
@@ -79,7 +84,10 @@ export default function BPEIssue() {
     { field: 'id', headerName: '#' },
     { field: 'imei', headerName: 'IMEI', flex: 1 },
     { field: 'serialNo', headerName: 'Serial No', flex: 1 },
+    { field: 'fromLocation', headerName: 'FromLocation', flex: 1 },
     { field: 'issue', headerName: 'Issue', flex: 1 },
+    { field: 'insertBy', headerName: 'Insert By', flex: 1 },
+    { field: 'insertDate', headerName: 'Insert Date', flex: 1 },
     {
       field: 'action',
       headerName: 'Action',
@@ -112,12 +120,23 @@ export default function BPEIssue() {
       }
     }
   ];
+  const handleExportClick = () => {
+    setExportLoading(true);
+    dispatch(getIssueExcel()).then((res) => {
+      if (res.payload.data.success) {
+        window.open(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/${res.payload.data.data}`, '_blank');
+        setExportLoading(false);
+      } else {
+        setExportLoading(false);
+      }
+    });
+  };
 
   return (
     <Box sx={{ height: 'calc(100vh - 190px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box sx={{ position: 'absolute', paddingBottom: '60px', right: '60px', display: 'flex', alignItems: 'center' }}>
-          <Button
+          <LoadingButton
             variant="contained"
             sx={{
               mr: 1,
@@ -127,10 +146,11 @@ export default function BPEIssue() {
               }
             }}
             startIcon={<FileUploadIcon />}
+            // loading={exportLoading}
           >
             Import
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             variant="contained"
             startIcon={<FileDownloadIcon />}
             sx={{
@@ -139,9 +159,11 @@ export default function BPEIssue() {
                 backgroundColor: '#0e5a2b'
               }
             }}
+            onClick={handleExportClick}
+            loading={exportLoading}
           >
             Export
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
 
