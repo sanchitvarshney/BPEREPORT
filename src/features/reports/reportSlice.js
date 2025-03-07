@@ -103,13 +103,28 @@ export const getDispatchDeviceSerialNo = createAsyncThunk('totalDevice/getDispat
   return response;
 });
 
-export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async () => {
-  const response = await axiosInstance.get(`/bpeIssue/getIssue`);
+export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssue?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
 
-export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async () => {
-  const response = await axiosInstance.get(`/bpeIssue/getIssueExcel`);
+export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssueExcel?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
+export const updateIssueExcel = createAsyncThunk('totalDevice/updateIssueExcel', async (payload) => {
+  const response = await axiosInstance.post(`/bpeIssue/updateIssue`,payload);
+  return response;
+});
+
+export const uploadIssueExcel = createAsyncThunk('totalDevice/uploadIssueExcel', async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await axiosInstance.post(`/bpeIssue/uploadIssue`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // Set appropriate headers
+    }});
   return response;
 });
 
