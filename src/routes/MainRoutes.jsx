@@ -4,6 +4,7 @@ import Dashboard from 'layout/Dashboard';
 import Protected from 'components/shared/Protected';
 import NotFoundPage from 'pages/NotFoundPage';
 import DeviceInCompanyLayout from 'layout/WarehouseLayout/DispatchLayout';
+import BPEIssueLayout from 'layout/BPEIssueLayout/BPEIssueLayout';
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
@@ -102,7 +103,19 @@ const MainRoutes = {
     },
     {
       path: '/bpe-issue',
-      element: <BPEIssue />
+      element: (
+        <BPEIssueLayout>
+          <BPEIssue />
+        </BPEIssueLayout>
+      )
+    },
+    {
+      path: '/bpe-issue-report',
+      element: (
+        <BPEIssueLayout>
+          <BPEIssue />
+        </BPEIssueLayout>
+      )
     },
     {
       path: '*',
