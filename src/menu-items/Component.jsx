@@ -27,15 +27,15 @@ const Component = {
       target: false,
       breadcrumbs: false
     },
-    {
-      id: 'components-on-locaton',
-      title: 'Components At Locaton',
-      type: 'item',
-      url: '/components-at-company-locations',
-      icon: icons.LocationOnOutlinedIcon,
-      target: false,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'components-on-locaton',
+    //   title: 'Components At Locaton',
+    //   type: 'item',
+    //   url: '/components-at-company-locations',
+    //   icon: icons.LocationOnOutlinedIcon,
+    //   target: false,
+    //   breadcrumbs: false
+    // },
     {
       id: 'total-material-in-bpe-company',
       title: 'Components In BPe',
