@@ -5,44 +5,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography, TextField, Modal, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { CustomNoRowsOverlay } from '../../components/table/CustomNoRowsOverlay';
 import { showToast } from 'utils/ToastProvider';
-import { solvedBpeIssue } from 'features/reports/reportSlice';
-import { getBpeIssue } from 'features/reports/reportSlice';
+import { solvedBpeIssue, getBpeIssue } from 'features/reports/reportSlice';
 
-export default function TotalDispatchDEviceTable() {
+export default function BPEIssue() {
   const { bpeIssue, bpeIssueLoading, bpeIssueResolveLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
-  const rows = bpeIssue?.map((item, index) => ({
-    id: index + 1,
-    imei: item.imei,
-    serialNo: item.serial,
-    issue: item.issue,
-    txnId: item.transaction
-  })) || [];
+  const rows =
+    bpeIssue?.map((item, index) => ({
+      id: index + 1,
+      imei: item.imei,
+      serialNo: item.serial,
+      issue: item.issue,
+      txnId: item.transaction
+    })) || [];
 
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [openApproveModal, setOpenApproveModal] = useState(false);
-  const [modalData, setModalData] = useState(null); 
-  const [comment, setComment] = useState(''); 
+  const [modalData, setModalData] = useState(null);
+  const [comment, setComment] = useState('');
 
   const handleApproveClick = (rowData) => {
-    setModalData(rowData); 
-    setOpenApproveModal(true); 
+    setModalData(rowData);
+    setOpenApproveModal(true);
   };
 
   const handleRejectClick = (rowData) => {
-    setModalData(rowData); 
-    setOpenRejectModal(true);  
+    setModalData(rowData);
+    setOpenRejectModal(true);
   };
 
   const handleSubmitApprove = () => {
-    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: "Y", remark: comment })).then((res) => {
+    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: 'Y', remark: comment })).then((res) => {
       if (res.payload.data.status === 'success' || res.payload.data.success === true) {
         showToast(res.payload.data.message || 'BPE Issue approved successfully', 'success');
         dispatch(getBpeIssue());
         setOpenApproveModal(false);
-        setComment(''); 
+        setComment('');
       }
     });
   };
@@ -53,12 +55,12 @@ export default function TotalDispatchDEviceTable() {
       return;
     }
 
-    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: "REJ", remark: comment })).then((res) => {
+    dispatch(solvedBpeIssue({ txn: modalData.txnId, status: 'REJ', remark: comment })).then((res) => {
       if (res.payload.data.status === 'success' || res.payload.data.success === true) {
         showToast(res.payload.data.message || 'BPE Issue rejected successfully', 'success');
         dispatch(getBpeIssue());
         setOpenRejectModal(false);
-        setComment(''); 
+        setComment('');
       }
     });
   };
@@ -81,16 +83,16 @@ export default function TotalDispatchDEviceTable() {
     {
       field: 'action',
       headerName: 'Action',
-      width: 250,  
+      width: 250,
       renderCell: (params) => {
         return (
           <>
             <Button
               variant="contained"
-              color="success"  
+              color="success"
               onClick={() => handleApproveClick(params.row)}
               size="medium"
-              style={{ marginRight: '8px' }} 
+              style={{ marginRight: '8px' }}
               startIcon={<CheckIcon />}
             >
               Approve
@@ -98,8 +100,8 @@ export default function TotalDispatchDEviceTable() {
 
             <Button
               variant="contained"
-              color="warning" 
-              onClick={() => handleRejectClick(params.row)} 
+              color="warning"
+              onClick={() => handleRejectClick(params.row)}
               size="medium"
               startIcon={<CancelIcon />}
             >
@@ -112,7 +114,37 @@ export default function TotalDispatchDEviceTable() {
   ];
 
   return (
-    <Box sx={{ height: 'calc(100vh - 170px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 190px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ position: 'absolute', paddingBottom: '60px', right: '60px', display: 'flex', alignItems: 'center' }}>
+          <Button
+            variant="contained"
+            sx={{
+              mr: 1,
+              backgroundColor: '#b7144d', // Custom color for Export button (Blue)
+              '&:hover': {
+                backgroundColor: '#9c1443' // Custom hover color
+              }
+            }}
+            startIcon={<FileUploadIcon />}
+          >
+            Import
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<FileDownloadIcon />}
+            sx={{
+              backgroundColor: '#0f7f39',
+              '&:hover': {
+                backgroundColor: '#0e5a2b'
+              }
+            }}
+          >
+            Export
+          </Button>
+        </Box>
+      </Box>
+
       <DataGrid
         loading={bpeIssueLoading || bpeIssueResolveLoading}
         rows={rows || []}
@@ -160,7 +192,7 @@ export default function TotalDispatchDEviceTable() {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
-            borderRadius: 2,
+            borderRadius: 2
           }}
         >
           <Typography id="approve-modal-title" variant="h6" component="h2">
@@ -223,7 +255,7 @@ export default function TotalDispatchDEviceTable() {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
-            borderRadius: 2,
+            borderRadius: 2
           }}
         >
           <Typography id="reject-modal-title" variant="h6" component="h2">
