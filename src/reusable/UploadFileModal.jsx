@@ -1,7 +1,7 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { Typography, Modal, Button } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { showToast } from 'utils/ToastProvider';
@@ -10,6 +10,7 @@ import { uploadIssueExcel, updateIssueExcel } from 'features/reports/reportSlice
 import ShowBERUploadData from 'components/table/ShowBERUploadData';
 
 export default function UploadFileModal({ open, onClose }) {
+  const { uploadIssueExcelLoading } = useSelector((state) => state.report);
   const [importLoading, setImportLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [showUploadedData, setShowUploadedData] = useState(false);
@@ -21,7 +22,7 @@ export default function UploadFileModal({ open, onClose }) {
       showToast('Please select a file to import.', 'error');
       return;
     }
-
+    event.target.value = null;
     setImportLoading(true);
     dispatch(uploadIssueExcel(file)).then((res) => {
       if (res.payload.data.success) {
@@ -39,7 +40,7 @@ export default function UploadFileModal({ open, onClose }) {
   const onSubmitData = () => {
     setSubmitLoading(true);
     dispatch(updateIssueExcel(uploadedData)).then((res) => {
-      if(res.payload.data.status === 'success' || res.payload.data.success === true) {
+      if (res.payload.data.status === 'success' || res.payload.data.success === true) {
         showToast(res.payload.data.message || 'BPE Issue updated successfully', 'success');
         setShowUploadedData(false);
         onClose();
@@ -144,7 +145,7 @@ export default function UploadFileModal({ open, onClose }) {
                   boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.1)'
                 }
               }}
-              loading={importLoading}
+              loading={uploadIssueExcelLoading}
             >
               <FileUploadIcon sx={{ mr: 1 }} />
               Upload File
