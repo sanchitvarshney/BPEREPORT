@@ -153,10 +153,8 @@ export default function BPEIssue() {
   // Import function to handle file upload
 
   return (
-    <>
-      {' '}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
+        <Box sx={{ display: 'flex', gap: '10px', mt: '10px' }}>
           <RangePicker
             format={'DD/MM/YYYY'}
             value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -221,7 +219,6 @@ export default function BPEIssue() {
         </Box>
 
         <Box sx={{ height: 'calc(100vh - 250px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
-          <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}></Box>
           <DataGrid
             loading={bpeIssueLoading || bpeIssueResolveLoading}
             rows={rows || []}
@@ -382,6 +379,5 @@ export default function BPEIssue() {
           </Modal>
         </Box>
       </LocalizationProvider>
-    </>
   );
 }

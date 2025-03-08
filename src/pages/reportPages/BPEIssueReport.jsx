@@ -21,10 +21,10 @@ export default function BPEIssueReport() {
   const { issueReportData, issueReportDataLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows =
-  issueReportData?.map((item, index) => ({
+    issueReportData?.map((item, index) => ({
       id: index + 1,
       imei: item.imei,
-      serialNo:item.serial,
+      serialNo: item.serial,
       submitDate: item.submitDt,
       submitRemark: item.submitRemark,
       resolveDate: item.resDt,
@@ -67,12 +67,11 @@ export default function BPEIssueReport() {
     { field: 'resolveStatus', headerName: 'Resolve Status', flex: 1 },
     { field: 'resolveRemark', headerName: 'Resolve Remark', flex: 1 },
     { field: 'resolveDate', headerName: 'Resolve Date', flex: 1 },
-    { field: 'insertBy', headerName: 'Resolved By', flex: 1 },
+    { field: 'insertBy', headerName: 'Resolved By', flex: 1 }
   ];
 
   return (
-    <>
-      {' '}
+  
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
           <RangePicker
@@ -97,7 +96,9 @@ export default function BPEIssueReport() {
             loading={issueReportDataLoading}
             onClick={() => {
               if (dateRange.from && dateRange.to) {
-                dispatch(getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') }));
+                dispatch(
+                  getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
+                );
               } else {
                 showToast('Please select date', 'error');
               }
@@ -107,23 +108,22 @@ export default function BPEIssueReport() {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
-            <Button
-                    disabled={!issueReportData}
-                    variant="contained"
-                    color="success"
-                    onClick={()=>{
-                      if (issueReportData) {
-                                      exportToExcel(issueReportData, 'Issue Report');
-                                    }
-                    }} 
-                  >
-                    <Download fontSize={'small'} sx={{ mr: '10px' }} />
-                    Download
-                  </Button>
+          <Button
+            disabled={!issueReportData}
+            variant="contained"
+            color="success"
+            onClick={() => {
+              if (issueReportData) {
+                exportToExcel(issueReportData, 'Issue Report');
+              }
+            }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
         </Box>
 
         <Box sx={{ height: 'calc(100vh - 250px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
-          <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}></Box>
           <DataGrid
             loading={issueReportDataLoading}
             rows={rows || []}
@@ -158,6 +158,6 @@ export default function BPEIssueReport() {
           <UploadFileModal open={openUploadModal} onClose={handleCloseModal} />
         </Box>
       </LocalizationProvider>
-    </>
+   
   );
 }
