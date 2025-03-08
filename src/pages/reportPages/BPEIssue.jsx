@@ -31,7 +31,8 @@ export default function BPEIssue() {
       txnId: item.transaction,
       insertBy: item.insertBy,
       insertDate: item.insertDt,
-      fromLocation: item.fromLocation
+      fromLocation: item.fromLocation,
+      pendingRemark: item.pendingRemark
     })) || [];
 
   const [openRejectModal, setOpenRejectModal] = useState(false);
@@ -100,39 +101,40 @@ export default function BPEIssue() {
     { field: 'serialNo', headerName: 'Serial No', flex: 1 },
     { field: 'fromLocation', headerName: 'FromLocation', flex: 1 },
     { field: 'issue', headerName: 'Issue', flex: 1 },
+    { field: 'pendingRemark', headerName: 'Pending Remark', flex: 1 },
     { field: 'insertBy', headerName: 'Insert By', flex: 1 },
     { field: 'insertDate', headerName: 'Insert Date', flex: 1 },
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 250,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => handleApproveClick(params.row)}
-              size="medium"
-              style={{ marginRight: '8px' }}
-              startIcon={<CheckIcon />}
-            >
-              Approve
-            </Button>
+    // {
+    //   field: 'action',
+    //   headerName: 'Action',
+    //   width: 250,
+    //   renderCell: (params) => {
+    //     return (
+    //       <>
+    //         <Button
+    //           variant="contained"
+    //           color="success"
+    //           onClick={() => handleApproveClick(params.row)}
+    //           size="medium"
+    //           style={{ marginRight: '8px' }}
+    //           startIcon={<CheckIcon />}
+    //         >
+    //           Approve
+    //         </Button>
 
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={() => handleRejectClick(params.row)}
-              size="medium"
-              startIcon={<CancelIcon />}
-            >
-              Pending
-            </Button>
-          </>
-        );
-      }
-    }
+    //         <Button
+    //           variant="contained"
+    //           color="warning"
+    //           onClick={() => handleRejectClick(params.row)}
+    //           size="medium"
+    //           startIcon={<CancelIcon />}
+    //         >
+    //           Pending
+    //         </Button>
+    //       </>
+    //     );
+    //   }
+    // }
   ];
 
   const handleExportClick = () => {
