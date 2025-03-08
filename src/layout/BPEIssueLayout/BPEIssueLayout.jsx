@@ -43,7 +43,7 @@ const BPEIssueLayout = ({ children }) => {
             sx={{ fontWeight: "500" }}
             label={
               <div className="flex items-center justify-center gap-[8px]">
-                <span>BPE Issue</span>
+                <span>BPE Pending</span>
               </div>
             }
             aria-label="Device In Warehouse"
@@ -55,7 +55,7 @@ const BPEIssueLayout = ({ children }) => {
             label={
               <div className="flex items-center justify-center gap-[8px]">
                 {/* <SettingsIcon fontSize="small" /> */}
-                <span>BPE Issue Report</span>
+                <span>BPE Resolved</span>
               </div>
             }
             aria-label="Wrong Device Detail"

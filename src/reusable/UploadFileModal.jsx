@@ -90,9 +90,9 @@ export default function UploadFileModal({ open, onClose }) {
         <Typography sx={{ mb: 1, color: '#777' }}>
           2. If you approve, write <strong>"APR"</strong> in the status column.
         </Typography>
-        <Typography sx={{ mb: 1, color: '#777' }}>
+        {/* <Typography sx={{ mb: 1, color: '#777' }}>
           3. If you reject, write <strong>"REJ"</strong> in the status column.
-        </Typography>
+        </Typography> */}
 
         {/* File Upload Section */}
         <Typography
