@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -63,7 +63,7 @@ export const exportToExcel = (jsonData) => {
 };
 
 const DynamicTable = ({ rowdata, dateRange }) => {
-  const { emitDeviceOnLocation } = useSocketContext(); // Access the socket context
+  const { emitDeviceOnLocation,onDownloadReport } = useSocketContext(); // Access the socket context
 
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
@@ -94,6 +94,12 @@ const DynamicTable = ({ rowdata, dateRange }) => {
     id: index + 1,
     ...item
   }));
+
+  useEffect(() => {
+    onDownloadReport(() => {
+      showToast("Report downloaded successfully", "success");
+    });
+  }, [onDownloadReport]);
 
   // Download handler
   const handleDownloadClick = (data) => {

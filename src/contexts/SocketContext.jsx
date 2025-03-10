@@ -36,6 +36,11 @@ export const SocketProvider = ({ children }) => {
     console.log("clicked");
     socketService.emit("deviceInWarehouse", payload);
   };
+
+  const emitFGDispatch = (payload) => {
+    console.log("clicked");
+    socketService.emit("fgDeviceReport", payload);
+  };
   const emitDeviceOnLocation = (payload) => {
     console.log("clicked");
     socketService.emit("deviceOnLocation", payload);
@@ -46,14 +51,6 @@ export const SocketProvider = ({ children }) => {
     socketService.emit("berDeviceReport", payload);
   };
 
-  const emitDownloadR10Report = (payload) => {
-    console.log("clicked");
-    socketService.emit("r10Download", payload);
-  };
-  const emitDownloadr5Report = (payload) => {
-    console.log(payload)
-    socketService.emit("r5DeviceSerial", payload);
-  };
   const emitGetNotification = () => {
     socketService.emit("getNotification","");
   };
@@ -68,5 +65,5 @@ export const SocketProvider = ({ children }) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{ emitDeviceInWareHouseDownload, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitDownloadR10Report,emitDownloadr5Report }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{ emitDeviceInWareHouseDownload, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
 };

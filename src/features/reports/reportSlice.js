@@ -36,6 +36,7 @@ const initialState = {
   issueReportData: null,
   issueReportLoading: false,
   uploadIssueExcelLoading:false,
+  updateIssueExcelLoading:false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -197,6 +198,15 @@ const reportSlice = createSlice({
       .addCase(getBpeIssueReport.rejected, (state) => {
         state.issueReportDataLoading = false;
         state.issueReportData = null;
+      })
+      .addCase(updateIssueExcel.pending, (state) => {
+        state.updateIssueExcelLoading = true;
+      })
+      .addCase(updateIssueExcel.fulfilled, (state) => {
+        state.updateIssueExcelLoading = false;
+      })
+      .addCase(updateIssueExcel.rejected, (state) => {
+        state.updateIssueExcelLoading = false;
       })
       .addCase(uploadIssueExcel.pending, (state) => {
         state.uploadIssueExcelLoading = true;

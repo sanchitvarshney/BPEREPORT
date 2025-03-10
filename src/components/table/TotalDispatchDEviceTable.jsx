@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDispatch, useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { IconButton } from '@mui/material';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
-import { Button } from '@mui/material';
+import { Download } from '@mui/icons-material';
 import DeviceDetailsDrawer from 'components/table/DeviceDetailsDrawer';
 import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
-import { getDispatchDeviceSerialNo } from 'features/reports/reportSlice';
+import { useSocketContext } from '../../contexts/SocketContext';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
   const { dispatchDataReportLoading, dispatchDataReport,totalDispatchDevicesLoading, totalDispatchDevices } = useSelector((state) => state.report);
-  const dispatch = useDispatch();
+  const { emitFGDispatch,onDownloadReport } = useSocketContext();
+
   const rows = dispatchDataReport?.map((item, index) => ({
     id: index + 1,
     SKU: item.SKU,
@@ -23,6 +24,12 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     balance: item.Balance,
     key: item.SKUKEY
   }))||[];
+
+    useEffect(() => {
+      onDownloadReport(() => {
+        showToast("Report downloaded successfully", "success");
+      });
+    }, [onDownloadReport]);
 
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -75,26 +82,25 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
       width: 150,
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
+          <IconButton
             onClick={() => {
-              setOpenModal(true);
+              // setOpenModal(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {
-                dispatch(
-                  getDispatchDeviceSerialNo({
-                    from: dayjs(dateRange.from).format('DD-MM-YYYY'),
-                    to: dayjs(dateRange.to).format('DD-MM-YYYY'),
-                    deviceKey: params?.row?.key
-                  })
-                );
+                emitFGDispatch({
+                  startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                  endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                  device_key: params?.row?.key,
+                  type: "both"
+                });
+                showToast('Download started', 'success');
               }
             }}
-            size="small"
+            color="primary"
           >
-            View Details
-          </Button>
+            <Download />
+          </IconButton>
         );
       }
     }
