@@ -4,8 +4,9 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
+import { LoadingButton } from '@mui/lab';
 
-const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData }) => {
+const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData ,updateIssueExcelLoading}) => {
   // Dynamically create rows based on the data
   const rows = data?.map((item, index) => ({
     id: index + 1,
@@ -34,7 +35,8 @@ const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData }) => {
           bgcolor: 'background.paper',
           border: '2px solid #000',
           boxShadow: 24,
-          p: 4
+          p: 4,
+          height: '90%',
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -60,12 +62,12 @@ const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData }) => {
 
         {/* Show CircularProgress if loading */}
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90%' }}>
             <CircularProgress />
           </Box>
         ) : data && data.length > 0 ? (
           // Display DataGrid if data exists
-          <Box sx={{ height: 600, width: '100%' }}>
+          <Box sx={{ height: "90%", width: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}
@@ -109,9 +111,9 @@ const ShowBERUploadData = ({ open, data, onClose, loading ,onSubmitData }) => {
           <Button onClick={onClose} variant="outlined" sx={{ mb: 2 }}>
             Close
           </Button>
-          <Button onClick={onSubmitData} variant="contained" sx={{ mb: 2 }} >
+          <LoadingButton onClick={onSubmitData} variant="contained" sx={{ mb: 2 }} loading={updateIssueExcelLoading}>
             Submit
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
     </Modal>

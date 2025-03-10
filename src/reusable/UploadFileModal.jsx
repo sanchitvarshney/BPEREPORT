@@ -10,7 +10,7 @@ import { uploadIssueExcel, updateIssueExcel } from 'features/reports/reportSlice
 import ShowBERUploadData from 'components/table/ShowBERUploadData';
 
 export default function UploadFileModal({ open, onClose }) {
-  const { uploadIssueExcelLoading } = useSelector((state) => state.report);
+  const { uploadIssueExcelLoading,updateIssueExcelLoading } = useSelector((state) => state.report);
   const [importLoading, setImportLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [showUploadedData, setShowUploadedData] = useState(false);
@@ -155,9 +155,10 @@ export default function UploadFileModal({ open, onClose }) {
 
         <ShowBERUploadData
           open={showUploadedData}
-          onClose={setShowUploadedData}
+          onClose={()=>setShowUploadedData(false)}
           data={uploadedData || []}
           loading={submitLoading}
+          updateIssueExcelLoading={updateIssueExcelLoading}
           onSubmitData={onSubmitData}
         />
         {/* Close Button Section */}
