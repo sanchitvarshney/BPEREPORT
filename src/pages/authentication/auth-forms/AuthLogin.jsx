@@ -89,7 +89,7 @@ export default function AuthLogin() {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().required('Email is required'),
+          email: Yup.string().required('Username is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={handleSubmit}
