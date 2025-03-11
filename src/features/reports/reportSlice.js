@@ -36,7 +36,10 @@ const initialState = {
   issueReportData: null,
   issueReportLoading: false,
   uploadIssueExcelLoading:false,
-  updateIssueExcelLoading:false
+  updateIssueExcelLoading:false,
+  deviceAnalysisReport:null,
+  deviceAnalysisReportLoading:false,
+
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -127,6 +130,11 @@ export const updateIssueExcel = createAsyncThunk('totalDevice/updateIssueExcel',
   return response;
 });
 
+export const getDeviceAnalysis = createAsyncThunk("report/getR13Report", async (payload) => {
+  const response = await axiosInstance.get(`/analytics/device/report?fromDate=${payload.from}&toDate=${payload.to}`);
+  return response;
+});
+
 export const uploadIssueExcel = createAsyncThunk('totalDevice/uploadIssueExcel', async (file) => {
   const formData = new FormData();
   formData.append('file', file);
@@ -184,6 +192,20 @@ const reportSlice = createSlice({
       .addCase(getWrongDeviceDetail.rejected, (state) => {
         state.wrongDeviceDetailLoading = false;
         state.wrongDeviceDetail = null;
+      })
+      .addCase(getDeviceAnalysis.pending, (state) => {
+        state.deviceAnalysisReportLoading = true;
+        state.deviceAnalysisReport = null;
+      })
+      .addCase(getDeviceAnalysis.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.deviceAnalysisReport = action.payload.data.data;
+        }
+        state.deviceAnalysisReportLoading = false;
+      })
+      .addCase(getDeviceAnalysis.rejected, (state) => {
+        state.deviceAnalysisReportLoading = false;
+        state.deviceAnalysisReport = null;
       })
       .addCase(getBpeIssueReport.pending, (state) => {
         state.issueReportDataLoading = true;
