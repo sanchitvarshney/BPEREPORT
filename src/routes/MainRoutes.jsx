@@ -21,6 +21,7 @@ const BPEIssueReport = Loadable(lazy(() => import('pages/reportPages/BPEIssueRep
 const TotalWrongDevice = Loadable(lazy(() => import('pages/reportPages/TotalWrongDevice')));
 const TotalMINDevice = Loadable(lazy(() => import('pages/reportPages/TotalMINDevice')));
 const TotalComponentsOnCompanyLocation = Loadable(lazy(() => import('pages/reportPages/TotalComponentsOnCompanylocation')));
+const DeviceAnalysis = Loadable(lazy(() => import('pages/reportPages/DeviceAnalysis')));
 
 const MainRoutes = {
   path: '/',
@@ -77,6 +78,10 @@ const MainRoutes = {
     {
       path: '/total-material-in-bpe',
       element: <TotalMaterialInBPECompany />
+    },
+    {
+      path: '/device-analysis',
+      element: <DeviceAnalysis />
     },
     {
       path: '/total-material-in-msc',
