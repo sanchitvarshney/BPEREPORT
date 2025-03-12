@@ -55,7 +55,9 @@ const TotalDeviceInCompany = () => {
           <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Type" onChange={handleChange}>
             <MenuItem value={'both'}>All</MenuItem>
             <MenuItem value={'onlyv2'}> AWB</MenuItem>
-            <MenuItem value={'withoutv2'}> Non-AWB</MenuItem>
+            <MenuItem value={'BER'}> BER</MenuItem>
+            <MenuItem value={'OFFICE'}>OFFICE</MenuItem>
+            <MenuItem value={'REGULAR'}> REGULAR</MenuItem>
           </Select>
         </FormControl>
 
