@@ -53,8 +53,6 @@ const TotalDeviceInCompany = () => {
         <FormControl fullWidth sx={{ maxWidth: '250px' }}>
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
           <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Type" onChange={handleChange}>
-            <MenuItem value={'both'}>All</MenuItem>
-            <MenuItem value={'onlyv2'}> AWB</MenuItem>
             <MenuItem value={'BER'}> BER</MenuItem>
             <MenuItem value={'OFFICE'}>OFFICE</MenuItem>
             <MenuItem value={'REGULAR'}> REGULAR</MenuItem>
