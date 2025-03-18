@@ -6,19 +6,19 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columnDefs= [
   { headerName: "IMEI", field: "IMEI", sortable: true, filter: true, width: 150 },
-  { headerName: "Serial", field: "serialNo", sortable: true, filter: true },
+  { headerName: "Serial", field: "serialNo", sortable: true, filter: true ,width: 150 },
   { headerName: "Model", field: "modelNo", sortable: true, filter: true },
   { headerName: "Qc Status", field: "QcStatus", sortable: true, filter: true },
   {headerName:"Sim Testing",field:"simTesting",sortable:true,filter:true},
   {headerName:"Sim Pairing",field:"simPairing",sortable:true,filter:true},
-  {headerName:"Mono Cartoon SN Match",field:"monoCartonSNMatch",sortable:true,filter:true},
-  {headerName:"Charging Cable and Adaptor Check",field:"chargingCableTest",sortable:true,filter:true},
+  {headerName:"Mono Cartoon SN Match",field:"monoCartonSNMatch",sortable:true,filter:true,width:200},
+  {headerName:"Charging Cable and Adaptor Check",field:"chargingCableTest",sortable:true,filter:true,width:250},
   {headerName:"Key Function",field:"keyFn",sortable:true,filter:true},
-  {headerName:"Visual Condition",field:"VisualCondition",sortable:true,filter:true},
-  {headerName:"Charging Testing",field:"ChargingTest",sortable:true,filter:true},
-  { headerName: "Insert Date and Time", field: "insertDateAndTime", sortable: true, filter: true },
-  { headerName: "Insert By", field: "insertByName", sortable: true, filter: true },
-  { headerName: "Analysis Remark", field: "analytcisRemark", sortable: true, filter: true },
+  {headerName:"Visual Condition",field:"VisualCondition",sortable:true,filter:true,width:150},
+  {headerName:"Charging Testing",field:"ChargingTest",sortable:true,filter:true, width:150},
+  { headerName: "Insert Date and Time", field: "insertDateAndTime", sortable: true, filter: true,width:200 },
+  // { headerName: "Insert By", field: "insertByName", sortable: true, filter: true },
+  { headerName: "Analysis Remark", field: "analytcisRemark", sortable: true, filter: true,width:150 },
 ];
 
 export default function DeviceAnalysisTable() {
