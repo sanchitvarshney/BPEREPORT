@@ -56,7 +56,7 @@ const Component = {
     },
     {
       id: 'component-used',
-      title: 'Component Used',
+      title: 'Component Consumption',
       type: 'item',
       url: '/component-used',
       icon: icons.DisplaySettingsOutlinedIcon,

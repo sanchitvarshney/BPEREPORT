@@ -47,7 +47,7 @@ const Device = {
     },
     {
       id: 'device-analysis',
-      title: 'Device Analysis',
+      title: 'Device Analytics',
       type: 'item',
       url: '/device-analysis',
       icon: icons.DevicesFoldIcon,
