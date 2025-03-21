@@ -9,7 +9,7 @@ const IMEIWiseConst = {
   children: [
     {
       id: 'assembly-consumption',
-      title: 'Assembely Consumption',
+      title: 'Assembly Consumption',
       type: 'item',
       url: '/assembly-consumption',
       icon: icons.AccountTreeOutlinedIcon,
