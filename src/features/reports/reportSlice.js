@@ -39,7 +39,8 @@ const initialState = {
   updateIssueExcelLoading:false,
   deviceAnalysisReport:null,
   deviceAnalysisReportLoading:false,
-
+  trcReport: null,
+  trcReportLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -101,6 +102,12 @@ export const getComponentReport = createAsyncThunk('totalDevice/getComponentRepo
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
+
+export const getTrcComponentReport = createAsyncThunk('totalDevice/getTrcComponentReport', async (payload) => {
+  const response = await axiosInstance.get(`/bpe/dashboard/component/trcConsumptionReport?from=${payload.from}&to=${payload.to}`);
+  return response;
+});
+
 export const getDeviceSerialNoForCompany = createAsyncThunk('totalDevice/getDeviceSerialNoForCompany', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`);
   return response;
@@ -459,6 +466,20 @@ const reportSlice = createSlice({
       .addCase(getComponentReport.rejected, (state) => {
         state.componentReportLoading = false;
         state.componentReport = null;
+      })
+      .addCase(getTrcComponentReport.pending, (state) => {
+        state.trcReportLoading = true;
+        state.trcReport = null;
+      })
+      .addCase(getTrcComponentReport.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.trcReport = action.payload.data;
+        }
+        state.trcReportLoading = false;
+      })
+      .addCase(getTrcComponentReport.rejected, (state) => {
+        state.trcReportLoading = false;
+        state.trcReport = null;
       });
   }
 });
