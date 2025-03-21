@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import { showToast } from 'utils/ToastProvider';
 import { useSocketContext } from '../../contexts/SocketContext';
 
 export default function TotalDispatchDEviceTable({ dateRange }) {
-  const { emitBERDeviceReport } = useSocketContext();
+  const { emitBERDeviceReport ,onDownloadReport} = useSocketContext();
   const { totalBERReportLoading, BERReportData,totalBERDevices,totalBERDevicesLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows = BERReportData?.map((item, index) => ({
@@ -25,6 +25,12 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
     balance: item.Balance,
     key:item.SKUKEY,
   }))||[];
+
+  useEffect(() => {
+    onDownloadReport(() => {
+      showToast("Report downloaded successfully", "success");
+    });
+  }, [onDownloadReport]);
 
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);

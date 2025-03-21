@@ -4,34 +4,26 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button, InputLabel } from '@mui/material';
-import TotalDEviceInCompanyTable from 'components/table/TotalDEviceInCompanyTable';
+import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getTotalProduct } from 'features/reports/reportSlice';
-import { exportToExcel } from 'helper/excelExport';
+import { getDeviceAnalysis } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
+import DeviceAnalysisTable from 'components/table/DeviceAnalysisTable';
 const { RangePicker } = DatePicker;
-
-const TotalDeviceInCompany = () => {
-  const { totalProductLoading, totalProduct } = useSelector((state) => state.report);
+const DeviceAnalysis = () => {
+  const { deviceAnalysisReportLoading, deviceAnalysisReport } = useSelector((state) => state.report);
   const dispatch = useDispatch();
-  const [type, setType] = React.useState('both');
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
 
-  const handleChange = (event) => {
-    setType(event.target.value);
-  };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px',paddingTop:"20px" }}>
+      <Box sx={{ display: 'flex', gap: '10px' }}>
         <RangePicker
           format={'DD/MM/YYYY'}
           value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -50,21 +42,12 @@ const TotalDeviceInCompany = () => {
           ]}
         />
 
-        <FormControl fullWidth sx={{ maxWidth: '250px' }}>
-          <InputLabel id="demo-simple-select-label">Type</InputLabel>
-          <Select labelId="demo-simple-select-label" id="demo-simple-select" value={type} label="Type" onChange={handleChange}>
-            <MenuItem value={'BER'}> BER</MenuItem>
-            <MenuItem value={'OFFICE'}>OFFICE</MenuItem>
-            <MenuItem value={'REGULAR'}> REGULAR</MenuItem>
-          </Select>
-        </FormControl>
-
         <LoadingButton
-          loading={totalProductLoading}
+          loading={deviceAnalysisReportLoading}
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalProduct({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type })
+                getDeviceAnalysis({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
               );
             } else {
               showToast('Please select date', 'error');
@@ -76,12 +59,12 @@ const TotalDeviceInCompany = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!totalProduct}
+          disabled={!deviceAnalysisReport}
           variant="contained"
           color="success"
           onClick={() => {
-            if (totalProduct) {
-              exportToExcel(totalProduct, 'Total Device In Company');
+            if (deviceAnalysisReport) {
+              exportToExcel(deviceAnalysisReport, 'Device Analysis Report');
             }
           }}
         >
@@ -89,13 +72,9 @@ const TotalDeviceInCompany = () => {
           Download
         </Button>
       </Box>
-
-      <TotalDEviceInCompanyTable
-        dateRange={dateRange}
-        type={type}
-      />
+      <DeviceAnalysisTable />
     </LocalizationProvider>
   );
 };
 
-export default TotalDeviceInCompany;
+export default DeviceAnalysis;

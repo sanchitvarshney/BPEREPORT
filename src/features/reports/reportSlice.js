@@ -32,7 +32,14 @@ const initialState = {
   getMINReportData:null,
   minReportLoading:false,
   componentsOnLocation: null,
-  componentsOnLocationLoading: false
+  componentsOnLocationLoading: false,
+  issueReportData: null,
+  issueReportLoading: false,
+  uploadIssueExcelLoading:false,
+  updateIssueExcelLoading:false,
+  deviceAnalysisReport:null,
+  deviceAnalysisReportLoading:false,
+
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -103,8 +110,38 @@ export const getDispatchDeviceSerialNo = createAsyncThunk('totalDevice/getDispat
   return response;
 });
 
-export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async () => {
-  const response = await axiosInstance.get(`/bpeIssue/getIssue`);
+export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssue?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
+export const getBpeIssueReport = createAsyncThunk('totalDevice/getBpeIssueReport', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/report?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
+export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async (payload) => {
+  const response = await axiosInstance.get(`/bpeIssue/getIssueExcel?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
+export const updateIssueExcel = createAsyncThunk('totalDevice/updateIssueExcel', async (payload) => {
+  const response = await axiosInstance.post(`/bpeIssue/updateIssue`,payload);
+  return response;
+});
+
+export const getDeviceAnalysis = createAsyncThunk("report/getR13Report", async (payload) => {
+  const response = await axiosInstance.get(`/analytics/device/report?fromDate=${payload.from}&toDate=${payload.to}`);
+  return response;
+});
+
+export const uploadIssueExcel = createAsyncThunk('totalDevice/uploadIssueExcel', async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await axiosInstance.post(`/bpeIssue/uploadIssue`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // Set appropriate headers
+    }});
   return response;
 });
 
@@ -155,6 +192,52 @@ const reportSlice = createSlice({
       .addCase(getWrongDeviceDetail.rejected, (state) => {
         state.wrongDeviceDetailLoading = false;
         state.wrongDeviceDetail = null;
+      })
+      .addCase(getDeviceAnalysis.pending, (state) => {
+        state.deviceAnalysisReportLoading = true;
+        state.deviceAnalysisReport = null;
+      })
+      .addCase(getDeviceAnalysis.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.deviceAnalysisReport = action.payload.data.data;
+        }
+        state.deviceAnalysisReportLoading = false;
+      })
+      .addCase(getDeviceAnalysis.rejected, (state) => {
+        state.deviceAnalysisReportLoading = false;
+        state.deviceAnalysisReport = null;
+      })
+      .addCase(getBpeIssueReport.pending, (state) => {
+        state.issueReportDataLoading = true;
+        state.issueReportData = null;
+      })
+      .addCase(getBpeIssueReport.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.issueReportData = action.payload.data.data;
+        }
+        state.issueReportDataLoading = false;
+      })
+      .addCase(getBpeIssueReport.rejected, (state) => {
+        state.issueReportDataLoading = false;
+        state.issueReportData = null;
+      })
+      .addCase(updateIssueExcel.pending, (state) => {
+        state.updateIssueExcelLoading = true;
+      })
+      .addCase(updateIssueExcel.fulfilled, (state) => {
+        state.updateIssueExcelLoading = false;
+      })
+      .addCase(updateIssueExcel.rejected, (state) => {
+        state.updateIssueExcelLoading = false;
+      })
+      .addCase(uploadIssueExcel.pending, (state) => {
+        state.uploadIssueExcelLoading = true;
+      })
+      .addCase(uploadIssueExcel.fulfilled, (state) => {
+        state.uploadIssueExcelLoading = false;
+      })
+      .addCase(uploadIssueExcel.rejected, (state) => {
+        state.uploadIssueExcelLoading = false;
       })
       .addCase(getMINReport.pending, (state) => {
         state.minReportLoading = true;

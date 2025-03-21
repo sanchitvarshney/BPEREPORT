@@ -17,9 +17,11 @@ const BERDetails = Loadable(lazy(() => import('pages/reportPages/TotalBERDevices
 const ComponentUsed = Loadable(lazy(() => import('pages/reportPages/ComponentUsed')));
 const RejectionReport = Loadable(lazy(() => import('pages/reportPages/RejectionReport')));
 const BPEIssue = Loadable(lazy(() => import('pages/reportPages/BPEIssue')));
+const BPEIssueReport = Loadable(lazy(() => import('pages/reportPages/BPEIssueReport')));
 const TotalWrongDevice = Loadable(lazy(() => import('pages/reportPages/TotalWrongDevice')));
 const TotalMINDevice = Loadable(lazy(() => import('pages/reportPages/TotalMINDevice')));
 const TotalComponentsOnCompanyLocation = Loadable(lazy(() => import('pages/reportPages/TotalComponentsOnCompanylocation')));
+const DeviceAnalysis = Loadable(lazy(() => import('pages/reportPages/DeviceAnalysis')));
 
 const MainRoutes = {
   path: '/',
@@ -78,6 +80,10 @@ const MainRoutes = {
       element: <TotalMaterialInBPECompany />
     },
     {
+      path: '/device-analysis',
+      element: <DeviceAnalysis />
+    },
+    {
       path: '/total-material-in-msc',
       element: <TotalMaterialInMSCCompany />
     },
@@ -113,7 +119,7 @@ const MainRoutes = {
       path: '/bpe-issue-report',
       element: (
         <BPEIssueLayout>
-          <BPEIssue />
+          <BPEIssueReport />
         </BPEIssueLayout>
       )
     },

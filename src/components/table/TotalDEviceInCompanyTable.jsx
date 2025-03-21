@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
@@ -14,12 +14,13 @@ import { useSocketContext } from '../../contexts/SocketContext';
 export default function TotalDeviceInCompanyTable({ dateRange, type }) {
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseModal = () => {
     setOpenModal(false);
     setModalData(null);
   };
-  const { emitDeviceInWareHouseDownload } = useSocketContext();
+  const { emitDeviceInWareHouseDownload,onDownloadReport } = useSocketContext();
   const { totalProduct, totalProductLoading, serialNoForCompanyData, serialNoForCompanyDataLoading } = useSelector((state) => state.report);
   const rows =
     totalProduct?.map((item, index) => ({
@@ -32,6 +33,14 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
       balance: item.Balance,
       key: item.SKUKEY
     })) || [];
+
+    useEffect(() => {
+      onDownloadReport(() => {
+        setLoading(false);
+        showToast("Report downloaded successfully", "success");
+      });
+    }, [onDownloadReport]);
+
   const columns = [
     { field: 'id', headerName: '#', width: 90 },
     { field: 'SKU', headerName: 'SKU', width: 150 },
@@ -49,6 +58,7 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
           <IconButton
             onClick={() => {
               // setOpenModal(true);
+              setLoading(true);
               if (!dateRange.from || !dateRange.to) {
                 showToast('Please select a date range', 'error');
               } else {
@@ -58,6 +68,7 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
                   device_key: params?.row?.key,
                   type: type
                 });
+                showToast('Download started', 'success');
               }
             }}
             color="primary"

@@ -27,15 +27,15 @@ const Component = {
       target: false,
       breadcrumbs: false
     },
-    {
-      id: 'components-on-locaton',
-      title: 'Components At Locaton',
-      type: 'item',
-      url: '/components-at-company-locations',
-      icon: icons.LocationOnOutlinedIcon,
-      target: false,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'components-on-locaton',
+    //   title: 'Components At Locaton',
+    //   type: 'item',
+    //   url: '/components-at-company-locations',
+    //   icon: icons.LocationOnOutlinedIcon,
+    //   target: false,
+    //   breadcrumbs: false
+    // },
     {
       id: 'total-material-in-bpe-company',
       title: 'Components In BPe',
@@ -56,7 +56,7 @@ const Component = {
     },
     {
       id: 'component-used',
-      title: 'Component Used',
+      title: 'Component Consumption',
       type: 'item',
       url: '/component-used',
       icon: icons.DisplaySettingsOutlinedIcon,

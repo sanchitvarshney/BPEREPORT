@@ -3,13 +3,15 @@ import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOu
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import AdUnitsOutlinedIcon from '@mui/icons-material/AdUnitsOutlined';
+import DevicesFoldIcon from '@mui/icons-material/DevicesFold';
 const icons = {
   LoginOutlined,
   ProfileOutlined,
   OnDeviceTrainingOutlinedIcon,
   DashboardOutlinedIcon,
   LocationOnOutlinedIcon,
-  AdUnitsOutlinedIcon
+  AdUnitsOutlinedIcon,
+  DevicesFoldIcon
 };
 const Device = {
   id: 'device',
@@ -40,6 +42,15 @@ const Device = {
       type: 'item',
       url: '/ber-details',
       icon: icons.AdUnitsOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'device-analysis',
+      title: 'Device Analytics',
+      type: 'item',
+      url: '/device-analysis',
+      icon: icons.DevicesFoldIcon,
       target: false,
       breadcrumbs: false
     }

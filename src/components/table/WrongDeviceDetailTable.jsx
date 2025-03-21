@@ -25,7 +25,7 @@ export default function TotalDeviceInCompanyTable() {
         field: header,
         headerName: header,
         width: 150,
-      })).filter((column) => column.field !== 'Transaction ID' && column.field !== 'Attchments');
+      })).filter((column) => column.field !== 'Transaction ID' && column.field !== 'Attchments' && column.field !== 'Inserted By');
 
       // Add the "View" column for the "eye" icon
       dynamicColumns.push({
