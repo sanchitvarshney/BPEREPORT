@@ -56,6 +56,7 @@ const TotalDeviceInCompany = () => {
             <MenuItem value={'BER'}> BER</MenuItem>
             <MenuItem value={'OFFICE'}>OFFICE</MenuItem>
             <MenuItem value={'REGULAR'}> REGULAR</MenuItem>
+            <MenuItem value={'ALL'}> ALL</MenuItem>
           </Select>
         </FormControl>
 
@@ -81,7 +82,7 @@ const TotalDeviceInCompany = () => {
           color="success"
           onClick={() => {
             if (totalProduct) {
-              exportToExcel(totalProduct, 'Total Device In Company');
+              exportToExcel(totalProduct, 'Device In Warehoure');
             }
           }}
         >

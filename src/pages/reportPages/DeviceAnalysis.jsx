@@ -64,7 +64,7 @@ const DeviceAnalysis = () => {
           color="success"
           onClick={() => {
             if (deviceAnalysisReport) {
-              exportToExcel(deviceAnalysisReport, 'Device Analysis Report');
+              exportToExcel(deviceAnalysisReport, 'Device Analysis');
             }
           }}
         >

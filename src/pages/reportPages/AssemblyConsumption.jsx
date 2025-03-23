@@ -33,7 +33,7 @@ const AssemblyConsumption = () => {
     }));
 
     // Call the exportToExcel function (pass data for export and filename)
-    exportToExcel(dataForExport, 'Assembly_Consumption_Report');
+    exportToExcel(dataForExport, 'Assembly Consumption');
   };
 
   return (
