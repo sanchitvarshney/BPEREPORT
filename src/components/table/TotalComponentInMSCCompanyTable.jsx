@@ -6,9 +6,9 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
   { field: 'id', headerName: '#', width: 90 },
-  { field: 'partNo', headerName: 'Part No', width: 150 },
-  { field: 'componentName', headerName: 'Part Name', width: 400 },
-  { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
+  { field: 'sku', headerName: 'SKU', width: 150 },
+  { field: 'skuName', headerName: 'SKU Name', width: 400 },
+  { field: 'date', headerName: 'Dispatch Date', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
   { field: 'balance', headerName: 'Balance', type: 'number', width: 130 }

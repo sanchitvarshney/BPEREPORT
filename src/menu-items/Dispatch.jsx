@@ -1,6 +1,9 @@
 import WarehouseOutlinedIcon from '@mui/icons-material/WarehouseOutlined';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+
 const icons = {
-  WarehouseOutlinedIcon
+  WarehouseOutlinedIcon,
+  LocalShippingOutlinedIcon
 };
 const Dispatch = {
   id: 'device',
@@ -13,6 +16,15 @@ const Dispatch = {
       type: 'item',
       url: '/total-dispatch-device',
       icon: icons.WarehouseOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'dispatch-report',
+      title: 'Dispatch Report',
+      type: 'item',
+      url: '/dispatch-report',
+      icon: icons.LocalShippingOutlinedIcon,
       target: false,
       breadcrumbs: false
     }
