@@ -1,9 +1,66 @@
+import { showToast } from 'utils/ToastProvider';
 import * as XLSX from 'xlsx';
 
 // Utility function to export data to Excel
 export const exportToExcel = (data, fileName) => {
-  // Create a worksheet
-  const worksheet = XLSX.utils.json_to_sheet(data);
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    showToast('Invalid data for export',"error");
+    return;
+  }
+
+  // Define a mapping of old column names to new ones
+  const columnNameMapping = {
+    'vendorCode': 'Vendor Code',
+    'vendorName': 'Vendor Name',
+    'vendorAddress': 'Vendor Address',
+    'awbNo': 'AWB No',
+    'serial': 'Serial',
+    'imei':'IMEI',
+    'quantity':"Quantity",
+    'product':"Product",
+    'totalDebit':'Total Debit',
+    'inDate':"In Date",
+    'issues':'Issues',
+    'sequenceNumber':'Index',
+    'model':'Model',
+    'qcStatus':'QC Status',
+    'simTest':'Sim Test',
+    'simPair':'Sim Pair',
+    'monoCarton':'Mono Carton',
+    'chargingCable':'Charging Cable',
+    'keyFunction':'Key Function',
+    'visualCondition':'Visual Condition',
+    'chargingTest':'Charging Test',
+    'insertDate':'Insert Date',
+    'insertBy':'Insert By',
+    'analytisRemark':'Analysis Remark',
+    "total_quantity":"Total Quantity",
+    "component":"Component",
+    "partNo":"Part No",
+    "category":"Category",
+    "txnID":"Txn ID",
+    "issue":"Issue",
+    "submitDt":"Submit Date",
+    "submitRemark":"Submit Remark",
+    "resolveStatus":"Resolve Status",
+    "resRemark":"Resolve Remark",
+    "resDt":"Resolve Date",
+    "user_name":"User Name",
+    
+  };
+
+  // Modify column names in the data
+  const modifiedData = data.map(row => {
+    const newRow = {};
+    Object.keys(row).forEach(key => {
+      // If the column has a mapping, replace it; otherwise, keep the original key
+      newRow[columnNameMapping[key] || key] = row[key];
+    });
+    return newRow;
+  });
+
+  // Create a worksheet with the modified data
+  const worksheet = XLSX.utils.json_to_sheet(modifiedData);
 
   // Create a workbook and append the worksheet
   const workbook = XLSX.utils.book_new();
@@ -13,6 +70,7 @@ export const exportToExcel = (data, fileName) => {
   XLSX.writeFile(workbook, `${fileName}.xlsx`);
 };
 
+
 export const exportDynamicDataToExcel = (data, fileName) => {
   if (!data || !Array.isArray(data?.data) || data?.data?.length === 0) {
     console.error('Invalid data for export');
@@ -20,7 +78,7 @@ export const exportDynamicDataToExcel = (data, fileName) => {
   }
   let headers = [...data?.header]; 
   const dataRows = [...data?.data];
-  const filteredHeaders = headers.filter(header => header !== 'Attchments');
+  const filteredHeaders = headers.filter(header => header !== 'Attchments'&& header !== 'Inserted By');
   
   const filteredData = dataRows?.map(row => {
     const { Attchments, ...rest } = row;

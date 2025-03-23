@@ -64,7 +64,7 @@ const TotalDispatchdevices = () => {
           color="success"
           onClick={() => {
             if (componentSummary) {
-              exportToExcel(componentSummary, 'Component Summary Report');
+              exportToExcel(componentSummary, 'Component Consumption');
             }
           }}
         >

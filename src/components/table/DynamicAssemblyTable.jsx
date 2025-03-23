@@ -15,7 +15,7 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
       renderCell: (params) => {
         // Find the quantity for this component
         const componentData = params.row.Components.find((comp) => comp['Part No'] === component['Part No']);
-        return componentData ? componentData.Quantity : 'N/A';
+        return componentData ? componentData.Quantity : '0';
       }
     }))
   ];

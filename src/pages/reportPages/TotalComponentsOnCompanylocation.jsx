@@ -27,7 +27,7 @@ export const exportToExcel = (jsonData) => {
   const wsData = [];
 
   // Define the order of locations
-  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MsC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // Create a copy of the data array to avoid mutating the prop directly
   const sortedData = [...jsonData].sort((a, b) => {
@@ -58,7 +58,7 @@ export const exportToExcel = (jsonData) => {
   XLSX.utils.book_append_sheet(wb, ws, 'Stock Report'); // Append sheet to workbook
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }); // Generate Excel file
   const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(data, 'Stock_Report.xlsx'); // Save as Excel file
+  saveAs(data, 'Device On Location.xlsx'); // Save as Excel file
 };
 
 const DynamicTable = ({ rowdata }) => {
@@ -112,7 +112,7 @@ const DynamicTable = ({ rowdata }) => {
 };
 export function LocationAccordion({ data }) {
   // Define the order of locations
-  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MSC', 'Assembly-MsC', 'Finish Goods store-MsC'];
+  const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MsC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
   // If 'data' is not provided or is empty, return nothing
   if (!data || !Array.isArray(data) || data.length === 0) {
