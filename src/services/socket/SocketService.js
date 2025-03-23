@@ -1,3 +1,4 @@
+import { showToast } from "utils/ToastProvider";
 import { getToken } from "../../utils/tokenUtills";
 import { io, Socket } from "socket.io-client";
 
@@ -28,7 +29,10 @@ class SocketService {
       console.error("Socket connection error:", error);
       this.isLoading = false; 
     });
-  
+  this.socket.on("error_msg", (error_msg) => {
+    console.error("Socket error:", error_msg);
+    showToast(error_msg, "error");
+  })
   }
 
   disconnect() {

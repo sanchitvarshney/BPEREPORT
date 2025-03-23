@@ -7,11 +7,11 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getTotalComponentInMSC } from 'features/reports/reportSlice';
+import { getr5Report } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
-import TotalComponentInMSCCompanyTable from 'components/table/TotalComponentInMSCCompanyTable';
+import DispatchReportTable from 'components/table/DispatchReportTable';
 const { RangePicker } = DatePicker;
 const DispatchReport = () => {
   const { totalComponentInMSCLoading, totalComponentInMSC } = useSelector((state) => state.report);
@@ -47,7 +47,7 @@ const DispatchReport = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getr5Report({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
               );
             } else {
               showToast('Please select date', 'error');
@@ -72,7 +72,7 @@ const DispatchReport = () => {
           Download
         </Button>
       </Box>
-      <TotalComponentInMSCCompanyTable />
+      <DispatchReportTable />
     </LocalizationProvider>
   );
 };

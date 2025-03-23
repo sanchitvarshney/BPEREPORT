@@ -7,10 +7,10 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 const columns = [
   { field: 'id', headerName: '#', width: 90 },
   { field: 'date', headerName: 'Date', width: 150 },
-  { field: 'txnId', headerName: 'Transaction Id', width: 400 },
+  { field: 'txnId', headerName: 'Transaction Id', width: 200 },
   { field: 'method', headerName: 'Method',  width: 130 },
-  { field: 'locationIn', headerName: 'Location In',  width: 130 },
-  { field: 'locationOut', headerName: 'Location Out',width: 130 },
+  { field: 'locationIn', headerName: 'Location In',  width: 200 },
+  { field: 'locationOut', headerName: 'Location Out',width: 200 },
   { field: 'transactionType', headerName: 'Transaction Type', width: 130 },
   { field: 'remark', headerName: 'Remark', width: 130 },
 ];

@@ -40,7 +40,9 @@ const initialState = {
   deviceAnalysisReport:null,
   deviceAnalysisReportLoading:false,
   trcReport: null,
-  trcReportLoading: false
+  trcReportLoading: false,
+  dispatchreport: null,
+  dispatchreportLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -167,6 +169,11 @@ export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSe
   return response;
 });
 
+export const getr5Report = createAsyncThunk("report/getr5Report", async (query) => {
+  const response = await axiosInstance.get(query.type === "DEVICE" ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}`);
+  return response;
+});
+
 const reportSlice = createSlice({
   name: 'totalDevice',
   initialState,
@@ -190,6 +197,20 @@ const reportSlice = createSlice({
       .addCase(getTotalProduct.rejected, (state) => {
         state.totalProductLoading = false;
         state.totalProduct = null;
+      })
+      .addCase(getr5Report.pending, (state) => {
+        state.dispatchreportLoading = true;
+        state.dispatchreport = null;
+      })
+      .addCase(getr5Report.fulfilled, (state, action) => {
+        state.dispatchreportLoading = false;
+        if (action.payload.data.success) {
+          state.dispatchreport = action.payload.data.data;
+        }
+      })
+      .addCase(getr5Report.rejected, (state) => {
+        state.dispatchreportLoading = false;
+        state.dispatchreport = null;
       })
       .addCase(getWrongDeviceDetail.pending, (state) => {
         state.wrongDeviceDetailLoading = true;

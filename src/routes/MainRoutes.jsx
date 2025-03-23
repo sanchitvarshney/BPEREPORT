@@ -10,6 +10,7 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
 const TotalDeviceInCompanylocation = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompanylocation')));
 const TotalMaterialInBPECompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInBPECompany')));
+const DispatchReport = Loadable(lazy(() => import('pages/reportPages/DispatchReport')));
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
 const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
 const AssemblyConsumption = Loadable(lazy(() => import('pages/reportPages/AssemblyConsumption')));
@@ -88,6 +89,10 @@ const MainRoutes = {
     {
       path: '/total-material-in-msc',
       element: <TotalMaterialInMSCCompany />
+    },
+    {
+      path: '/dispatch-report',
+      element: <DispatchReport />
     },
     {
       path: '/total-dispatch-device',
