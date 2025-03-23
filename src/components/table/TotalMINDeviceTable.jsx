@@ -12,28 +12,30 @@ import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet";
 
-export default function () {
+export default function ({ partner }) {
   const { minReportLoading, getMINReportData } = useSelector((state) => state.report);
-  const rows = getMINReportData?.map((item, index) => ({
-    id: index + 1,
-    vendorCode: item.vendorCode,  // Ensure field names match the data
-    vendorName: item.vendorName,
-    inDate: item.inDate,
-    vendorAddress: item.vendorAddress,
-    awbNo: item.awbNo,
-    serial: item.serial,
-    imei: item.imei,
-    quantity: item.quantity,
-    product: item.product,
-    totalDebit: item.totalDebit,
-    issues: item.issues,  // Assuming "issues" is part of the data
-    opening: item.OpeningBalance,  // Example additional field from your previous code
-    inward: item.TotalIn,
-    outward: item.TotalOut,
-    closing: item.ClosingBalance
-  }))||[];
+  const rows =
+    getMINReportData?.map((item, index) => ({
+      id: index + 1,
+      vendorCode: item.vendorCode, // Ensure field names match the data
+      vendorName: item.vendorName,
+      inDate: item.inDate,
+      vendorAddress: item.vendorAddress,
+      awbNo: item.awbNo,
+      serial: item.serial,
+      imei: item.imei,
+      quantity: item.quantity,
+      product: item.product,
+      totalDebit: item.totalDebit,
+      issues: item.issues, // Assuming "issues" is part of the data
+      opening: item.OpeningBalance, // Example additional field from your previous code
+      inward: item.TotalIn,
+      outward: item.TotalOut,
+      closing: item.ClosingBalance,
+      partner: item.partner
+    })) || [];
 
-const [openModal, setOpenModal] = useState(false); // Modal visibility state
+  const [openModal, setOpenModal] = useState(false); // Modal visibility state
   const [selectedIssues, setSelectedIssues] = useState(null);
   const handleOpenModal = (issues) => {
     setSelectedIssues(issues); // Set issues data for modal
@@ -46,8 +48,8 @@ const [openModal, setOpenModal] = useState(false); // Modal visibility state
   };
 
   const issuesColumns = [
-    { field: "item", headerName: "Item", minWidth: 200 },
-    { field: "status", headerName: "Status", minWidth: 150 }
+    { field: 'item', headerName: 'Item', minWidth: 200 },
+    { field: 'status', headerName: 'Status', minWidth: 150 }
   ];
 
   // Transform the issues object into an array of objects for the DataGrid
@@ -58,33 +60,32 @@ const [openModal, setOpenModal] = useState(false); // Modal visibility state
         status: String(value)
       }))
     : [];
+  console.log(partner);
 
-
-  const columns = [
-    // { headerName: "#", field: "id", valueGetter: "node.rowIndex+1", maxWidth: 100 },
-    { headerName: "Vendor Code", field: "vendorCode" },
-    { headerName: "Vendor Name", field: "vendorName", minWidth: 300 },
-    { headerName: "In Date", field: "inDate", minWidth: 200 },
-    { headerName: "Vendor Address", field: "vendorAddress", minWidth: 400 },
-    { headerName: "AWB No", field: "awbNo" },
-    { headerName: "Serial", field: "serial" },
-    { headerName: "IMEI", field: "imei" },
-    { headerName: "Quantity", field: "quantity" },
-    { headerName: "Product", field: "product" },
-    { headerName: "Total Debit", field: "totalDebit" },
+  const baseColumns = [
+    { headerName: 'Vendor Code', field: 'vendorCode' },
+    { headerName: 'Vendor Name', field: 'vendorName', minWidth: 300 },
+    { headerName: 'In Date', field: 'inDate', minWidth: 200 },
+    { headerName: 'Vendor Address', field: 'vendorAddress', minWidth: 400 },
+    { headerName: 'AWB No', field: 'awbNo' },
+    { headerName: 'Serial', field: 'serial' },
+    { headerName: 'IMEI', field: 'imei' },
+    { headerName: 'Quantity', field: 'quantity' },
+    { headerName: 'Product', field: 'product' },
+    { headerName: 'Total Debit', field: 'totalDebit' },
     {
-      headerName: "Issues",
-      field: "issues",
+      headerName: 'Issues',
+      field: 'issues',
       renderCell: (params) => (
-        <IconButton
-        onClick={() => handleOpenModal(params.value)} 
-        color="primary"
-      >
-        <VisibilityIcon />
-      </IconButton>
+        <IconButton onClick={() => handleOpenModal(params.value)} color="primary">
+          <VisibilityIcon />
+        </IconButton>
       )
-    },
+    }
   ];
+
+  // Conditionally include the "Partner" column based on the "partner" value
+  const columns = partner === 'ALL' ? [...baseColumns, { headerName: 'Partner', field: 'partner', minWidth: 150 }] : baseColumns;
 
   return (
     <Box sx={{ height: 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
@@ -117,7 +118,7 @@ const [openModal, setOpenModal] = useState(false); // Modal visibility state
         }}
         pageSizeOptions={[20]}
       />
-     <Dialog open={openModal} onClose={handleCloseModal} maxWidth="sm" fullWidth>
+      <Dialog open={openModal} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle>Device Issues</DialogTitle>
         <DialogContent>
           <div className="issues-table">
@@ -156,7 +157,11 @@ const [openModal, setOpenModal] = useState(false); // Modal visibility state
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} color="primary" style={{ padding: '8px 16px', background: '#1976d2', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          <Button
+            onClick={handleCloseModal}
+            color="primary"
+            style={{ padding: '8px 16px', background: '#1976d2', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
             Close
           </Button>
         </DialogActions>

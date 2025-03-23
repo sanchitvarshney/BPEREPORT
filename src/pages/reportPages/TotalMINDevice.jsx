@@ -93,7 +93,7 @@ const TotalMINDevice = () => {
           Download
         </Button>
         </Box>
-        <TotalMINDeviceTable/>
+        <TotalMINDeviceTable partner={partner}/>
       </div>
     </LocalizationProvider>
   );
