@@ -2,7 +2,7 @@ import { showToast } from 'utils/ToastProvider';
 import * as XLSX from 'xlsx';
 
 // Utility function to export data to Excel
-export const exportToExcel = (data, fileName) => {
+export const exportToExcel = (data, fileName,partner) => {
   if (!data || !Array.isArray(data) || data.length === 0) {
     showToast('Invalid data for export',"error");
     return;
@@ -74,7 +74,8 @@ export const exportToExcel = (data, fileName) => {
 
   // Create a workbook and append the worksheet
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  const sheetName = partner ? partner : 'Sheet1';
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
 
   // Write the workbook and trigger the download
   XLSX.writeFile(workbook, `${fileName}.xlsx`);

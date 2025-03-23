@@ -55,6 +55,7 @@ const TotalMINDevice = () => {
               <MenuItem value="eCOM">eCOM</MenuItem>
               <MenuItem value="DTDC">DTDC</MenuItem>
               <MenuItem value="dVery">Delhivery</MenuItem>
+              <MenuItem value="ALL">All</MenuItem>
               {/* Add other partners as required */}
             </Select>
           </FormControl>
@@ -84,7 +85,7 @@ const TotalMINDevice = () => {
           color="success"
           onClick={() => {
             if (getMINReportData) {
-              exportToExcel(getMINReportData, 'Device AWB Report');
+              exportToExcel(getMINReportData, `Device AWB Report (${partner})`,partner);
             }
           }}
         >
