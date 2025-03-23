@@ -108,6 +108,11 @@ export const getTrcComponentReport = createAsyncThunk('totalDevice/getTrcCompone
   return response;
 });
 
+export const getDeviceSummary = createAsyncThunk("query/getDeviceSummary", async (id) => {
+  const response = await axiosInstance.get(`/query/q6/devicetimeline?srlOrImei=${id}`);
+  return response;
+});
+
 export const getDeviceSerialNoForCompany = createAsyncThunk('totalDevice/getDeviceSerialNoForCompany', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`);
   return response;
@@ -213,6 +218,20 @@ const reportSlice = createSlice({
       .addCase(getDeviceAnalysis.rejected, (state) => {
         state.deviceAnalysisReportLoading = false;
         state.deviceAnalysisReport = null;
+      })
+      .addCase(getDeviceSummary.pending, (state) => {
+        state.deviceSummaryLoading = true;
+        state.deviceSummary = null;
+      })
+      .addCase(getDeviceSummary.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.deviceSummary = action.payload.data.data;
+        }
+        state.deviceSummaryLoading = false;
+      })
+      .addCase(getDeviceSummary.rejected, (state) => {
+        state.deviceSummaryLoading = false;
+        state.deviceSummary = null;
       })
       .addCase(getBpeIssueReport.pending, (state) => {
         state.issueReportDataLoading = true;

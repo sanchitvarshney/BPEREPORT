@@ -13,6 +13,7 @@ const TotalMaterialInBPECompany = Loadable(lazy(() => import('pages/reportPages/
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
 const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
 const AssemblyConsumption = Loadable(lazy(() => import('pages/reportPages/AssemblyConsumption')));
+const DeviceSummary = Loadable(lazy(() => import('pages/reportPages/DeviceSummary')));
 const TRCConsumption = Loadable(lazy(() => import('pages/reportPages/TrcConsumption')));
 const BERDetails = Loadable(lazy(() => import('pages/reportPages/TotalBERDevices')));
 const ComponentUsed = Loadable(lazy(() => import('pages/reportPages/ComponentUsed')));
@@ -103,6 +104,10 @@ const MainRoutes = {
     {
       path: '/ber-details',
       element: <BERDetails />
+    },
+    {
+      path: '/device-summary',
+      element: <DeviceSummary />
     },
     {
       path: '/component-used',

@@ -4,6 +4,7 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import AdUnitsOutlinedIcon from '@mui/icons-material/AdUnitsOutlined';
 import DevicesFoldIcon from '@mui/icons-material/DevicesFold';
+import DockOutlinedIcon from '@mui/icons-material/DockOutlined';
 const icons = {
   LoginOutlined,
   ProfileOutlined,
@@ -11,7 +12,8 @@ const icons = {
   DashboardOutlinedIcon,
   LocationOnOutlinedIcon,
   AdUnitsOutlinedIcon,
-  DevicesFoldIcon
+  DevicesFoldIcon,
+  DockOutlinedIcon
 };
 const Device = {
   id: 'device',
@@ -51,6 +53,15 @@ const Device = {
       type: 'item',
       url: '/device-analysis',
       icon: icons.DevicesFoldIcon,
+      target: false,
+      breadcrumbs: false
+    },
+    {
+      id: 'device-summary',
+      title: 'Device Summary',
+      type: 'item',
+      url: '/device-summary',
+      icon: icons.DockOutlinedIcon,
       target: false,
       breadcrumbs: false
     }

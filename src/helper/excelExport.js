@@ -46,7 +46,17 @@ export const exportToExcel = (data, fileName) => {
     "resRemark":"Resolve Remark",
     "resDt":"Resolve Date",
     "user_name":"User Name",
-    
+    "method":"Method",
+    "name":"Name",
+    "skuCode":"Sku Code",
+    "qty":"Qty",
+    "transactionType":"Transaction Type",
+    "refId":"Ref ID",
+    "minNo":"Min No",
+    "time":"Time",
+    "location":"Location",
+    "locationOut":"Location Out",
+    "user":"User",
   };
 
   // Modify column names in the data
