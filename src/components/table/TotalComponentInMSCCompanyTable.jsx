@@ -6,9 +6,9 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 
 const columns = [
   { field: 'id', headerName: '#', width: 90 },
-  { field: 'sku', headerName: 'SKU', width: 150 },
-  { field: 'skuName', headerName: 'SKU Name', width: 400 },
-  { field: 'date', headerName: 'Dispatch Date', type: 'number', width: 130 },
+  { field: 'sku', headerName: 'Part No', width: 150 },
+  { field: 'skuName', headerName: 'Part Name', width: 400 },
+  // { field: 'date', headerName: 'Dispatch Date', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
   { field: 'balance', headerName: 'Balance', type: 'number', width: 130 }
@@ -25,7 +25,9 @@ export default function TotalComponentInMSCCompanyTable() {
     opening: item.Opening,
     inward: item.Inward,
     outward: item.Outward,
-    balance: item.Balance
+    balance: item.Balance,
+    sku: item["Part No"],
+    skuName: item['Component Name']
   }))||[];
 
   return (
