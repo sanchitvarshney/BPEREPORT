@@ -9,6 +9,7 @@ const columns = [
   { field: 'sku', headerName: 'Part No', width: 150 },
   { field: 'skuName', headerName: 'Part Name', width: 400 },
   // { field: 'date', headerName: 'Dispatch Date', type: 'number', width: 130 },
+  { field: 'opening', headerName: 'Opening', type: 'number', width: 130 },
   { field: 'inward', headerName: 'Inward', type: 'number', width: 130 },
   { field: 'outward', headerName: 'Outward', type: 'number', width: 130 },
   { field: 'balance', headerName: 'Balance', type: 'number', width: 130 }
