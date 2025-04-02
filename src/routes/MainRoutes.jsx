@@ -82,10 +82,10 @@ const MainRoutes = {
       path: '/total-material-in-bpe',
       element: <TotalMaterialInBPECompany />
     },
-    {
-      path: '/device-analysis',
-      element: <DeviceAnalysis />
-    },
+    // {
+    //   path: '/device-analysis',
+    //   element: <DeviceAnalysis />
+    // },
     {
       path: '/total-material-in-msc',
       element: <TotalMaterialInMSCCompany />
