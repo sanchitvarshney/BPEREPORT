@@ -47,15 +47,15 @@ const Device = {
       target: false,
       breadcrumbs: false
     },
-    {
-      id: 'device-analysis',
-      title: 'Device Analytics',
-      type: 'item',
-      url: '/device-analysis',
-      icon: icons.DevicesFoldIcon,
-      target: false,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'device-analysis',
+    //   title: 'Device Analytics',
+    //   type: 'item',
+    //   url: '/device-analysis',
+    //   icon: icons.DevicesFoldIcon,
+    //   target: false,
+    //   breadcrumbs: false
+    // },
     {
       id: 'device-summary',
       title: 'Device Summary',
