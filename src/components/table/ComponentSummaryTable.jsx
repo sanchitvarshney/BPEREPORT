@@ -13,6 +13,7 @@ export default function ComponentSummaryTable() {
     componentName: item.component,
     category: item.category,
     totalQuantiity: item.total_quantity,
+    totalIMEI: item.total_imei
     
   }))||[];
 
@@ -22,6 +23,7 @@ export default function ComponentSummaryTable() {
     { field: 'componentName', headerName: 'Part Name', width: 450 },
     { field: 'category', headerName: 'Category', type: 'number',width: 130 },
     { field: 'totalQuantiity', headerName: 'Total Quantity',width: 130 },
+    { field: 'totalIMEI', headerName: 'Total IMEI',width: 130 },
    
   ];
 
