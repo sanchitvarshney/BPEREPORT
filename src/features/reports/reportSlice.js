@@ -89,7 +89,7 @@ export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDis
   return response;
 });
 export const getComponentSummary = createAsyncThunk('totalDevice/getComponentSummary', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}&loc_out=${payload.location}`);
   return response;
 });
 export const getRejectionReport = createAsyncThunk('totalDevice/getRejectionReport', async (payload) => {

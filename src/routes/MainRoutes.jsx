@@ -14,6 +14,8 @@ const DispatchReport = Loadable(lazy(() => import('pages/reportPages/DispatchRep
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
 const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
 const AssemblyConsumption = Loadable(lazy(() => import('pages/reportPages/AssemblyConsumption')));
+const ConsumptionLayout = Loadable(lazy(() => import('layout/AssemblyConsumptionLayout/ConsumptionLayout')));
+const TRCConsumptionLayout = Loadable(lazy(() => import('layout/TRCConsumptionLayout/TRCConsumptionLayout')));
 const DeviceSummary = Loadable(lazy(() => import('pages/reportPages/DeviceSummary')));
 const TRCConsumption = Loadable(lazy(() => import('pages/reportPages/TrcConsumption')));
 const BERDetails = Loadable(lazy(() => import('pages/reportPages/TotalBERDevices')));
@@ -100,11 +102,19 @@ const MainRoutes = {
     },
     {
       path: '/assembly-consumption',
-      element: <AssemblyConsumption />
+      element: (
+        <ConsumptionLayout>
+          <AssemblyConsumption />
+        </ConsumptionLayout>
+      )
     },
     {
       path: '/trc-consumption',
-      element: <TRCConsumption />
+      element: (
+        <TRCConsumptionLayout>
+          <TRCConsumption />
+        </TRCConsumptionLayout>
+      )
     },
     {
       path: '/ber-details',
@@ -115,8 +125,20 @@ const MainRoutes = {
       element: <DeviceSummary />
     },
     {
-      path: '/component-used',
-      element: <ComponentUsed />
+      path: '/assembly-component-summary',
+      element: (
+        <ConsumptionLayout>
+          <ComponentUsed />
+        </ConsumptionLayout>
+      )
+    },
+    {
+      path: '/trc-component-summary',
+      element: (
+        <TRCConsumptionLayout>
+          <ComponentUsed />
+        </TRCConsumptionLayout>
+      )
     },
     {
       path: '/rejection-report',

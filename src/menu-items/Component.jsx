@@ -54,15 +54,15 @@ const Component = {
       target: false,
       breadcrumbs: false
     },
-    {
-      id: 'component-used',
-      title: 'Component Consumption',
-      type: 'item',
-      url: '/component-used',
-      icon: icons.DisplaySettingsOutlinedIcon,
-      target: false,
-      breadcrumbs: false
-    }
+    // {
+    //   id: 'component-used',
+    //   title: 'Component Consumption',
+    //   type: 'item',
+    //   url: '/component-used',
+    //   icon: icons.DisplaySettingsOutlinedIcon,
+    //   target: false,
+    //   breadcrumbs: false
+    // }
   ]
 };
 

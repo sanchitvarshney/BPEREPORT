@@ -20,10 +20,11 @@ const TotalDispatchdevices = () => {
     from: null,
     to: null
   });
+  const location = window.location.pathname.includes('assembly')? 'Assembly' : 'TRC';
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px' }}>
+      <Box sx={{ display: 'flex', gap: '10px', mt: '10px'  }}>
         <RangePicker
           format={'DD/MM/YYYY'}
           value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -47,7 +48,7 @@ const TotalDispatchdevices = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
+                getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location })
               );
             } else {
               showToast('Please select date', 'error');

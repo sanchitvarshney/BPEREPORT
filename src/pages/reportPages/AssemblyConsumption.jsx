@@ -38,7 +38,7 @@ const AssemblyConsumption = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px' }}>
+      <Box sx={{ display: 'flex', gap: '10px', mt: '10px'  }}>
         <RangePicker
           format={'DD/MM/YYYY'}
           value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
