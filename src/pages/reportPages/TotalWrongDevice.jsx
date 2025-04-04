@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel,Button} from '@mui/material';
+import { Box, InputLabel, Button, FormControl, Select, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getWrongDeviceDetail } from 'features/reports/reportSlice';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
@@ -18,17 +15,32 @@ import WrongDeviceDetailTable from 'components/table/WrongDeviceDetailTable';
 const { RangePicker } = DatePicker;
 
 const TotalWrongDevice = () => {
-  const { wrongDeviceDetailLoading,wrongDeviceDetail } = useSelector((state) => state.report);
+  const { wrongDeviceDetailLoading, wrongDeviceDetail } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [wrongDeviceDateRange, setWrongDeviceDateRange] = useState({
     from: null,
     to: null
   });
 
+  // Get unique categories from the data
+  const categories = useMemo(() => {
+    if (!wrongDeviceDetail?.data) return [];
+
+    const uniqueCategories = new Set();
+    wrongDeviceDetail.data.forEach((item) => {
+      if (item.Category) {
+        uniqueCategories.add(item.Category);
+      }
+    });
+
+    return Array.from(uniqueCategories).sort();
+  }, [wrongDeviceDetail]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className=''>
+      <div className="">
         <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
           <RangePicker
             format={'DD/MM/YYYY'}
@@ -55,7 +67,7 @@ const TotalWrongDevice = () => {
               <MenuItem value="eCOM">eCOM</MenuItem>
               <MenuItem value="DTDC">DTDC</MenuItem>
               <MenuItem value="dVery">Delhivery</MenuItem>
-              {/* Add other partners as required */}
+              <MenuItem value="ALL">ALL</MenuItem>
             </Select>
           </FormControl>
           <LoadingButton
@@ -79,21 +91,46 @@ const TotalWrongDevice = () => {
             Search
           </LoadingButton>
           <Button
-          disabled={!wrongDeviceDetail}
-          variant="contained"
-          color="success"
-          onClick={() => {
-            if (wrongDeviceDetail) {
-              exportDynamicDataToExcel(wrongDeviceDetail, 'Wrong Device Detail');
-            }
-          }}
-        >
-          <Download fontSize={'small'} sx={{ mr: '10px' }} />
-          Download
-        </Button>
+            disabled={!wrongDeviceDetail}
+            variant="contained"
+            color="success"
+            onClick={() => {
+              if (wrongDeviceDetail) {
+                exportDynamicDataToExcel(wrongDeviceDetail, 'Wrong Device Detail');
+              }
+            }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
+          {wrongDeviceDetail?.data && categories.length > 0 && (
+            <FormControl sx={{ minWidth: 250 }}>
+              <InputLabel>Filter by Category</InputLabel>
+              <Select
+                value={categoryFilter}
+                label="Filter by Category"
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                sx={{
+                  background: 'white',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#1976d2'
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#1976d2'
+                  }
+                }}
+              >
+                <MenuItem value="all">All Categories</MenuItem>
+                {categories.map((category) => (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
         </Box>
-        <WrongDeviceDetailTable
-        />
+        <WrongDeviceDetailTable categoryFilter={categoryFilter} />
       </div>
     </LocalizationProvider>
   );

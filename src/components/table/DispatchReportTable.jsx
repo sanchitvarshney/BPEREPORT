@@ -54,8 +54,8 @@ export default function DispatchReportTable() {
     //   hide: true,
     // },
     {
-      headerName: "--",
-      field: "dispatchId",
+      headerName: "Warehouse",
+      field: "warehouse",
       sortable: true,
       filter: true,
       flex: 1,
@@ -98,6 +98,7 @@ export default function DispatchReportTable() {
     inserby: item.inserby,
     balance: item.Balance,
     txnId: item.txnId,
+    warehouse: item.warehouse
   }))||[];
 
   return (

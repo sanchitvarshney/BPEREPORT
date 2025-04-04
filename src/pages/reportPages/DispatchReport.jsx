@@ -14,7 +14,8 @@ import { DatePicker } from 'antd';
 import DispatchReportTable from 'components/table/DispatchReportTable';
 const { RangePicker } = DatePicker;
 const DispatchReport = () => {
-  const { totalComponentInMSCLoading, totalComponentInMSC } = useSelector((state) => state.report);
+  const { dispatchreport, dispatchreportLoading } = useSelector((state) => state.report);
+  
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -43,7 +44,7 @@ const DispatchReport = () => {
         />
 
         <LoadingButton
-          loading={totalComponentInMSCLoading}
+          loading={dispatchreportLoading}
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
@@ -59,12 +60,12 @@ const DispatchReport = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!totalComponentInMSC}
+          disabled={!dispatchreport}
           variant="contained"
           color="success"
           onClick={() => {
-            if (totalComponentInMSC) {
-              exportToExcel(totalComponentInMSC, 'Total Material In MSC ');
+            if (dispatchreport) {
+              exportToExcel(dispatchreport, 'Dispatch Report');
             }
           }}
         >
