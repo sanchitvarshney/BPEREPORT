@@ -25,13 +25,13 @@ export default function TotalDeviceInCompanyTable({ dateRange, type }) {
   const rows =
     totalProduct?.map((item, index) => ({
       id: index + 1,
-      SKU: item.SKU,
-      productName: item['Product Name'],
-      opening: item.Opening,
-      inward: item.Inward,
-      outward: item.Outward,
-      balance: item.Balance,
-      key: item.SKUKEY
+      SKU: item?.SKU,
+      productName: item?.['Product Name'],
+      opening: item?.Opening,
+      inward: item?.Inward,
+      outward: item?.Outward,
+      balance: item?.Balance,
+      key: item?.SKUKEY
     })) || [];
 
     useEffect(() => {
