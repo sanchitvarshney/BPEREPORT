@@ -16,22 +16,33 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
+import { useSocketContext } from '../../contexts/SocketContext';
+import { useEffect } from 'react';
 
 const TotalDeviceInCompany = () => {
   const { totalProductLoading, totalProduct } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [type, setType] = React.useState('both');
+  const [loading, setLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
+  const { emitDeviceInWareHouseDownload, onDownloadReport } = useSocketContext();
+
+  useEffect(() => {
+    onDownloadReport(() => {
+      setLoading(false);
+      showToast('Report downloaded successfully', 'success');
+    });
+  }, [onDownloadReport]);
 
   const handleChange = (event) => {
     setType(event.target.value);
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px',paddingTop:"20px" }}>
+      <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
         <RangePicker
           format={'DD/MM/YYYY'}
           value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -89,12 +100,31 @@ const TotalDeviceInCompany = () => {
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
           Download
         </Button>
+        <Button
+          disabled={ !totalProduct}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            setLoading(true);
+            if (!dateRange.from || !dateRange.to) {
+              showToast('Please select a date range', 'error');
+            } else {
+              emitDeviceInWareHouseDownload({
+                startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                device_key: 'ALL',
+                type: type
+              });
+              showToast('Download started', 'success');
+            }
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download All
+        </Button>
       </Box>
 
-      <TotalDEviceInCompanyTable
-        dateRange={dateRange}
-        type={type}
-      />
+      <TotalDEviceInCompanyTable dateRange={dateRange} type={type} />
     </LocalizationProvider>
   );
 };
