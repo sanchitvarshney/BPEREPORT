@@ -42,7 +42,9 @@ const initialState = {
   trcReport: null,
   trcReportLoading: false,
   dispatchreport: null,
-  dispatchreportLoading: false
+  dispatchreportLoading: false,
+  batteryQcData: null,
+  batteryQcLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -102,6 +104,11 @@ export const getTotalBERDevices = createAsyncThunk('totalDevice/getTotalBERDevic
 });
 export const getComponentReport = createAsyncThunk('totalDevice/getComponentReport', async (payload) => {
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}`);
+  return response;
+});
+
+export const getBatteryQCReport = createAsyncThunk('totalDevice/getBatteryQCReport', async (payload) => {
+  const response = await axiosInstance.get(`/report/r3BatteryQcReport?fromDate=${payload.from}&toDate=${payload.to}`);
   return response;
 });
 
@@ -211,6 +218,20 @@ const reportSlice = createSlice({
       .addCase(getr5Report.rejected, (state) => {
         state.dispatchreportLoading = false;
         state.dispatchreport = null;
+      })
+      .addCase(getBatteryQCReport.pending, (state) => {
+        state.batteryQcLoading = true;
+        state.batteryQcData = null;
+      })
+      .addCase(getBatteryQCReport.fulfilled, (state, action) => {
+        state.batteryQcLoading = false;
+        if (action.payload.data.success) {
+          state.batteryQcData = action.payload.data.data;
+        }
+      })  
+      .addCase(getBatteryQCReport.rejected,(state,action)=>{
+        state.batteryQcLoading = false;
+        state.batteryQcData = null;
       })
       .addCase(getWrongDeviceDetail.pending, (state) => {
         state.wrongDeviceDetailLoading = true;

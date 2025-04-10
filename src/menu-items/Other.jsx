@@ -1,14 +1,25 @@
 import ReportOutlinedIcon from '@mui/icons-material/ReportOutlined';
 import SyncProblemOutlinedIcon from '@mui/icons-material/SyncProblemOutlined';
+import Battery3BarOutlinedIcon from '@mui/icons-material/Battery3BarOutlined';
 const icons = {
   ReportOutlinedIcon,
-  SyncProblemOutlinedIcon
+  SyncProblemOutlinedIcon,
+  Battery3BarOutlinedIcon
 };
 const Other = {
   id: 'other',
   title: 'Others',
   type: 'group',
   children: [
+    {
+      id: 'battery-qc-report',
+      title: 'Battery QC Report',
+      type: 'item',
+      url: '/battery-qc-report',
+      icon: icons.Battery3BarOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
     {
       id: 'rejection-report',
       title: 'Rejection Report',

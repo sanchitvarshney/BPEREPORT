@@ -11,6 +11,7 @@ const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/Tot
 const TotalDeviceInCompanylocation = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompanylocation')));
 const TotalMaterialInBPECompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInBPECompany')));
 const DispatchReport = Loadable(lazy(() => import('pages/reportPages/DispatchReport')));
+const BatteryQCReport = Loadable(lazy(() => import('pages/reportPages/BatteryQCReport')));
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
 const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
 const AssemblyConsumption = Loadable(lazy(() => import('pages/reportPages/AssemblyConsumption')));
@@ -95,6 +96,10 @@ const MainRoutes = {
     {
       path: '/dispatch-report',
       element: <DispatchReport />
+    },
+    {
+      path: '/battery-qc-report',
+      element: <BatteryQCReport />
     },
     {
       path: '/total-dispatch-device',
