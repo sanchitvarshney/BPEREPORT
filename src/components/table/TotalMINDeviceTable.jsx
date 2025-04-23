@@ -10,6 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { min } from 'lodash';
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet";
 
 export default function ({ partner }) {
@@ -32,7 +33,17 @@ export default function ({ partner }) {
       inward: item.TotalIn,
       outward: item.TotalOut,
       closing: item.ClosingBalance,
-      partner: item.partner
+      partner: item.partner,
+      adaptor:item.issues?.Adaptor,
+      box:item.issues?.Box,
+      bracket:item.issues?.Bracket,
+      cable:item.issues?.Cable,
+      deviceId:item.issues?.["Device ID"],
+      internalDamage:item.issues?.["No Internal Damage"],
+      physicalDamage:item.issues?.["No Physical Damage"],
+      sim:item.issues?.SIM,
+      soundCheck:item.issues?.["Sound Check - OK"],
+      standee:item.issues?.Standee
     })) || [];
 
   const [openModal, setOpenModal] = useState(false); // Modal visibility state
@@ -60,7 +71,6 @@ export default function ({ partner }) {
         status: String(value)
       }))
     : [];
-  console.log(partner);
 
   const baseColumns = [
     { headerName: 'Vendor Code', field: 'vendorCode' },
@@ -73,15 +83,26 @@ export default function ({ partner }) {
     { headerName: 'Quantity', field: 'quantity' },
     { headerName: 'Product', field: 'product' },
     { headerName: 'Total Debit', field: 'totalDebit' },
-    {
-      headerName: 'Issues',
-      field: 'issues',
-      renderCell: (params) => (
-        <IconButton onClick={() => handleOpenModal(params.value)} color="primary">
-          <VisibilityIcon />
-        </IconButton>
-      )
-    }
+    // {
+    //   headerName: 'Issues',
+    //   field: 'issues',
+    //   renderCell: (params) => (
+    //     <IconButton onClick={() => handleOpenModal(params.value)} color="primary">
+    //       <VisibilityIcon />
+    //     </IconButton>
+    //   )
+    // },
+    { headerName: 'Adaptor', field: 'adaptor' },
+    { headerName: 'Box', field: 'box' },
+    { headerName: 'Bracket', field: 'bracket' },
+    { headerName: 'Cable', field: 'cable' },
+    { headerName: 'Device ID', field: 'deviceId' },
+    { headerName: 'No Internal Damage', field: 'internalDamage',minWidth:150 },
+    { headerName: 'No Physical Damage', field: 'physicalDamage',minWidth:150 },
+    { headerName: 'Sim', field: 'sim' },
+    { headerName: 'Sound Check', field: 'soundCheck',minWidth:120 },
+    { headerName: 'Standee', field: 'standee' },
+
   ];
 
   // Conditionally include the "Partner" column based on the "partner" value
