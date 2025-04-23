@@ -93,7 +93,7 @@ export default function ({ partner }) {
     //   )
     // },
     { headerName: 'Adaptor', field: 'adaptor' },
-    { headerName: 'Box', field: 'box' },
+    // { headerName: 'Box', field: 'box' },
     { headerName: 'Bracket', field: 'bracket' },
     { headerName: 'Cable', field: 'cable' },
     { headerName: 'Device ID', field: 'deviceId' },
@@ -101,7 +101,7 @@ export default function ({ partner }) {
     { headerName: 'No Physical Damage', field: 'physicalDamage',minWidth:150 },
     { headerName: 'Sim', field: 'sim' },
     { headerName: 'Sound Check', field: 'soundCheck',minWidth:120 },
-    { headerName: 'Standee', field: 'standee' },
+    // { headerName: 'Standee', field: 'standee' },
 
   ];
 
@@ -160,7 +160,7 @@ export default function ({ partner }) {
                   background: '#1976d2 !important'
                 },
                 '& .MuiDataGrid-footerContainer': {
-                  borderTop: '1px solid #ddd' // Add a top border
+                  borderTop: '1px solid #ddd', // Add a top border
                 }
               }}
               initialState={{
