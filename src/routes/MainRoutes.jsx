@@ -5,6 +5,7 @@ import Protected from 'components/shared/Protected';
 import NotFoundPage from 'pages/NotFoundPage';
 import DeviceInCompanyLayout from 'layout/WarehouseLayout/DispatchLayout';
 import BPEIssueLayout from 'layout/BPEIssueLayout/BPEIssueLayout';
+import ErrorBoundary from 'components/ErrorBoundary';
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
@@ -33,7 +34,9 @@ const MainRoutes = {
   path: '/',
   element: (
     <Protected authentication>
-      <Dashboard />
+      <ErrorBoundary>
+        <Dashboard />
+      </ErrorBoundary>
     </Protected>
   ),
   children: [

@@ -6,6 +6,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import { useEffect } from 'react';
+import { useSocketContext } from 'contexts/SocketContext';
 
 // project import
 import AppBarStyled from './AppBarStyled';
@@ -22,6 +24,7 @@ import MenuUnfoldOutlined from '@ant-design/icons/MenuUnfoldOutlined';
 export default function Header() {
   const theme = useTheme();
   const downLG = useMediaQuery(theme.breakpoints.down('lg'));
+  const { isConnected, emitGetNotification } = useSocketContext();
 
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
@@ -61,6 +64,12 @@ export default function Header() {
     }
   };
 
+  useEffect(() => {
+    if (isConnected) {
+      emitGetNotification();
+    }
+  }, [isConnected]);
+  
   return (
     <>
       {!downLG ? (

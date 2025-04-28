@@ -1,30 +1,26 @@
 import { Suspense } from 'react';
-import React, { useState, useEffect } from 'react';
-import Loader from './Loader';
-import ErrorLoading from 'reusable/ErrorLoading';
+import { Box, CircularProgress } from '@mui/material';
+import ErrorBoundary from './ErrorBoundary';
 
-const Loadable = (Component) => (props) => {
-  const [hasError, setHasError] = useState(false);
+const Loader = () => (
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh'
+    }}
+  >
+    <CircularProgress />
+  </Box>
+);
 
-  useEffect(() => {
-    // Reset error state if component re-renders
-    setHasError(false);
-  }, [Component]);
-
-  if (hasError) {
-    return <ErrorLoading/>;
-  }
-
-  return (
-    <Suspense
-      fallback={<Loader />}
-      onError={() => {
-        setHasError(true);
-      }}
-    >
+const Loadable = (Component) => (props) => (
+  <ErrorBoundary>
+    <Suspense fallback={<Loader />}>
       <Component {...props} />
     </Suspense>
-  );
-};
+  </ErrorBoundary>
+);
 
 export default Loadable;
