@@ -15,11 +15,11 @@ const initialState = {
   totalDispatchDevices: null,
   totalDispatchDevicesLoading: false,
   componentReportLoading: false,
-  serialNoForCompanyData: null ,
+  serialNoForCompanyData: null,
   serialNoForCompanyDataLoading: false,
   totalBERDevices: null,
   totalBERDevicesLoading: false,
-  dispatchDataReport:null,  
+  dispatchDataReport: null,
   componentSummaryLoading: false,
   componentSummary: null,
   rejectionReportLoading: false,
@@ -29,22 +29,27 @@ const initialState = {
   bpeIssueResolveLoading: false,
   wrongDeviceDetail: null,
   wrongDeviceDetailLoading: false,
-  getMINReportData:null,
-  minReportLoading:false,
+  getMINReportData: null,
+  minReportLoading: false,
   componentsOnLocation: null,
   componentsOnLocationLoading: false,
   issueReportData: null,
   issueReportLoading: false,
-  uploadIssueExcelLoading:false,
-  updateIssueExcelLoading:false,
-  deviceAnalysisReport:null,
-  deviceAnalysisReportLoading:false,
+  uploadIssueExcelLoading: false,
+  updateIssueExcelLoading: false,
+  deviceAnalysisReport: null,
+  deviceAnalysisReportLoading: false,
   trcReport: null,
   trcReportLoading: false,
   dispatchreport: null,
   dispatchreportLoading: false,
   batteryQcData: null,
-  batteryQcLoading: false
+  batteryQcLoading: false,
+  swipeMachineReport: null,
+  swipeMachineReportLoading: false,
+  swipeMachineReportPage: 1,
+  swipeMachineReportTotalPages: 0,
+  swipeMachineReportTotalRecords: 0
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -61,8 +66,10 @@ export const getWrongDeviceDetail = createAsyncThunk('totalDevice/getWrongDevice
   return response;
 });
 
-export const getMINReport = createAsyncThunk("report/getMINReport", async (payload) => {
-  const response = await axiosInstance.get(`/deviceMinV2/deviceInwardReport?fromDt=${payload.from}&toDt=${payload.to}&partner=${payload.partner}`);
+export const getMINReport = createAsyncThunk('report/getMINReport', async (payload) => {
+  const response = await axiosInstance.get(
+    `/deviceMinV2/deviceInwardReport?fromDt=${payload.from}&toDt=${payload.to}&partner=${payload.partner}`
+  );
   return response;
 });
 
@@ -75,7 +82,9 @@ export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLoca
   return response;
 });
 export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponentsOnLocation', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentDepartmentWiseStock?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/component/componentDepartmentWiseStock?startDate=${payload.from}&endDate=${payload.to}`
+  );
   return response;
 });
 export const getTotalComponentInBPE = createAsyncThunk('totalDevice/getTotalComponentInBPE', async (payload) => {
@@ -91,7 +100,9 @@ export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDis
   return response;
 });
 export const getComponentSummary = createAsyncThunk('totalDevice/getComponentSummary', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}&loc_out=${payload.location}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}&loc_out=${payload.location}`
+  );
   return response;
 });
 export const getRejectionReport = createAsyncThunk('totalDevice/getRejectionReport', async (payload) => {
@@ -117,17 +128,21 @@ export const getTrcComponentReport = createAsyncThunk('totalDevice/getTrcCompone
   return response;
 });
 
-export const getDeviceSummary = createAsyncThunk("query/getDeviceSummary", async (id) => {
+export const getDeviceSummary = createAsyncThunk('query/getDeviceSummary', async (id) => {
   const response = await axiosInstance.get(`/query/q6/devicetimeline?srlOrImei=${id}`);
   return response;
 });
 
 export const getDeviceSerialNoForCompany = createAsyncThunk('totalDevice/getDeviceSerialNoForCompany', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/device/deviceSerialNoForCompany?startDate=${payload.from}&endDate=${payload.to}&device_key=${payload.deviceKey}&type=${payload.type}`
+  );
   return response;
 });
 export const getDispatchDeviceSerialNo = createAsyncThunk('totalDevice/getDispatchDeviceSerialNo', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/deviceSerialNoForDispatch?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/dishpatch/deviceSerialNoForDispatch?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`
+  );
   return response;
 });
 
@@ -147,11 +162,11 @@ export const getIssueExcel = createAsyncThunk('totalDevice/getIssueExcel', async
 });
 
 export const updateIssueExcel = createAsyncThunk('totalDevice/updateIssueExcel', async (payload) => {
-  const response = await axiosInstance.post(`/bpeIssue/updateIssue`,payload);
+  const response = await axiosInstance.post(`/bpeIssue/updateIssue`, payload);
   return response;
 });
 
-export const getDeviceAnalysis = createAsyncThunk("report/getR13Report", async (payload) => {
+export const getDeviceAnalysis = createAsyncThunk('report/getR13Report', async (payload) => {
   const response = await axiosInstance.get(`/analytics/device/report?fromDate=${payload.from}&toDate=${payload.to}`);
   return response;
 });
@@ -161,8 +176,9 @@ export const uploadIssueExcel = createAsyncThunk('totalDevice/uploadIssueExcel',
   formData.append('file', file);
   const response = await axiosInstance.post(`/bpeIssue/uploadIssue`, formData, {
     headers: {
-      'Content-Type': 'multipart/form-data', // Set appropriate headers
-    }});
+      'Content-Type': 'multipart/form-data' // Set appropriate headers
+    }
+  });
   return response;
 });
 
@@ -172,12 +188,23 @@ export const solvedBpeIssue = createAsyncThunk('totalDevice/solvedBpeIssue', asy
 });
 
 export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSerialNo', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceSerialNoForBer?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/device/deviceSerialNoForBer?startDate=${payload.from}&endDate=${payload.to}&deviceKey=${payload.deviceKey}`
+  );
   return response;
 });
 
-export const getr5Report = createAsyncThunk("report/getr5Report", async (query) => {
-  const response = await axiosInstance.get(query.type === "DEVICE" ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}`);
+export const getr5Report = createAsyncThunk('report/getr5Report', async (query) => {
+  const response = await axiosInstance.get(
+    query.type === 'DEVICE' ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}`
+  );
+  return response;
+});
+
+export const getSwipeMachineReport = createAsyncThunk('report/getSwipeMachineReport', async (payload) => {
+  const response = await axiosInstance.get(
+    `/swipeMachine/report/${payload.partnerValue}?fromDate=${payload.fromDate}&toDate=${payload.toDate}&page=${payload.page}&limit=${payload.limit}`
+  );
   return response;
 });
 
@@ -228,8 +255,8 @@ const reportSlice = createSlice({
         if (action.payload.data.success) {
           state.batteryQcData = action.payload.data.data;
         }
-      })  
-      .addCase(getBatteryQCReport.rejected,(state,action)=>{
+      })
+      .addCase(getBatteryQCReport.rejected, (state, action) => {
         state.batteryQcLoading = false;
         state.batteryQcData = null;
       })
@@ -464,7 +491,7 @@ const reportSlice = createSlice({
       })
       .addCase(getRejectionReport.fulfilled, (state, action) => {
         // if (action.payload.data.success) {
-          state.rejectionReport = action.payload.data;
+        state.rejectionReport = action.payload.data;
         // }
         state.rejectionReportLoading = false;
       })
@@ -541,6 +568,23 @@ const reportSlice = createSlice({
       .addCase(getTrcComponentReport.rejected, (state) => {
         state.trcReportLoading = false;
         state.trcReport = null;
+      })
+      .addCase(getSwipeMachineReport.pending, (state) => {
+        state.swipeMachineReportLoading = true;
+        state.swipeMachineReport = null;
+      })
+      .addCase(getSwipeMachineReport.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.swipeMachineReport = action.payload.data.data;
+          state.swipeMachineReportPage = action.payload.data.page;
+          state.swipeMachineReportTotalPages = action.payload.data.totalPages;
+          state.swipeMachineReportTotalRecords = action.payload.data.totalRecords;
+        }
+        state.swipeMachineReportLoading = false;
+      })
+      .addCase(getSwipeMachineReport.rejected, (state) => {
+        state.swipeMachineReportLoading = false;
+        state.swipeMachineReport = null;
       });
   }
 });
