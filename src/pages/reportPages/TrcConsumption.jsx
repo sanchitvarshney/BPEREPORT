@@ -27,7 +27,7 @@ const TrcConsumption = () => {
       "IMEI No": device["IMEI No"],
       "Serial No": device["Serial No"],
       ...device.Components.reduce((acc, component) => {
-      acc[component["Part Name"]?? component["Component Name"] + " (" + component["Part No"]+")"] = component.Quantity;
+      acc[trcReport?.components?.filter((componentData) => componentData["Part No"]===component["Part No"])[0]["Part Name"] + " (" + component["Part No"]+")"] = component.Quantity;
         return acc;
       }, {})
     }));
