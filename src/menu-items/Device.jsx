@@ -22,7 +22,7 @@ const Device = {
   children: [
     {
       id: 'total-device-in-company',
-      title: 'Devices In Warehouse',
+      title: 'In Warehouse',
       type: 'item',
       url: '/total-device-in-company',
       icon: icons.OnDeviceTrainingOutlinedIcon,
@@ -31,7 +31,7 @@ const Device = {
     },
     {
       id: 'devices-on-locaton',
-      title: 'Devices At Locaton',
+      title: 'On Location',
       type: 'item',
       url: '/total-device-at-company-locations',
       icon: icons.LocationOnOutlinedIcon,
@@ -58,7 +58,7 @@ const Device = {
     // },
     {
       id: 'device-summary',
-      title: 'Device Summary',
+      title: 'Summary',
       type: 'item',
       url: '/device-summary',
       icon: icons.DockOutlinedIcon,
