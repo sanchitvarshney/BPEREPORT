@@ -5,6 +5,7 @@ import Dispatch from './Dispatch';
 import IMEIWiseConst from './IMEIWiseConst';
 import other from 'menu-items/Other';
 import swipe from './Swipe';
+import { menuIcons } from './icons';
 
 const menuItems = {
   items: [
@@ -17,7 +18,7 @@ const menuItems = {
           id: 'soundbox-section',
           title: 'Soundbox',
           type: 'collapse',
-          icon: dashboard.children[0].icon,
+          icon: menuIcons.soundbox,
           children: [
             {
               id: 'soundbox-dashboard',
@@ -75,7 +76,7 @@ const menuItems = {
           id: 'swipeDevice-section',
           title: 'Swipe Device',
           type: 'collapse',
-          icon: dashboard.children[0].icon,
+          icon: menuIcons.swipeDevice,
           children: [
             {
               id: 'swipe-section',
