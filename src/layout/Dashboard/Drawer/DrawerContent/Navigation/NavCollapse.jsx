@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-// project import
 import NavItem from './NavItem';
 import { useGetMenuMaster } from 'api/menu';
 
@@ -19,10 +18,13 @@ export default function NavCollapse({ menu, level }) {
   const theme = useTheme();
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
-  const [open, setOpen] = useState(false);
+
+  // Local open state
+  const [isOpen, setIsOpen] = useState(false);
+  const [openChildId, setOpenChildId] = useState(null); // for this menu’s children
 
   const handleClick = () => {
-    setOpen(!open);
+    setIsOpen(!isOpen);
   };
 
   const Icon = menu.icon;
@@ -31,7 +33,7 @@ export default function NavCollapse({ menu, level }) {
   const menuCollapse = menu.children?.map((item) => {
     switch (item.type) {
       case 'collapse':
-        return <NavCollapse key={item.id} menu={item} level={level + 1} />;
+        return <NavCollapse key={item.id} menu={item} level={level + 1} openMenuId={openChildId} setOpenMenuId={setOpenChildId} />;
       case 'item':
         return <NavItem key={item.id} item={item} level={level + 1} />;
       default:
@@ -50,8 +52,8 @@ export default function NavCollapse({ menu, level }) {
           mb: 0.5,
           alignItems: 'flex-start',
           backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
-          py: level > 1 ? 0.5 : 0.75, // Further reduced padding
-          pl: `${level * 8}px`, // Further reduced left padding
+          py: level > 1 ? 0.25 : 0.5,
+          pl: `${Math.min(16 + level * 8, 32)}px`, // Updated padding
           '&:hover': {
             bgcolor: 'primary.lighter'
           },
@@ -67,33 +69,36 @@ export default function NavCollapse({ menu, level }) {
         }}
         onClick={handleClick}
       >
-        <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 16 : 32 }}>{menuIcon}</ListItemIcon>
+        <ListItemIcon sx={{ my: 'auto', minWidth: 28 }}>{menuIcon}</ListItemIcon>
         <ListItemText
           primary={
-            <Typography 
-              variant={open ? 'h5' : 'body1'} 
-              color="inherit" 
-              sx={{ 
-                my: 'auto',
-                fontSize: '0.875rem'
+            <Typography
+              variant="body2"
+              noWrap
+              sx={{
+                fontSize: '0.875rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
             >
               {menu.title}
             </Typography>
           }
-          secondary={menu.caption && (
-            <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
-              {menu.caption}
-            </Typography>
-          )}
+          secondary={
+            menu.caption && (
+              <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+                {menu.caption}
+              </Typography>
+            )
+          }
         />
-        {open ? (
+        {isOpen ? (
           <KeyboardArrowDownIcon sx={{ fontSize: '1rem', ml: 0.5 }} />
         ) : (
           <KeyboardArrowRightIcon sx={{ fontSize: '1rem', ml: 0.5 }} />
         )}
       </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <Box
             sx={{
@@ -101,8 +106,8 @@ export default function NavCollapse({ menu, level }) {
               flexDirection: 'column',
               gap: 0.25,
               bgcolor: 'background.default',
-              borderLeft: `1px solid ${theme.palette.divider}`,
-              ml: 1 // Further reduced margin
+              borderLeft: `1px solid ${theme.palette.divider}`
+              // ml: `${level * 6}px`
             }}
           >
             {menuCollapse}
