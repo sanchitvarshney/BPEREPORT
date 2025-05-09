@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 
 // project import
 import NavItem from './NavItem';
+import NavCollapse from './NavCollapse';
 import { useGetMenuMaster } from 'api/menu';
 
 export default function NavGroup({ item }) {
@@ -15,11 +16,7 @@ export default function NavGroup({ item }) {
   const navCollapse = item.children?.map((menuItem) => {
     switch (menuItem.type) {
       case 'collapse':
-        return (
-          <Typography key={menuItem.id} variant="caption" color="error" sx={{ p: 2.5 }}>
-            collapse - only available in paid version
-          </Typography>
-        );
+        return <NavCollapse key={menuItem.id} menu={menuItem} level={1} />;
       case 'item':
         return <NavItem key={menuItem.id} item={menuItem} level={1} />;
       default:
@@ -33,18 +30,30 @@ export default function NavGroup({ item }) {
 
   return (
     <List
-      subheader={
-        item.title &&
-        drawerOpen && (
-          <Box sx={{ pl: 3, mb: 1.5 }}>
-            <Typography variant="subtitle2" color="textSecondary">
-              {item.title}
-            </Typography>
-            {/* only available in paid version */}
-          </Box>
-        )
-      }
-      sx={{ mb: drawerOpen ? 1.5 : 0, py: 0, zIndex: 0 }}
+      sx={{
+        mb: drawerOpen ? 1.5 : 0,
+        py: 0,
+        zIndex: 0,
+        '& .MuiListItemButton-root': {
+          mb: 0.5,
+          alignItems: 'flex-start',
+          backgroundColor: 'inherit',
+          py: 1.25,
+          '&:hover': {
+            bgcolor: 'primary.lighter'
+          },
+          '&.Mui-selected': {
+            bgcolor: 'primary.lighter',
+            borderRight: '2px solid',
+            borderRightColor: 'primary.main',
+            color: 'primary.main',
+            '&:hover': {
+              color: 'primary.main',
+              bgcolor: 'primary.lighter'
+            }
+          }
+        }
+      }}
     >
       {navCollapse}
     </List>
