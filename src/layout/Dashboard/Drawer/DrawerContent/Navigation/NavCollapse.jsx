@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,30 +9,30 @@ import Collapse from '@mui/material/Collapse';
 import Box from '@mui/material/Box';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-
+import { useState } from 'react';
 import NavItem from './NavItem';
 import { useGetMenuMaster } from 'api/menu';
 
-export default function NavCollapse({ menu, level }) {
+export default function NavCollapse({ menu, level, openMenuId, setOpenMenuId }) {
   const theme = useTheme();
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
-  // Local open state
-  const [isOpen, setIsOpen] = useState(false);
-  const [openChildId, setOpenChildId] = useState(null); // for this menu’s children
+  const isOpen = openMenuId === menu.id;
 
   const handleClick = () => {
-    setIsOpen(!isOpen);
+    setOpenMenuId(isOpen ? null : menu.id);
   };
 
   const Icon = menu.icon;
-  const menuIcon = menu.icon ? <Icon style={{ fontSize: drawerOpen ? '1rem' : '1.25rem' }} /> : false;
+  const menuIcon = Icon ? <Icon style={{ fontSize: drawerOpen ? '1rem' : '1.25rem' }} /> : null;
+
+  const [childOpenId, setChildOpenId] = useState(null); // This controls the submenu at this level
 
   const menuCollapse = menu.children?.map((item) => {
     switch (item.type) {
       case 'collapse':
-        return <NavCollapse key={item.id} menu={item} level={level + 1} openMenuId={openChildId} setOpenMenuId={setOpenChildId} />;
+        return <NavCollapse key={item.id} menu={item} level={level + 1} openMenuId={childOpenId} setOpenMenuId={setChildOpenId} />;
       case 'item':
         return <NavItem key={item.id} item={item} level={level + 1} />;
       default:
@@ -53,7 +52,7 @@ export default function NavCollapse({ menu, level }) {
           alignItems: 'flex-start',
           backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
           py: level > 1 ? 0.25 : 0.5,
-          pl: `${Math.min(16 + level * 8, 32)}px`, // Updated padding
+          pl: `${Math.min(16 + level * 8, 32)}px`,
           '&:hover': {
             bgcolor: 'primary.lighter'
           },
@@ -106,8 +105,8 @@ export default function NavCollapse({ menu, level }) {
               flexDirection: 'column',
               gap: 0.25,
               bgcolor: 'background.default',
-              borderLeft: `1px solid ${theme.palette.divider}`
-              // ml: `${level * 6}px`
+              borderLeft: `1px solid ${theme.palette.divider}`,
+              // ml: `${level * 0}px`
             }}
           >
             {menuCollapse}
@@ -120,5 +119,7 @@ export default function NavCollapse({ menu, level }) {
 
 NavCollapse.propTypes = {
   menu: PropTypes.object,
-  level: PropTypes.number
+  level: PropTypes.number,
+  openMenuId: PropTypes.string,
+  setOpenMenuId: PropTypes.func
 };

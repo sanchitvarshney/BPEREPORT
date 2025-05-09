@@ -2,7 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
@@ -12,7 +11,7 @@ export default function NavGroup({ item }) {
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
-  const [openMenuId, setOpenMenuId] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null); // For top-level collapses
 
   const navCollapse = item.children?.map((menuItem) => {
     switch (menuItem.type) {
