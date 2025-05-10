@@ -49,7 +49,12 @@ const initialState = {
   swipeMachineReportLoading: false,
   swipeMachineReportPage: 1,
   swipeMachineReportTotalPages: 0,
-  swipeMachineReportTotalRecords: 0
+  swipeMachineReportTotalRecords: 0,
+  swipeFunctionalReport: null,
+  swipeFunctionalReportLoading: false,
+  swipeFunctionalReportPage: 1,
+  swipeFunctionalReportTotalPages: 0,
+  swipeFunctionalReportTotalRecords: 0
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -204,6 +209,13 @@ export const getr5Report = createAsyncThunk('report/getr5Report', async (query) 
 export const getSwipeMachineReport = createAsyncThunk('report/getSwipeMachineReport', async (payload) => {
   const response = await axiosInstance.get(
     `/swipeMachine/report/${payload.partnerValue}?fromDate=${payload.fromDate}&toDate=${payload.toDate}&page=${payload.page}&limit=${payload.limit}`
+  );
+  return response;
+});
+
+export const getSwipeFunctionalReport = createAsyncThunk('report/getSwipeFunctionalReport', async (payload) => {
+  const response = await axiosInstance.get(
+    `/swipeMachine/report?startDate=${payload.fromDate}&endDate=${payload.toDate}&page=${payload.page}&limit=${payload.limit}`
   );
   return response;
 });
@@ -585,6 +597,23 @@ const reportSlice = createSlice({
       .addCase(getSwipeMachineReport.rejected, (state) => {
         state.swipeMachineReportLoading = false;
         state.swipeMachineReport = null;
+      })
+      .addCase(getSwipeFunctionalReport.pending, (state) => {
+        state.swipeFunctionalReportLoading = true;
+        state.swipeFunctionalReport = null;
+      })
+      .addCase(getSwipeFunctionalReport.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          state.swipeFunctionalReport = action.payload.data.data;
+          state.swipeFunctionalReportPage = action.payload.data.page;
+          state.swipeFunctionalReportTotalPages = action.payload.data.totalPages;
+          state.swipeFunctionalReportTotalRecords = action.payload.data.totalRecords;
+        }
+        state.swipeFunctionalReportLoading = false;
+      })
+      .addCase(getSwipeFunctionalReport.rejected, (state) => {
+        state.swipeFunctionalReportLoading = false;
+        state.swipeFunctionalReport = null;
       });
   }
 });

@@ -30,6 +30,7 @@ const TotalMINDevice = Loadable(lazy(() => import('pages/reportPages/TotalMINDev
 const TotalComponentsOnCompanyLocation = Loadable(lazy(() => import('pages/reportPages/TotalComponentsOnCompanylocation')));
 const DeviceAnalysis = Loadable(lazy(() => import('pages/reportPages/DeviceAnalysis')));
 const SwipeMINReport = Loadable(lazy(() => import('pages/reportPages/SwipeMINReport')));
+const SwipeFunctionalReport = Loadable(lazy(() => import('pages/reportPages/SwipeFunctionalReport')));
 
 const MainRoutes = {
   path: '/',
@@ -60,6 +61,10 @@ const MainRoutes = {
     {
       path: '/swipe-min-report',
       element: <SwipeMINReport />
+    },
+    {
+      path: '/swipe-functional-report',
+      element: <SwipeFunctionalReport />
     },
     {
       path: '/wrong-device',

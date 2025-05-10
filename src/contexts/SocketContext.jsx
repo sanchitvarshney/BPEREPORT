@@ -60,6 +60,16 @@ export const SocketProvider = ({ children }) => {
     socketService.emit("rWrongDevice", payload);
   };
 
+  const emitSwipeFunctionalReport = (payload) => {
+    console.log(payload)
+    socketService.emit("swipeFunctionalReport", payload);
+  }
+
+  const emitDownloadSwipeReport = (payload) => {
+    console.log("clicked");
+    socketService.emit("swipeDispatchReport", payload);
+  };
+
   const emitGetNotification = () => {
     socketService.emit("getNotification","");
   };
@@ -74,5 +84,5 @@ export const SocketProvider = ({ children }) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{ emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{emitSwipeFunctionalReport, emitDownloadSwipeReport, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
 };

@@ -2,11 +2,13 @@ import ReportOutlinedIcon from '@mui/icons-material/ReportOutlined';
 import SyncProblemOutlinedIcon from '@mui/icons-material/SyncProblemOutlined';
 import Battery3BarOutlinedIcon from '@mui/icons-material/Battery3BarOutlined';
 import DockOutlinedIcon from '@mui/icons-material/DockOutlined';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 const icons = {
   ReportOutlinedIcon,
   SyncProblemOutlinedIcon,
   Battery3BarOutlinedIcon,
-  DockOutlinedIcon
+  DockOutlinedIcon,
+  DashboardOutlinedIcon
 };
 const Other = {
   id: 'other',
@@ -22,15 +24,15 @@ const Other = {
       target: false,
       breadcrumbs: false
     },
-    // {
-    //   id: 'rejection-report',
-    //   title: 'Rejection Report',
-    //   type: 'item',
-    //   url: '/rejection-report',
-    //   icon: icons.ReportOutlinedIcon,
-    //   target: false,
-    //   breadcrumbs: false
-    // },
+    {
+      id: 'functional-report',
+      title: 'Functional Report',
+      type: 'item',
+      url: '/swipe-functional-report',
+      icon: icons.DashboardOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
     // {
     //   id: 'bpe-issue',
     //   title: 'BPe Issue',
