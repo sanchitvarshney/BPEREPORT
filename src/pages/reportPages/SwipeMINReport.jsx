@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -12,12 +12,15 @@ import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
 import SwipeMINReportTable from 'components/table/SwipeMINReportTable';
+import {useSocketContext} from '../../contexts/SocketContext';
 const { RangePicker } = DatePicker;
 
 const SwipeMINReport = () => {
-  const { swipeMachineReportLoading, swipeMachineReport, swipeMachineReportPage, swipeMachineReportTotalPages } = useSelector(
+  const { swipeMachineReportLoading, swipeMachineReport, swipeMachineReportTotalPages } = useSelector(
     (state) => state.report
   );
+  const {swipeMachineInward} =   useSocketContext();
+
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
   const [page, setPage] = useState(1);
@@ -41,6 +44,15 @@ const SwipeMINReport = () => {
       );
     }
   };
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    swipeMachineInward({ fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'), toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),partner:partner });
+  };
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -109,6 +121,17 @@ const SwipeMINReport = () => {
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
             Download
+          </Button>
+          <Button
+            disabled={!swipeMachineReport}
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleDownload()
+            }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download All
           </Button>
         </Box>
         <SwipeMINReportTable />
