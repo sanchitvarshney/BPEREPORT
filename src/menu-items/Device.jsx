@@ -38,7 +38,7 @@ const Device = {
       target: false,
       breadcrumbs: false
     },
-{
+    {
       id: 'ber-details',
       title: 'BER Devices',
       type: 'item',

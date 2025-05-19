@@ -199,7 +199,7 @@ export function LocationAccordion({ data, dateRange }) {
   );
 }
 
-const TotalDeviceInCompanylocation = () => {
+const SwipeTotalDeviceInCompanylocation = () => {
   const { deviceOnLocationLoading, deviceOnLocation } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
@@ -233,7 +233,7 @@ const TotalDeviceInCompanylocation = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"soundBox" })
+                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"swipeMachine" })
               );
             } else {
               showToast('Please select date', 'error');
@@ -282,4 +282,4 @@ const TotalDeviceInCompanylocation = () => {
   );
 };
 
-export default TotalDeviceInCompanylocation;
+export default SwipeTotalDeviceInCompanylocation;

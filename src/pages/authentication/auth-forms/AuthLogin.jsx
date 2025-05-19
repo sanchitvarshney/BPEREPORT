@@ -50,10 +50,10 @@ export default function AuthLogin() {
 
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    if (!recaptchaValue) {
-      showToast("Please verify the reCAPTCHA", "error");
-      return;
-    }
+    // if (!recaptchaValue) {
+    //   showToast("Please verify the reCAPTCHA", "error");
+    //   return;
+    // }
     try {
       const payload = {
         username: values.email,

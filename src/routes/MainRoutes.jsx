@@ -6,6 +6,8 @@ import NotFoundPage from 'pages/NotFoundPage';
 import DeviceInCompanyLayout from 'layout/WarehouseLayout/DispatchLayout';
 import BPEIssueLayout from 'layout/BPEIssueLayout/BPEIssueLayout';
 import ErrorBoundary from 'components/ErrorBoundary';
+import SwipeTotalDeviceInCompanylocation from 'pages/reportPages/SwipeTotalDeviceInCompanylocation';
+
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
@@ -105,6 +107,10 @@ const MainRoutes = {
     {
       path: '/total-material-in-msc',
       element: <TotalMaterialInMSCCompany />
+    },
+        {
+      path: '/swipe/total-device-at-company-locations',
+      element: <SwipeTotalDeviceInCompanylocation />
     },
     {
       path: '/dispatch-report',

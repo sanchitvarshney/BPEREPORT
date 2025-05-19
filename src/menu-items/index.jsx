@@ -6,6 +6,8 @@ import IMEIWiseConst from './IMEIWiseConst';
 import other from 'menu-items/Other';
 import swipe from './Swipe';
 import { menuIcons } from './icons';
+import SwipeLocation from './SwipeLocation';
+import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOutlined';
 
 const menuItems = {
   items: [
@@ -32,7 +34,7 @@ const menuItems = {
               id: 'device-section',
               title: 'Device',
               type: 'collapse',
-              icon: Device.children[0].icon,
+              icon:  Device.children[0].icon,
               children: Device.children
             },
             {
@@ -84,11 +86,18 @@ const menuItems = {
               type: 'collapse',
               icon: swipe.children[0].icon,
               children: swipe.children
+            },
+            {
+              id: 'swipe-device-section',
+              title: 'Device',
+              type: 'collapse',
+              icon: OnDeviceTrainingOutlinedIcon,
+              children: SwipeLocation.children
             }
           ]
-        },
+        }
       ]
-    },
+    }
   ]
 };
 

@@ -82,8 +82,10 @@ export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent
   const response = await axiosInstance.get(`/bpe/dashboard/component/componentInCompany?startDate=${payload.from}&endDate=${payload.to}`);
   return response;
 });
+
 export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLocation', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceLocation?startDate=${payload.from}&endDate=${payload.to}`);
+
+  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceLocation?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
   return response;
 });
 export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponentsOnLocation', async (payload) => {
