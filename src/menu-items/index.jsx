@@ -5,6 +5,7 @@ import Dispatch from './Dispatch';
 import IMEIWiseConst from './IMEIWiseConst';
 import other from 'menu-items/Other';
 import swipe from './Swipe';
+import SwipeDispatch from './SwipeDispatch';
 import { menuIcons } from './icons';
 import SwipeLocation from './SwipeLocation';
 import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOutlined';
@@ -93,6 +94,13 @@ const menuItems = {
               type: 'collapse',
               icon: OnDeviceTrainingOutlinedIcon,
               children: SwipeLocation.children
+            },
+            {
+              id: 'swipe-dispatch-section',
+              title: 'Dispatch',
+              type: 'collapse',
+              icon: SwipeDispatch.children[0].icon,
+              children: SwipeDispatch.children
             }
           ]
         }

@@ -125,6 +125,14 @@ const MainRoutes = {
       element: <TotalDispatchdevices />
     },
     {
+      path: '/total-dispatch-swipe-device',
+      element: <TotalDispatchdevices />
+    },
+    {
+      path: '/dispatch-report-swipe-device',
+      element: <DispatchReport />
+    },
+    {
       path: '/assembly-consumption',
       element: (
         <ConsumptionLayout>

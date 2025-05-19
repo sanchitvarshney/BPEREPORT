@@ -20,7 +20,8 @@ const TotalDispatchdevices = () => {
     from: null,
     to: null
   });
-
+  const isSwipeModule = window.location.pathname.includes('swipe');
+  console.log(isSwipeModule, 'isSwipeModule');
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -47,7 +48,7 @@ const TotalDispatchdevices = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalDispatchDevices({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getTotalDispatchDevices({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'),type:isSwipeModule ? 'swipeMachine' : 'soundBox' })
               );
             } else {
               showToast('Please select date', 'error');

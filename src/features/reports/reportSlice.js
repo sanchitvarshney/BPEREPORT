@@ -103,7 +103,7 @@ export const getTotalComponentInMSC = createAsyncThunk('totalDevice/getTotalComp
   return response;
 });
 export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDispatchDevices', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
   return response;
 });
 export const getComponentSummary = createAsyncThunk('totalDevice/getComponentSummary', async (payload) => {
@@ -203,7 +203,7 @@ export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSe
 
 export const getr5Report = createAsyncThunk('report/getr5Report', async (query) => {
   const response = await axiosInstance.get(
-    query.type === 'DEVICE' ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}`
+    query.type === 'DEVICE' ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}&type=${query.type}`
   );
   return response;
 });

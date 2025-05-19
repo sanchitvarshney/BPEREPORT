@@ -15,6 +15,7 @@ import DispatchReportTable from 'components/table/DispatchReportTable';
 const { RangePicker } = DatePicker;
 const DispatchReport = () => {
   const { dispatchreport, dispatchreportLoading } = useSelector((state) => state.report);
+  const isSwipeModule = window.location.pathname.includes('swipe');
   
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
@@ -48,7 +49,7 @@ const DispatchReport = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getr5Report({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getr5Report({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'),type:isSwipeModule ? 'swipeMachine' : 'soundBox' })
               );
             } else {
               showToast('Please select date', 'error');
