@@ -62,9 +62,18 @@ export const exportToExcel = (data, fileName,partner) => {
   // Modify column names in the data
   const modifiedData = data.map(row => {
     const newRow = {};
-    Object.keys(row).forEach(key => {
-      // If the column has a mapping, replace it; otherwise, keep the original key
-      newRow[columnNameMapping[key] || key] = row[key];
+    Object.keys(row).forEach((key) => {
+      if (key === 'issues' && row[key]) {
+        // Flatten the issues object into separate columns
+        Object.keys(row[key]).forEach((issueKey) => {
+          if (issueKey !== '[[Prototype]]') {
+            newRow[`Issue - ${issueKey}`] = row[key][issueKey];
+          }
+        });
+      } else {
+        // If the column has a mapping, replace it; otherwise, keep the original key
+        newRow[columnNameMapping[key] || key] = row[key];
+      }
     });
     return newRow;
   });

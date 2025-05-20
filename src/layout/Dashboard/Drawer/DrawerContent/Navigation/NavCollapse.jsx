@@ -92,9 +92,9 @@ export default function NavCollapse({ menu, level, openMenuId, setOpenMenuId }) 
           }
         />
         {isOpen ? (
-          <KeyboardArrowDownIcon sx={{ fontSize: '1rem', ml: 0.5 }} />
+          <KeyboardArrowDownIcon sx={{ fontSize: '1rem', ml: 0.5, mt: 0.7 }} />
         ) : (
-          <KeyboardArrowRightIcon sx={{ fontSize: '1rem', ml: 0.5 }} />
+          <KeyboardArrowRightIcon sx={{ fontSize: '1rem', ml: 0.5, mt: 0.7 }} />
         )}
       </ListItemButton>
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
