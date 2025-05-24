@@ -67,6 +67,7 @@ const TotalWrongDevice = () => {
               <MenuItem value="eCOM">eCOM</MenuItem>
               <MenuItem value="DTDC">DTDC</MenuItem>
               <MenuItem value="dVery">Delhivery</MenuItem>
+              <MenuItem value="expb">XpressBees</MenuItem>
               <MenuItem value="ALL">ALL</MenuItem>
             </Select>
           </FormControl>
