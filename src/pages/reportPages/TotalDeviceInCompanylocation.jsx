@@ -233,7 +233,7 @@ const TotalDeviceInCompanylocation = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"soundBox" })
+                getdeviceOnLocation({url:"/deviceLocation", from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"soundBox" })
               );
             } else {
               showToast('Please select date', 'error');

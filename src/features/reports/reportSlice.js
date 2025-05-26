@@ -84,8 +84,7 @@ export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent
 });
 
 export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLocation', async (payload) => {
-
-  const response = await axiosInstance.get(`/bpe/dashboard/device/deviceLocation?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/device/${payload.url}?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
   return response;
 });
 export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponentsOnLocation', async (payload) => {

@@ -233,7 +233,7 @@ const SwipeTotalDeviceInCompanylocation = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"swipeMachine" })
+                getdeviceOnLocation({url:"/swipeDeviceLocation", from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"swipeMachine" })
               );
             } else {
               showToast('Please select date', 'error');
