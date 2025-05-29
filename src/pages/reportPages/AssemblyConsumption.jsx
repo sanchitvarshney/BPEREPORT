@@ -4,35 +4,37 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getComponentReport,getAllComponentReport } from 'features/reports/reportSlice';
+import { getComponentReport, getAllComponentReport } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import DynamicComponentTable from 'components/table/DynamicAssemblyTable';
 const { RangePicker } = DatePicker;
 const AssemblyConsumption = () => {
-  const { componentReport, componentReportLoading,allComponentReportLoading } = useSelector((state) => state.report);
+  const { componentReport, componentReportLoading, allComponentReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
   const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const isSwipe = window.location.pathname.includes('swipe');
 
   const handleDownload = () => {
     if (dateRange.from && dateRange.to) {
-      dispatch(getAllComponentReport({
-        from: dayjs(dateRange.from).format('YYYY-MM-DD'),
-      to: dayjs(dateRange.to).format('YYYY-MM-DD'),
-      type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
-    }))
-    }
-    else {
+      dispatch(
+        getAllComponentReport({
+          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox'
+        })
+      );
+    } else {
       showToast('Please select date', 'error');
     }
     // Prepare data for export
@@ -48,17 +50,34 @@ const AssemblyConsumption = () => {
     // Call the exportToExcel function (pass data for export and filename)
     exportToExcel(dataForExport, 'Assembly Consumption');
   };
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
-    if (dateRange.from && dateRange.to && partner) {
+  console.log(componentReport);
+  const handleChangeRowsPerPage = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setPage(1);
+    if (dateRange.from && dateRange.to) {
       dispatch(
         getComponentReport({
           from: dayjs(dateRange.from).format('YYYY-MM-DD'),
           to: dayjs(dateRange.to).format('YYYY-MM-DD'),
           type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
-          page: value,
-          limit: 10,
+          page: 1,
+          limit: newRowsPerPage
+        })
+      );
+    }
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage + 1);
+    if (dateRange.from && dateRange.to) {
+      dispatch(
+        getComponentReport({
+          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
+          page: newPage + 1,
+          limit: rowsPerPage
         })
       );
     }
@@ -96,7 +115,7 @@ const AssemblyConsumption = () => {
                     to: dayjs(dateRange.to).format('YYYY-MM-DD'),
                     type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
                     page: 1,
-                    limit: 10,
+                    limit: rowsPerPage
                   })
                 );
               } else {
@@ -108,7 +127,13 @@ const AssemblyConsumption = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
-          <LoadingButton disabled={!dateRange.from || !dateRange.to} variant="contained" color="success" onClick={handleDownload} loading={allComponentReportLoading}>
+          <LoadingButton
+            disabled={!dateRange.from || !dateRange.to}
+            variant="contained"
+            color="success"
+            onClick={handleDownload}
+            loading={allComponentReportLoading}
+          >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
             Download
           </LoadingButton>
@@ -119,15 +144,17 @@ const AssemblyConsumption = () => {
           loading={componentReportLoading}
         />
       </LocalizationProvider>
-      {componentReport?.data > 1 && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Pagination
-            count={componentReport?.data}
-            page={page}
-            onChange={handlePageChange}
+      {componentReport?.pagination && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', }}>
+          <TablePagination
+            count={componentReport?.pagination?.totalItems}
+            page={page - 1}
+            onPageChange={handlePageChange}
             color="primary"
             showFirstButton
             showLastButton
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Box>
       )}
