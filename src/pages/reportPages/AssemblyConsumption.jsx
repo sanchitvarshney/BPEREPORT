@@ -7,7 +7,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Box, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
-import { getComponentReport } from 'features/reports/reportSlice';
+import { getComponentReport,getAllComponentReport } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
@@ -20,19 +20,30 @@ const AssemblyConsumption = () => {
     from: null,
     to: null
   });
+  const [page, setPage] = useState(1);
 
   const isSwipe = window.location.pathname.includes('swipe');
 
   const handleDownload = () => {
+    if (dateRange.from && dateRange.to) {
+      dispatch(getAllComponentReport({
+        from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+      to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+      type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
+    }))
+    }
+    else {
+      showToast('Please select date', 'error');
+    }
     // Prepare data for export
-    const dataForExport = componentReport?.data?.map((device) => ({
-      'IMEI No': device['IMEI No'],
-      'Serial No': device['Serial No'],
-      ...device.Components.reduce((acc, component) => {
-        acc[component['Part Name'] + ' (' + component['Part No'] + ')'] = component.Quantity;
-        return acc;
-      }, {})
-    }));
+    // const dataForExport = componentReport?.data?.map((device) => ({
+    //   'IMEI No': device['IMEI No'],
+    //   'Serial No': device['Serial No'],
+    //   ...device.Components.reduce((acc, component) => {
+    //     acc[component['Part Name'] + ' (' + component['Part No'] + ')'] = component.Quantity;
+    //     return acc;
+    //   }, {})
+    // }));
 
     // Call the exportToExcel function (pass data for export and filename)
     exportToExcel(dataForExport, 'Assembly Consumption');
@@ -45,7 +56,9 @@ const AssemblyConsumption = () => {
         getComponentReport({
           from: dayjs(dateRange.from).format('YYYY-MM-DD'),
           to: dayjs(dateRange.to).format('YYYY-MM-DD'),
-          type: 'swipeMachine'
+          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
+          page: value,
+          limit: 10,
         })
       );
     }
@@ -81,7 +94,9 @@ const AssemblyConsumption = () => {
                   getComponentReport({
                     from: dayjs(dateRange.from).format('YYYY-MM-DD'),
                     to: dayjs(dateRange.to).format('YYYY-MM-DD'),
-                    type: 'swipeMachine'
+                    type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
+                    page: 1,
+                    limit: 10,
                   })
                 );
               } else {
@@ -93,7 +108,7 @@ const AssemblyConsumption = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
-          <Button disabled={!componentReport} variant="contained" color="success" onClick={handleDownload}>
+          <Button disabled={!dateRange.from || !dateRange.to} variant="contained" color="success" onClick={handleDownload}>
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
             Download
           </Button>

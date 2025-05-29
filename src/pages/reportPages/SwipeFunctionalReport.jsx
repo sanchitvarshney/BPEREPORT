@@ -21,7 +21,7 @@ const SwipeFunctionalReport = () => {
   const { swipeFunctionalReportLoading, swipeFunctionalReport, swipeFunctionalReportTotalPages } = useSelector((state) => state.report);
   const { emitSwipeFunctionalReport } = useSocketContext();
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1); 
   const [limit] = useState(10);
   const [type, setType] = useState('DEVICE');
   const [device, setDevice] = useState(null);
@@ -40,7 +40,7 @@ const SwipeFunctionalReport = () => {
           page: value,
           limit,
           deviceId: device?.id,
-          type:type,
+          type: type
         })
       );
     }
@@ -57,7 +57,7 @@ const SwipeFunctionalReport = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="">
-        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px', }}>
+        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
           <FormControl fullWidth sx={{ maxWidth: '100px' }}>
             <InputLabel id="demo-simple-select-label">Type</InputLabel>
             <Select
@@ -65,7 +65,10 @@ const SwipeFunctionalReport = () => {
               id="demo-simple-select"
               value={type}
               label="Type"
-              onChange={(e) => {setType(e.target.value); setDevice(null)}}
+              onChange={(e) => {
+                setType(e.target.value);
+                setDevice(null);
+              }}
               sx={{ height: '56px' }}
             >
               <MenuItem value={'DEVICE'}>Device</MenuItem>
@@ -110,7 +113,7 @@ const SwipeFunctionalReport = () => {
                     page: 1,
                     limit,
                     deviceId: device?.id,
-                    type:type,
+                    type: type
                   })
                 );
               } else {

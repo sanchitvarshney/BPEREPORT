@@ -54,7 +54,8 @@ const initialState = {
   swipeFunctionalReportLoading: false,
   swipeFunctionalReportPage: 1,
   swipeFunctionalReportTotalPages: 0,
-  swipeFunctionalReportTotalRecords: 0
+  swipeFunctionalReportTotalRecords: 0,
+  allComponentReportLoading: false,
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -121,7 +122,14 @@ export const getTotalBERDevices = createAsyncThunk('totalDevice/getTotalBERDevic
 });
 export const getComponentReport = createAsyncThunk('totalDevice/getComponentReport', async (payload) => {
   const response = await axiosInstance.get(
-    `/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`
+    `/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}&deviceType=${payload.type}&page=${payload.page}&limit=${payload.limit}`
+  );
+  return response;
+});
+
+export const getAllComponentReport = createAsyncThunk('totalDevice/getAllComponentReport', async (payload) => {
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/component/componentReport/download?startDate=${payload.from}&endDate=${payload.to}&deviceType=${payload.type}`
   );
   return response;
 });
@@ -569,6 +577,15 @@ const reportSlice = createSlice({
       .addCase(getComponentReport.rejected, (state) => {
         state.componentReportLoading = false;
         state.componentReport = null;
+      })
+      .addCase(getAllComponentReport.pending, (state) => {
+        state.allComponentReportLoading = true;
+      })
+      .addCase(getAllComponentReport.fulfilled, (state, action) => {
+        state.allComponentReportLoading = false;
+      })
+      .addCase(getAllComponentReport.rejected, (state) => {
+        state.allComponentReportLoading = false;
       })
       .addCase(getTrcComponentReport.pending, (state) => {
         state.trcReportLoading = true;
