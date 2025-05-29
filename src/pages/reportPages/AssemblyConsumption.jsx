@@ -14,7 +14,7 @@ import { DatePicker } from 'antd';
 import DynamicComponentTable from 'components/table/DynamicAssemblyTable';
 const { RangePicker } = DatePicker;
 const AssemblyConsumption = () => {
-  const { componentReport, componentReportLoading } = useSelector((state) => state.report);
+  const { componentReport, componentReportLoading,allComponentReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -108,10 +108,10 @@ const AssemblyConsumption = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
-          <Button disabled={!dateRange.from || !dateRange.to} variant="contained" color="success" onClick={handleDownload}>
+          <LoadingButton disabled={!dateRange.from || !dateRange.to} variant="contained" color="success" onClick={handleDownload} loading={allComponentReportLoading}>
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
             Download
-          </Button>
+          </LoadingButton>
         </Box>
         <DynamicComponentTable
           data={componentReport?.data || []}
