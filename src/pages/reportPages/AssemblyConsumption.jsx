@@ -21,13 +21,15 @@ const AssemblyConsumption = () => {
     to: null
   });
 
+  const isSwipe = window.location.pathname.includes('swipe');
+
   const handleDownload = () => {
     // Prepare data for export
     const dataForExport = componentReport?.data?.map((device) => ({
-      "IMEI No": device["IMEI No"],
-      "Serial No": device["Serial No"],
+      'IMEI No': device['IMEI No'],
+      'Serial No': device['Serial No'],
       ...device.Components.reduce((acc, component) => {
-      acc[component["Part Name"] + " (" + component["Part No"]+")"] = component.Quantity;
+        acc[component['Part Name'] + ' (' + component['Part No'] + ')'] = component.Quantity;
         return acc;
       }, {})
     }));
@@ -36,55 +38,85 @@ const AssemblyConsumption = () => {
     exportToExcel(dataForExport, 'Assembly Consumption');
   };
 
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: '10px', mt: '10px'  }}>
-        <RangePicker
-          format={'DD/MM/YYYY'}
-          value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
-          onChange={(range) => {
-            if (range) {
-              setDateRange({ from: range[0], to: range[1] });
-            } else {
-              setDateRange({ from: null, to: null });
-            }
-          }}
-          presets={[
-            { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
-            { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
-            { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
-            { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] }
-          ]}
-        />
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    if (dateRange.from && dateRange.to && partner) {
+      dispatch(
+        getComponentReport({
+          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+          type: 'swipeMachine'
+        })
+      );
+    }
+  };
 
-        <LoadingButton
+  return (
+    <>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Box sx={{ display: 'flex', gap: '10px', mt: '10px' }}>
+          <RangePicker
+            format={'DD/MM/YYYY'}
+            value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
+            onChange={(range) => {
+              if (range) {
+                setDateRange({ from: range[0], to: range[1] });
+              } else {
+                setDateRange({ from: null, to: null });
+              }
+            }}
+            presets={[
+              { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
+              { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
+              { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+              { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] }
+            ]}
+          />
+
+          <LoadingButton
+            loading={componentReportLoading}
+            onClick={() => {
+              if (dateRange.from && dateRange.to) {
+                dispatch(
+                  getComponentReport({
+                    from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+                    to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+                    type: 'swipeMachine'
+                  })
+                );
+              } else {
+                showToast('Please select date', 'error');
+              }
+            }}
+            variant="contained"
+          >
+            <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
+            Search
+          </LoadingButton>
+          <Button disabled={!componentReport} variant="contained" color="success" onClick={handleDownload}>
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
+        </Box>
+        <DynamicComponentTable
+          data={componentReport?.data || []}
+          components={componentReport?.components || []}
           loading={componentReportLoading}
-          onClick={() => {
-            if (dateRange.from && dateRange.to) {
-              dispatch(
-                getComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
-              );
-            } else {
-              showToast('Please select date', 'error');
-            }
-          }}
-          variant="contained"
-        >
-          <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
-          Search
-        </LoadingButton>
-        <Button
-          disabled={!componentReport}
-          variant="contained"
-          color="success"
-          onClick={handleDownload} 
-        >
-          <Download fontSize={'small'} sx={{ mr: '10px' }} />
-          Download
-        </Button>
-      </Box>
-      <DynamicComponentTable data={componentReport?.data || []} components={componentReport?.components || []} loading={componentReportLoading} />
-    </LocalizationProvider>
+        />
+      </LocalizationProvider>
+      {componentReport?.data > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Pagination
+            count={componentReport?.data}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            showFirstButton
+            showLastButton
+          />
+        </Box>
+      )}
+    </>
   );
 };
 

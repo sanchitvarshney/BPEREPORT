@@ -9,6 +9,7 @@ import SwipeDispatch from './SwipeDispatch';
 import { menuIcons } from './icons';
 import SwipeLocation from './SwipeLocation';
 import OnDeviceTrainingOutlinedIcon from '@mui/icons-material/OnDeviceTrainingOutlined';
+import SwipeIMEIReport from './SwipeIMEIReport';
 
 const menuItems = {
   items: [
@@ -101,6 +102,13 @@ const menuItems = {
               type: 'collapse',
               icon: SwipeDispatch.children[0].icon,
               children: SwipeDispatch.children
+            },
+            {
+              id: 'swipe-imei-section',
+              title: 'IMEI Reports',
+              type: 'collapse',
+              icon: SwipeIMEIReport.children[0].icon,
+              children: SwipeIMEIReport.children
             }
           ]
         }

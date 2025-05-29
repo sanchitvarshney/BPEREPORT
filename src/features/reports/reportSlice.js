@@ -120,7 +120,9 @@ export const getTotalBERDevices = createAsyncThunk('totalDevice/getTotalBERDevic
   return response;
 });
 export const getComponentReport = createAsyncThunk('totalDevice/getComponentReport', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/component/componentReport?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`
+  );
   return response;
 });
 
@@ -216,7 +218,7 @@ export const getSwipeMachineReport = createAsyncThunk('report/getSwipeMachineRep
 
 export const getSwipeFunctionalReport = createAsyncThunk('report/getSwipeFunctionalReport', async (payload) => {
   const response = await axiosInstance.get(
-    `/swipeMachine/report?startDate=${payload.fromDate}&endDate=${payload.toDate}&page=${payload.page}&limit=${payload.limit}`
+    `/swipeMachine/report?startDate=${payload.fromDate}&endDate=${payload.toDate}&page=${payload.page}&limit=${payload.limit}&device=${payload.deviceId}&type=${payload.type}`
   );
   return response;
 });

@@ -141,6 +141,10 @@ const MainRoutes = {
       )
     },
     {
+      path: '/swipe-assembly-consumption',
+      element: <AssemblyConsumption />
+    },
+    {
       path: '/trc-consumption',
       element: (
         <TRCConsumptionLayout>

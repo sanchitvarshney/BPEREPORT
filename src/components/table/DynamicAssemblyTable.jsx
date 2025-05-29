@@ -19,6 +19,7 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
       }
     }))
   ];
+  const isSwipe = window.location.pathname.includes('swipe');
 
   // Prepare rows where each row corresponds to a device and its components
   const rows = data?.map((device, index) => ({
@@ -29,7 +30,7 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
   }));
 
   return (
-    <Box sx={{ height: 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: isSwipe ? 'calc(100vh - 200px)' : 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
       loading={loading}
         rows={rows || []}

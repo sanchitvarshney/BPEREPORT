@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button, Pagination } from '@mui/material';
+import { Box, Button, Pagination, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getSwipeFunctionalReport } from 'features/reports/reportSlice';
@@ -13,7 +13,8 @@ import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
 import SwipeFunctionalReportTable from 'components/table/SwipeFunctionalReportTable';
 import { useSocketContext } from '../../contexts/SocketContext';
-
+import SelectDeviceWithType from '../../reusable/SelectDeviceWithType';
+import SelectComponent from '../../reusable/SelectComponent';
 const { RangePicker } = DatePicker;
 
 const SwipeFunctionalReport = () => {
@@ -22,6 +23,8 @@ const SwipeFunctionalReport = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const [type, setType] = useState('DEVICE');
+  const [device, setDevice] = useState(null);
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
@@ -35,7 +38,9 @@ const SwipeFunctionalReport = () => {
           fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
           toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
           page: value,
-          limit
+          limit,
+          deviceId: device?.id,
+          type:type,
         })
       );
     }
@@ -52,7 +57,30 @@ const SwipeFunctionalReport = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="">
-        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
+        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px', }}>
+          <FormControl fullWidth sx={{ maxWidth: '100px' }}>
+            <InputLabel id="demo-simple-select-label">Type</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={type}
+              label="Type"
+              onChange={(e) => {setType(e.target.value); setDevice(null)}}
+              sx={{ height: '56px' }}
+            >
+              <MenuItem value={'DEVICE'}>Device</MenuItem>
+              <MenuItem value={'PART'}>Part</MenuItem>
+            </Select>
+          </FormControl>
+          {type === 'DEVICE' ? (
+            <FormControl fullWidth sx={{ maxWidth: '250px' }}>
+              <SelectDeviceWithType value={device} onChange={setDevice} type="swipeMachine" sx={{ height: '40px' }} />
+            </FormControl>
+          ) : (
+            <FormControl fullWidth sx={{ maxWidth: '250px' }}>
+              <SelectComponent value={device} onChange={(e) => setDevice(e)} label="Select Part" sx={{ height: '40px' }} />
+            </FormControl>
+          )}
           <RangePicker
             format={'DD/MM/YYYY'}
             value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -80,7 +108,9 @@ const SwipeFunctionalReport = () => {
                     fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
                     toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
                     page: 1,
-                    limit
+                    limit,
+                    deviceId: device?.id,
+                    type:type,
                   })
                 );
               } else {
