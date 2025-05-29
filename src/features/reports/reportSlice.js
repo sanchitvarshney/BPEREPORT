@@ -55,7 +55,7 @@ const initialState = {
   swipeFunctionalReportPage: 1,
   swipeFunctionalReportTotalPages: 0,
   swipeFunctionalReportTotalRecords: 0,
-  allComponentReportLoading: false,
+  allComponentReportLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -85,7 +85,9 @@ export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent
 });
 
 export const getdeviceOnLocation = createAsyncThunk('totalDevice/getdeviceOnLocation', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/device/${payload.url}?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/device/${payload.url}?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`
+  );
   return response;
 });
 export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponentsOnLocation', async (payload) => {
@@ -103,7 +105,9 @@ export const getTotalComponentInMSC = createAsyncThunk('totalDevice/getTotalComp
   return response;
 });
 export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDispatchDevices', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`);
+  const response = await axiosInstance.get(
+    `/bpe/dashboard/dishpatch/dishpatchInCompany?startDate=${payload.from}&endDate=${payload.to}&type=${payload.type}`
+  );
   return response;
 });
 export const getComponentSummary = createAsyncThunk('totalDevice/getComponentSummary', async (payload) => {
@@ -127,11 +131,48 @@ export const getComponentReport = createAsyncThunk('totalDevice/getComponentRepo
   return response;
 });
 
-export const getAllComponentReport = createAsyncThunk('totalDevice/getAllComponentReport', async (payload) => {
-  const response = await axiosInstance.get(
-    `/bpe/dashboard/component/componentReport/download?startDate=${payload.from}&endDate=${payload.to}&deviceType=${payload.type}`
-  );
-  return response;
+// export const getAllComponentReport = createAsyncThunk('totalDevice/getAllComponentReport', async (payload) => {
+//   const response = await axiosInstance.get(
+//     `/bpe/dashboard/component/componentReport/download?startDate=${payload.from}&endDate=${payload.to}&deviceType=${payload.type}`
+//   );
+//   return response;
+// });
+
+export const getAllComponentReport = createAsyncThunk('totalDevice/getAllComponentReport', async (data, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(
+      `/bpe/dashboard/component/componentReport/download?startDate=${data.from}&endDate=${data.to}&deviceType=${data.type}`,
+      {
+        responseType: 'blob'
+      }
+    );
+
+    // Create blob URL and trigger download
+    const blob = new Blob([response.data], { type: 'application/zip' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Report_${data.type}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
+    // Return success response
+    return {
+      success: true,
+      data: null,
+      message: 'ZIP downloaded successfully'
+    };
+  } catch (error) {
+    // Return error response using rejectWithValue
+    return rejectWithValue({
+      success: false,
+      data: null,
+      message: error.message || 'Failed to download ZIP',
+      error: error
+    });
+  }
 });
 
 export const getBatteryQCReport = createAsyncThunk('totalDevice/getBatteryQCReport', async (payload) => {
@@ -212,7 +253,9 @@ export const getBERDeviceSerialNo = createAsyncThunk('totalDevice/getBERDeviceSe
 
 export const getr5Report = createAsyncThunk('report/getr5Report', async (query) => {
   const response = await axiosInstance.get(
-    query.type === 'DEVICE' ? `/report/r5/DEVICE?deviceId=${query.device}` : `/report/r5/DATE?from=${query.from}&to=${query.to}&type=${query.type}`
+    query.type === 'DEVICE'
+      ? `/report/r5/DEVICE?deviceId=${query.device}`
+      : `/report/r5/DATE?from=${query.from}&to=${query.to}&type=${query.type}`
   );
   return response;
 });
