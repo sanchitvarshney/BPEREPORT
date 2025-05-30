@@ -50,14 +50,14 @@ export default function SwipeMINReportTable() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10
+              pageSize: rows.length || 100
             }
           }
         }}
+        pageSizeOptions={[rows.length || 100]}
         slots={{
           noRowsOverlay: CustomNoRowsOverlay
         }}
-        pageSizeOptions={[10]}
         disableRowSelectionOnClick
       />
     </Box>

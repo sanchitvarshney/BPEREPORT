@@ -22,7 +22,7 @@ const SwipeFunctionalReport = () => {
   const { emitSwipeFunctionalReport } = useSocketContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [type, setType] = useState('DEVICE');
   const [device, setDevice] = useState(null);
   const [dateRange, setDateRange] = useState({
@@ -38,7 +38,7 @@ const SwipeFunctionalReport = () => {
           fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
           toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
           page: value,
-          limit,
+          limit: rowsPerPage,
           deviceId: device?.id,
           type: type
         })
@@ -55,15 +55,17 @@ const SwipeFunctionalReport = () => {
   };
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
-    setLimit(newRowsPerPage);
+    setRowsPerPage(newRowsPerPage);
     setPage(1);
     if (dateRange.from && dateRange.to) {
       dispatch(
-        getSwipeFunctionalReport({  
+        getSwipeFunctionalReport({
           fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
           toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
           page: 1,
-          limit: newRowsPerPage
+          limit: newRowsPerPage,
+          deviceId: device?.id,
+          type: type
         })
       );
     }
@@ -96,7 +98,7 @@ const SwipeFunctionalReport = () => {
             </FormControl>
           ) : (
             <FormControl fullWidth sx={{ maxWidth: '250px' }}>
-              <SelectComponent value={device} onChange={(e) => setDevice(e)} label="Select Part" size='small' />
+              <SelectComponent value={device} onChange={(e) => setDevice(e)} label="Select Part" size="small" />
             </FormControl>
           )}
           <RangePicker
@@ -127,7 +129,7 @@ const SwipeFunctionalReport = () => {
                     fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
                     toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
                     page: 1,
-                    limit,
+                    limit: rowsPerPage,
                     deviceId: device?.id,
                     type: type
                   })
@@ -175,7 +177,7 @@ const SwipeFunctionalReport = () => {
               color="primary"
               showFirstButton
               showLastButton
-              rowsPerPage={limit}
+              rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Box>

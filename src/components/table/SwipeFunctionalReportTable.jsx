@@ -62,14 +62,14 @@ export default function SwipeFunctionalReportTable() {
         rows={rows}
         columns={columns}
         rowCount={rowCount}
-        pageSizeOptions={[10]}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10
-            }
-          }
-        }}
+        // pageSizeOptions={[10]}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: 10
+        //     }
+        //   }
+        // }}
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd',
@@ -87,6 +87,14 @@ export default function SwipeFunctionalReportTable() {
           noRowsOverlay: CustomNoRowsOverlay
         }}
         disableRowSelectionOnClick
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: rows.length || 100
+            }
+          }
+        }}
+        pageSizeOptions={[rows.length || 100]}
       />
     </Box>
   );

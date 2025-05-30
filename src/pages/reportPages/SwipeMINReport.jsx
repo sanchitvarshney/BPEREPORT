@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel, Button, FormControl, Select, MenuItem, Pagination } from '@mui/material';
+import { Box, InputLabel, Button, FormControl, Select, MenuItem, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getSwipeMachineReport } from 'features/reports/reportSlice';
@@ -24,7 +24,7 @@ const SwipeMINReport = () => {
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit,setLimit] = useState(10);
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
@@ -53,6 +53,22 @@ const SwipeMINReport = () => {
     swipeMachineInward({ fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'), toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),partner:partner });
   };
 
+  const handleChangeRowsPerPage = (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setLimit(newRowsPerPage);
+    setPage(1);
+    if (dateRange.from && dateRange.to) {
+      dispatch(
+        getSwipeMachineReport({
+          partnerValue: partner,
+          fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+          toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+          page: 1,
+          limit: newRowsPerPage
+        })
+      );
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -127,7 +143,7 @@ const SwipeMINReport = () => {
             variant="contained"
             color="info"
             onClick={() => {
-              handleDownload()
+                handleDownload()
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
@@ -136,14 +152,16 @@ const SwipeMINReport = () => {
         </Box>
         <SwipeMINReportTable />
         {swipeMachineReportTotalPages > 1 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Pagination
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <TablePagination
               count={swipeMachineReportTotalPages}
               page={page}
-              onChange={handlePageChange}
+              onPageChange={handlePageChange}
               color="primary"
               showFirstButton
               showLastButton
+              rowsPerPage={limit}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Box>
         )}

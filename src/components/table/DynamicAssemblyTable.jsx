@@ -57,12 +57,11 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 100
+              pageSize: rows.length || 100
             }
           }
         }}
-        pageSizeOptions={[20]}
-
+        pageSizeOptions={[rows.length || 100]}
       />
     </Box>
   );
