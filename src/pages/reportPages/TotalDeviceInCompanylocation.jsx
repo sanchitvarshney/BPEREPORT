@@ -109,7 +109,8 @@ const DynamicTable = ({ rowdata, dateRange }) => {
         endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
         device_key: data?.SKUKEY,
         type: 'both',
-        location: data?.locationCode // or any other type you want,
+        location: data?.locationCode, // or any other type you want,
+        deviceType: "soundBox"
       });
     }
   };
