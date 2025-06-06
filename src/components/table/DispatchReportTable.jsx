@@ -10,7 +10,7 @@ import {useSocketContext} from '../../contexts/SocketContext';
 
 export default function DispatchReportTable() {
   const { dispatchreport, dispatchreportLoading } = useSelector((state) => state.report);
-  const { emitDownloadr5Report, emitDownloadWrongDeviceReport } =
+  const { emitDownloadr5Report, emitDownloadWrongDeviceReport, emitDownloadSwipeReport } =
   useSocketContext();
   const columns = [
         { field: 'id', headerName: '#', width: 90 },
@@ -75,7 +75,9 @@ export default function DispatchReportTable() {
             const type = params?.row?.deviceType;
             if (type === "wrongDevices") {
               emitDownloadWrongDeviceReport({ txnId: id });
-            } else {
+            }else if(type === "swipedevice"){
+              emitDownloadSwipeReport({ txnId: id });
+            }  else {
               emitDownloadr5Report({ txnId: id });
             }
           }}
@@ -98,7 +100,8 @@ export default function DispatchReportTable() {
     inserby: item.inserby,
     balance: item.Balance,
     txnId: item.txnId,
-    warehouse: item.warehouse
+    warehouse: item.warehouse,
+    deviceType: item.deviceType,
   }))||[];
 
   return (

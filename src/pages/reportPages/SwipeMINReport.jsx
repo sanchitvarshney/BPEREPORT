@@ -130,24 +130,11 @@ const SwipeMINReport = () => {
             variant="contained"
             color="success"
             onClick={() => {
-              if (swipeMachineReport) {
-                exportDynamicDataToExcel(swipeMachineReport, 'Swipe Machine Report');
-              }
-            }}
-          >
-            <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download
-          </Button>
-          <Button
-            disabled={!swipeMachineReport}
-            variant="contained"
-            color="info"
-            onClick={() => {
                 handleDownload()
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download All
+            Download
           </Button>
         </Box>
         <SwipeMINReportTable />

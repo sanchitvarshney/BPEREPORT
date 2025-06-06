@@ -79,10 +79,15 @@ export const SocketProvider = ({ children }) => {
   const onnotification = (callback) => {
     socketService.on("socket_receive_notification", callback);
   };
+
+  const emitDownloadSwipeReport = (payload) => {
+    console.log(payload)
+    socketService.emit("swipeDispatchReport", payload);
+  }
   
   const off = (event) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{emitDownloadSwipeReport,emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
 };
