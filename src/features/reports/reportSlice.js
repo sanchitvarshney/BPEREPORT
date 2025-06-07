@@ -60,7 +60,7 @@ const initialState = {
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
   const response = await axiosInstance.get(
-    `/bpe/dashboard/device/deviceInCompany?startDate=${payload?.from}&endDate=${payload?.to}&type=${payload?.type}`
+    `/bpe/dashboard/device/deviceInCompany?startDate=${payload?.from}&endDate=${payload?.to}&type=${payload?.type}&deviceType=${payload?.deviceType}`
   );
   return response;
 });

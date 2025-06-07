@@ -76,7 +76,7 @@ const TotalDeviceInCompany = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalProduct({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type })
+                getTotalProduct({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type, deviceType:"soundBox" })
               );
             } else {
               showToast('Please select date', 'error');
