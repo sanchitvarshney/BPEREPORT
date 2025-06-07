@@ -13,7 +13,7 @@ export default function BatteryQCReportTable() {
     { headerName: "IMEI", field: "imeiNo", sortable: true, filter: true, flex: 1 },
     { headerName: "IR (Internal Resistance)", field: "ir", sortable: true, filter: true, flex: 1 },
     { headerName: "Voltage", field: "volt", sortable: true, filter: true, flex: 1 },
-    { headerName: "Battary ID", field: "batteryId", sortable: true, filter: true, flex: 1 },
+    { headerName: "Battery ID", field: "batteryId", sortable: true, filter: true, flex: 1 },
     { headerName: "Status", field: "status", sortable: true, filter: true, flex: 1 },
     { headerName: "Insert Date", field: "insertDate", sortable: true, filter: true, flex: 1 },
     { headerName: "Insert By", field: "insertBy", sortable: true, filter: true,flex:1 },
