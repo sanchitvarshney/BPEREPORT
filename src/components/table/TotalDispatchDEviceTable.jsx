@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import { showToast } from 'utils/ToastProvider';
 import { useSocketContext } from '../../contexts/SocketContext';
 
-export default function TotalDispatchDEviceTable({ dateRange }) {
+export default function TotalDispatchDEviceTable({ dateRange, isSwipeModule }) {
   const { dispatchDataReportLoading, dispatchDataReport,totalDispatchDevicesLoading, totalDispatchDevices } = useSelector((state) => state.report);
   const { emitFGDispatch,onDownloadReport } = useSocketContext();
 
@@ -92,7 +92,8 @@ export default function TotalDispatchDEviceTable({ dateRange }) {
                   startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
                   endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
                   device_key: params?.row?.key,
-                  type: "both"
+                  type: "both",
+                  deviceType  : isSwipeModule ? "swipeMachine" : "soundBox"
                 });
                 showToast('Download started', 'success');
               }

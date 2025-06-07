@@ -38,7 +38,7 @@ export const SocketProvider = ({ children }) => {
   };
 
   const emitFGDispatch = (payload) => {
-    console.log("clicked");
+    console.log(payload);
     socketService.emit("fgDeviceReport", payload);
   };
   const emitDeviceOnLocation = (payload) => {

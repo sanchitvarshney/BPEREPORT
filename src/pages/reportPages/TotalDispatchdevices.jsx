@@ -73,7 +73,7 @@ const TotalDispatchdevices = () => {
           Download
         </Button>
       </Box>
-      <TotalDispatchDEviceTable dateRange={dateRange}  />
+      <TotalDispatchDEviceTable dateRange={dateRange} isSwipeModule={isSwipeModule}  />
     </LocalizationProvider>
   );
 };
