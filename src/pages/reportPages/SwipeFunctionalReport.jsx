@@ -8,7 +8,6 @@ import { Box, Button, TablePagination, FormControl, InputLabel, Select, MenuItem
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getSwipeFunctionalReport } from 'features/reports/reportSlice';
-import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
 import SwipeFunctionalReportTable from 'components/table/SwipeFunctionalReportTable';
@@ -18,7 +17,7 @@ import SelectComponent from '../../reusable/SelectComponent';
 const { RangePicker } = DatePicker;
 
 const SwipeFunctionalReport = () => {
-  const { swipeFunctionalReportLoading, swipeFunctionalReport, swipeFunctionalReportTotalPages } = useSelector((state) => state.report);
+  const { swipeFunctionalReportLoading, swipeFunctionalReportTotalPages } = useSelector((state) => state.report);
   const { emitSwipeFunctionalReport } = useSocketContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -143,19 +142,6 @@ const SwipeFunctionalReport = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
-          <Button
-            disabled={!swipeFunctionalReport}
-            variant="contained"
-            color="success"
-            onClick={() => {
-              if (swipeFunctionalReport) {
-                exportDynamicDataToExcel(swipeFunctionalReport, 'Swipe Machine Functional Report');
-              }
-            }}
-          >
-            <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download
-          </Button>
           <Button
             variant="contained"
             color="info"

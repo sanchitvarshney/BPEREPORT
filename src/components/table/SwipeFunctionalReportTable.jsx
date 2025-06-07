@@ -19,7 +19,7 @@ export default function SwipeFunctionalReportTable() {
       { field: 'serial', headerName: 'Serial Number', width: 150 },
       { field: 'imei_no1', headerName: 'IMEI 1', width: 150 },
       { field: 'imei_no2', headerName: 'IMEI 2', width: 150 },
-      { field: 'date', headerName: 'Date', width: 150 }
+      { field: 'date', headerName: 'Inserted Date', width: 150 }
     ];
 
     // Get questions from the first row
