@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTrcComponentReport } from 'features/reports/reportSlice';
@@ -20,7 +20,14 @@ const TrcConsumption = () => {
     from: null,
     to: null
   });
-
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [pagination, setPagination] = useState({
+    totalPages: 0,
+    totalRecords: 0,
+    currentPage: 1
+  });
+  const [records, setRecords] = useState([]);
   const handleDownload = () => {
     // Prepare data for export
     const dataForExport = trcReport?.data?.map((device) => ({
@@ -36,6 +43,16 @@ const TrcConsumption = () => {
     exportToExcel(dataForExport, 'TRC Consumption');
   };
 
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    dispatch(getTrcComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'), page: newPage + 1, limit: limit }));
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+    dispatch(getTrcComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'), page: 1, limit: parseInt(event.target.value, 10) }));
+  };
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' , mt: '10px' }}>
@@ -62,7 +79,7 @@ const TrcConsumption = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTrcComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
+                getTrcComponentReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'), page: 1, limit: 10 })
               );
             } else {
               showToast('Please select date', 'error');
@@ -84,6 +101,21 @@ const TrcConsumption = () => {
         </Button>
       </Box>
       <DynamicComponentTable data={trcReport?.data || []} components={trcReport?.components || []} loading={trcReportLoading} />
+      {trcReport && <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TablePagination
+        count={pagination.totalPages || 0}
+        page={page}
+        onPageChange={handlePageChange}
+        color="primary"
+        showFirstButton
+        showLastButton
+        rowsPerPage={limit}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalPages})`
+        }
+      />
+      </Box>}
     </LocalizationProvider>
   );
 };

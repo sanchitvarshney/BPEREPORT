@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalComponentInMSC } from 'features/reports/reportSlice';
@@ -20,7 +20,20 @@ const TotalMaterialInMSCCompany = () => {
     from: null,
     to: null
   });
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+ const pagination = totalComponentInMSC?.pagination 
 
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    dispatch(getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: newPage + 1, limit: limit }));
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+    dispatch(getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: 1, limit: parseInt(event.target.value, 10) }));
+  };
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -47,7 +60,7 @@ const TotalMaterialInMSCCompany = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
+                getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: 1, limit: 10 })
               );
             } else {
               showToast('Please select date', 'error');
@@ -73,6 +86,21 @@ const TotalMaterialInMSCCompany = () => {
         </Button>
       </Box>
       <TotalComponentInMSCCompanyTable />
+      {totalComponentInMSC && <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TablePagination
+        count={pagination?.totalItems || 0}
+        page={page}
+        onPageChange={handlePageChange}
+        color="primary"
+        showFirstButton
+        showLastButton
+        rowsPerPage={limit}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalItems})`
+        }
+      />
+      </Box>}
     </LocalizationProvider>
   );
 };

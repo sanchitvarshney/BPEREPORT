@@ -18,18 +18,18 @@ export default function TotalComponentInBPECompanyTable() {
   const { totalComponentInBPELoading, totalComponentInBPE } = useSelector((state) => state.report);
 
   // Map the rows to match the new data structure
-  const rows = totalComponentInBPE?.map((item, index) => ({
+  const rows = totalComponentInBPE?.data?.map((item, index) => ({
     id: index + 1,
-    partNo: item['Part No'],
-    componentName: item['Component Name'],
-    opening: item.Opening,
-    inward: item.Inward,
-    outward: item.Outward,
-    balance: item.Balance
+    partNo: item.partNo,
+    componentName: item.componentName,
+    opening: item.opening,
+    inward: item.inward,
+    outward: item.outward,
+    balance: item.balance
   }))||[];
-
+console.log(rows)
   return (
-    <Box sx={{ height: "calc(100vh - 170px)",  width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: "calc(100vh - 240px)",  width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={totalComponentInBPELoading}
         rows={rows}

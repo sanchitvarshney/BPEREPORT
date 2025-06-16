@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { Box, InputLabel, Button, FormControl, Select, MenuItem, TablePagination, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getWrongDeviceDetail } from 'features/reports/reportSlice';
@@ -23,25 +23,72 @@ const TotalWrongDevice = () => {
     from: null,
     to: null
   });
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
 
-  // Get unique categories from the data
+  // Extract data from the new response structure
+  const records = wrongDeviceDetail?.data?.records || [];
+  const pagination = wrongDeviceDetail?.data?.pagination || {};
+  const header = wrongDeviceDetail?.data?.header || [];
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    // You might want to dispatch a new API call here with the new page
+    if (wrongDeviceDateRange.from && wrongDeviceDateRange.to && partner) {
+      dispatch(
+        getWrongDeviceDetail({
+          from: dayjs(wrongDeviceDateRange.from).format('DD-MM-YYYY'),
+          to: dayjs(wrongDeviceDateRange.to).format('DD-MM-YYYY'),
+          partner,
+          page: newPage + 1, // API expects 1-based pagination
+          limit
+        })
+      );
+    }
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    const newLimit = parseInt(event.target.value, 10);
+    setLimit(newLimit);
+    setPage(0);
+    // You might want to dispatch a new API call here with the new limit
+    if (wrongDeviceDateRange.from && wrongDeviceDateRange.to && partner) {
+      dispatch(
+        getWrongDeviceDetail({
+          from: dayjs(wrongDeviceDateRange.from).format('DD-MM-YYYY'),
+          to: dayjs(wrongDeviceDateRange.to).format('DD-MM-YYYY'),
+          partner,
+          page: 1,
+          limit: newLimit
+        })
+      );
+    }
+  };
+
+  // Get unique categories from the records
   const categories = useMemo(() => {
-    if (!wrongDeviceDetail?.data) return [];
+    if (!records || records.length === 0) return [];
 
     const uniqueCategories = new Set();
-    wrongDeviceDetail.data.forEach((item) => {
+    records.forEach((item) => {
       if (item.Category) {
         uniqueCategories.add(item.Category);
       }
     });
 
     return Array.from(uniqueCategories).sort();
-  }, [wrongDeviceDetail]);
+  }, [records]);
+
+  // Filter records based on category
+  const filteredRecords = useMemo(() => {
+    if (categoryFilter === 'all') return records;
+    return records.filter((item) => item.Category === categoryFilter);
+  }, [records, categoryFilter]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="">
-        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
+        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px', flexWrap: 'wrap' }}>
           <RangePicker
             format={'DD/MM/YYYY'}
             value={wrongDeviceDateRange.from && wrongDeviceDateRange.to ? [wrongDeviceDateRange.from, wrongDeviceDateRange.to] : null}
@@ -71,15 +118,19 @@ const TotalWrongDevice = () => {
               <MenuItem value="ALL">ALL</MenuItem>
             </Select>
           </FormControl>
+
           <LoadingButton
             loading={wrongDeviceDetailLoading}
             onClick={() => {
               if (wrongDeviceDateRange.from && wrongDeviceDateRange.to && partner) {
+                setPage(0); // Reset to first page when searching
                 dispatch(
                   getWrongDeviceDetail({
                     from: dayjs(wrongDeviceDateRange.from).format('DD-MM-YYYY'),
                     to: dayjs(wrongDeviceDateRange.to).format('DD-MM-YYYY'),
-                    partner
+                    partner,
+                    page: 1,
+                    limit
                   })
                 );
               } else {
@@ -91,12 +142,13 @@ const TotalWrongDevice = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
+
           <Button
-            disabled={!wrongDeviceDetail}
+            disabled={!wrongDeviceDetail || records.length === 0}
             variant="contained"
             color="success"
             onClick={() => {
-              if (wrongDeviceDetail) {
+              if (wrongDeviceDetail && records.length > 0) {
                 exportDynamicDataToExcel(wrongDeviceDetail, 'Wrong Device Detail');
               }
             }}
@@ -104,7 +156,8 @@ const TotalWrongDevice = () => {
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
             Download
           </Button>
-          {wrongDeviceDetail?.data && categories.length > 0 && (
+
+          {records.length > 0 && categories.length > 0 && (
             <FormControl sx={{ minWidth: 250 }}>
               <InputLabel>Filter by Category</InputLabel>
               <Select
@@ -131,7 +184,37 @@ const TotalWrongDevice = () => {
             </FormControl>
           )}
         </Box>
-        <WrongDeviceDetailTable categoryFilter={categoryFilter} />
+        <WrongDeviceDetailTable categoryFilter={categoryFilter} records={filteredRecords} header={header} />
+
+        {pagination.totalRecords > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <TablePagination
+              count={pagination.totalRecords}
+              page={page}
+              onPageChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+              rowsPerPage={limit}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalPages})`
+              }
+            />
+          </Box>
+        )}
+
+        {/* Display pagination info */}
+        {pagination.totalRecords === 0 && wrongDeviceDetail && (
+          <Box sx={{ textAlign: 'center', mt: 4, p: 3 }}>
+            <Typography variant="h6" color="text.secondary">
+              No records found for the selected criteria
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Try adjusting your date range or partner selection
+            </Typography>
+          </Box>
+        )}
       </div>
     </LocalizationProvider>
   );

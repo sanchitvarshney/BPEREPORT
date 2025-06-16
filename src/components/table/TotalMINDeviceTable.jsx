@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import { IconButton } from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { min } from 'lodash';
-// import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet";
 
 export default function ({ partner }) {
   const { minReportLoading, getMINReportData } = useSelector((state) => state.report);
   const rows =
-    getMINReportData?.map((item, index) => ({
+    getMINReportData?.data?.map((item, index) => ({
       id: index + 1,
       vendorCode: item.vendorCode, // Ensure field names match the data
       vendorName: item.vendorName,
@@ -34,16 +30,16 @@ export default function ({ partner }) {
       outward: item.TotalOut,
       closing: item.ClosingBalance,
       partner: item.partner,
-      adaptor:item.issues?.Adaptor,
-      box:item.issues?.Box,
-      bracket:item.issues?.Bracket,
-      cable:item.issues?.Cable,
-      deviceId:item.issues?.["Device ID"],
-      internalDamage:item.issues?.["No Internal Damage"],
-      physicalDamage:item.issues?.["No Physical Damage"],
-      sim:item.issues?.SIM,
-      soundCheck:item.issues?.["Sound Check - OK"],
-      standee:item.issues?.Standee
+      adaptor: item.issues?.Adaptor,
+      box: item.issues?.Box,
+      bracket: item.issues?.Bracket,
+      cable: item.issues?.Cable,
+      deviceId: item.issues?.['Device ID'],
+      internalDamage: item.issues?.['No Internal Damage'],
+      physicalDamage: item.issues?.['No Physical Damage'],
+      sim: item.issues?.SIM,
+      soundCheck: item.issues?.['Sound Check - OK'],
+      standee: item.issues?.Standee
     })) || [];
 
   const [openModal, setOpenModal] = useState(false); // Modal visibility state
@@ -97,12 +93,11 @@ export default function ({ partner }) {
     { headerName: 'Bracket', field: 'bracket' },
     { headerName: 'Cable', field: 'cable' },
     { headerName: 'Device ID', field: 'deviceId' },
-    { headerName: 'No Internal Damage', field: 'internalDamage',minWidth:150 },
-    { headerName: 'No Physical Damage', field: 'physicalDamage',minWidth:150 },
+    { headerName: 'No Internal Damage', field: 'internalDamage', minWidth: 150 },
+    { headerName: 'No Physical Damage', field: 'physicalDamage', minWidth: 150 },
     { headerName: 'Sim', field: 'sim' },
-    { headerName: 'Sound Check', field: 'soundCheck',minWidth:120 },
+    { headerName: 'Sound Check', field: 'soundCheck', minWidth: 120 }
     // { headerName: 'Standee', field: 'standee' },
-
   ];
 
   // Conditionally include the "Partner" column based on the "partner" value
@@ -127,17 +122,18 @@ export default function ({ partner }) {
             borderTop: '1px solid #ddd' // Add a top border
           }
         }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 30
-            }
-          }
-        }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: 30
+        //     }
+        //   }
+        // }}
         slots={{
           noRowsOverlay: CustomNoRowsOverlay
         }}
-        pageSizeOptions={[20]}
+        pagination={false}
+        // pageSizeOptions={[20]}
       />
       <Dialog open={openModal} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle>Device Issues</DialogTitle>
@@ -160,7 +156,7 @@ export default function ({ partner }) {
                   background: '#1976d2 !important'
                 },
                 '& .MuiDataGrid-footerContainer': {
-                  borderTop: '1px solid #ddd', // Add a top border
+                  borderTop: '1px solid #ddd' // Add a top border
                 }
               }}
               initialState={{

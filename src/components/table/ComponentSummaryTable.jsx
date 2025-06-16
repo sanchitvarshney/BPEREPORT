@@ -7,7 +7,7 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 export default function ComponentSummaryTable() {
   const { componentSummary, componentSummaryLoading } = useSelector((state) => state.report);
   
-  const rows = componentSummary?.map((item, index) => ({
+  const rows = componentSummary?.data?.map((item, index) => ({
     id: index + 1,
     partNo: item.partNo,
     componentName: item.component,

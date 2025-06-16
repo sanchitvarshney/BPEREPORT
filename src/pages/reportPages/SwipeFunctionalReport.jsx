@@ -17,7 +17,7 @@ import SelectComponent from '../../reusable/SelectComponent';
 const { RangePicker } = DatePicker;
 
 const SwipeFunctionalReport = () => {
-  const { swipeFunctionalReportLoading, swipeFunctionalReportTotalPages } = useSelector((state) => state.report);
+  const { swipeFunctionalReportLoading, swipeFunctionalReportTotalRecords } = useSelector((state) => state.report);
   const { emitSwipeFunctionalReport } = useSocketContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -154,10 +154,10 @@ const SwipeFunctionalReport = () => {
           </Button>
         </Box>
         <SwipeFunctionalReportTable />
-        {swipeFunctionalReportTotalPages > 1 && (
+        {swipeFunctionalReportTotalRecords > 1 && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <TablePagination
-              count={swipeFunctionalReportTotalPages}
+              count={swipeFunctionalReportTotalRecords}
               page={page}
               onPageChange={handlePageChange}
               color="primary"

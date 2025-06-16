@@ -6,7 +6,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
-import { Button } from '@mui/material';
+import { Button,TablePagination } from '@mui/material';
 import { CustomNoRowsOverlay } from '../../components/table/CustomNoRowsOverlay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { showToast } from 'utils/ToastProvider';
@@ -21,7 +21,7 @@ export default function BPEIssueReport() {
   const { issueReportData, issueReportDataLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const rows =
-    issueReportData?.map((item, index) => ({
+    issueReportData?.data?.map((item, index) => ({
       id: index + 1,
       imei: item.imei,
       serialNo: item.serial,
@@ -45,6 +45,9 @@ export default function BPEIssueReport() {
     from: null,
     to: null
   });
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const pagination = issueReportData?.pagination || {}
 
   const handleCloseModal = () => {
     setOpenRejectModal(false);
@@ -56,6 +59,18 @@ export default function BPEIssueReport() {
   useEffect(() => {
     dispatch(getBpeIssue());
   }, [dispatch]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    dispatch(
+      getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'), page: newPage + 1, limit: limit }));
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+    dispatch(
+      getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'), page: 1, limit: parseInt(event.target.value, 10) }));
+  };
 
   const columns = [
     { field: 'id', headerName: '#' },
@@ -97,7 +112,7 @@ export default function BPEIssueReport() {
             onClick={() => {
               if (dateRange.from && dateRange.to) {
                 dispatch(
-                  getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') })
+                  getBpeIssueReport({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),page:1,limit:10 })
                 );
               } else {
                 showToast('Please select date', 'error');
@@ -123,40 +138,55 @@ export default function BPEIssueReport() {
           </Button>
         </Box>
 
-        <Box sx={{ height: 'calc(100vh - 250px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+        <Box sx={{ height: 'calc(100vh - 190px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
           <DataGrid
             loading={issueReportDataLoading}
             rows={rows || []}
             columns={columns}
-            sx={{
-              '& .MuiDataGrid-cell': {
-                borderBottom: '1px solid #ddd', // Horizontal row borders
-                borderRight: '1px solid #ddd' // Vertical column borders
-              },
-              '& .MuiDataGrid-columnHeaders': {
-                borderBottom: '1px solid #ddd', // Header separator
-                background: '#1976d2 !important'
-              },
-              '& .MuiDataGrid-footerContainer': {
-                borderTop: '1px solid #ddd' // Add a top border
-              }
-            }}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 30
-                }
-              }
-            }}
+            // sx={{
+            //   '& .MuiDataGrid-cell': {
+            //     borderBottom: '1px solid #ddd', // Horizontal row borders
+            //     borderRight: '1px solid #ddd' // Vertical column borders
+            //   },
+            //   '& .MuiDataGrid-columnHeaders': {
+            //     borderBottom: '1px solid #ddd', // Header separator
+            //     background: '#1976d2 !important'
+            //   },
+            //   '& .MuiDataGrid-footerContainer': {
+            //     borderTop: '1px solid #ddd' // Add a top border
+            //   }
+            // }}
+            // initialState={{
+            //   pagination: {
+            //     paginationModel: {
+            //       pageSize: 30
+            //     }
+            //   }
+            // }}
             slots={{
               noRowsOverlay: CustomNoRowsOverlay
             }}
-            pageSizeOptions={[20]}
+            // pageSizeOptions={[20]}
           />
 
           {/* Modal for Upload Instructions */}
           <UploadFileModal open={openUploadModal} onClose={handleCloseModal} />
         </Box>
+        {issueReportData && <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TablePagination
+        count={pagination.totalRecords || 0}
+        page={page}
+        onPageChange={handlePageChange}
+        color="primary"
+        showFirstButton
+        showLastButton
+        rowsPerPage={limit}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalRecords})`
+        }
+      />
+      </Box>}
       </LocalizationProvider>
    
   );

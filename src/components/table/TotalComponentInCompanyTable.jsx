@@ -18,7 +18,7 @@ export default function TotalComponentInCompanyTable() {
   const { totalComponent, totalComponentLoading } = useSelector((state) => state.report);
 
   // Map the rows to match the new data structure
-  const rows = totalComponent?.map((item, index) => ({
+  const rows = totalComponent?.data?.map((item, index) => ({
     id: index + 1,
     partNo: item['Part No'],
     componentName: item['Component Name'],
@@ -29,36 +29,37 @@ export default function TotalComponentInCompanyTable() {
   }))||[];
 
   return (
-    <Box sx={{ height: 'calc(100vh - 170px)', minHeight: 300, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 240px)', minHeight: 300, width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={totalComponentLoading}
         rows={rows}
         columns={columns}
-        sx={{
-          '& .MuiDataGrid-cell': {
-            borderBottom: '1px solid #ddd', // Horizontal row borders
-            borderRight: '1px solid #ddd' // Vertical column borders
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            borderBottom: '1px solid #ddd', // Header separator
-            borderRight: '1px solid #ddd', // Vertical column borders
-            backgroundColor: '#f2f2f2'
-          },
-          '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd' // Add a top border
-          }
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 30
-            }
-          }
-        }}
+        // sx={{
+        //   '& .MuiDataGrid-cell': {
+        //     borderBottom: '1px solid #ddd', // Horizontal row borders
+        //     borderRight: '1px solid #ddd' // Vertical column borders
+        //   },
+        //   '& .MuiDataGrid-columnHeaders': {
+        //     borderBottom: '1px solid #ddd', // Header separator
+        //     borderRight: '1px solid #ddd', // Vertical column borders
+        //     backgroundColor: '#f2f2f2'
+        //   },
+        //   '& .MuiDataGrid-footerContainer': {
+        //     borderTop: '1px solid #ddd' // Add a top border
+        //   }
+        // }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: 30
+        //     }
+        //   }
+        // }}
         slots={{
           noRowsOverlay: CustomNoRowsOverlay
         }}
-        pageSizeOptions={[20]}
+        // pageSizeOptions={[20]}
+
       />
     </Box>
   );

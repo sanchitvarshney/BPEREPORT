@@ -55,7 +55,9 @@ const initialState = {
   swipeFunctionalReportPage: 1,
   swipeFunctionalReportTotalPages: 0,
   swipeFunctionalReportTotalRecords: 0,
-  allComponentReportLoading: false
+  allComponentReportLoading: false,
+  totalRecords: 0,
+  totalPages: 0
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -66,21 +68,22 @@ export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', as
 });
 
 export const getWrongDeviceDetail = createAsyncThunk('totalDevice/getWrongDeviceDetail', async (payload) => {
+  const { from, to, partner, page = 1, limit = 10 } = payload;
   const response = await axiosInstance.get(
-    `/wrongDevice/fetch/?fromDate=${payload?.from}&toDate=${payload?.to}&deliveryPartner=${payload?.partner}`
+    `/wrongDevice/fetch/?fromDate=${from}&toDate=${to}&deliveryPartner=${partner}&page=${page}&limit=${limit}`
   );
   return response;
 });
 
 export const getMINReport = createAsyncThunk('report/getMINReport', async (payload) => {
   const response = await axiosInstance.get(
-    `/deviceMinV2/deviceInwardReport?fromDt=${payload.from}&toDt=${payload.to}&partner=${payload.partner}`
+    `/deviceMinV2/deviceInwardReport?fromDt=${payload.from}&toDt=${payload.to}&partner=${payload.partner}&page=${payload.page}&limit=${payload.limit}`
   );
   return response;
 });
 
 export const getTotalComponent = createAsyncThunk('totalDevice/getTotalComponent', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInCompany?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInCompany?startDate=${payload.from}&endDate=${payload.to}&page=${payload.page}&limit=${payload.limit}`);
   return response;
 });
 
@@ -97,11 +100,11 @@ export const getComponentsOnLocation = createAsyncThunk('totalDevice/getComponen
   return response;
 });
 export const getTotalComponentInBPE = createAsyncThunk('totalDevice/getTotalComponentInBPE', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInBPE?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInBPE?startDate=${payload.from}&endDate=${payload.to}&page=${payload.page}&limit=${payload.limit}`);
   return response;
 });
 export const getTotalComponentInMSC = createAsyncThunk('totalDevice/getTotalComponentInMSC', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInMsc?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/component/componentInMsc?startDate=${payload.from}&endDate=${payload.to}&page=${payload.page}&limit=${payload.limit}`);
   return response;
 });
 export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDispatchDevices', async (payload) => {
@@ -112,7 +115,7 @@ export const getTotalDispatchDevices = createAsyncThunk('totalDevice/getTotalDis
 });
 export const getComponentSummary = createAsyncThunk('totalDevice/getComponentSummary', async (payload) => {
   const response = await axiosInstance.get(
-    `/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}&loc_out=${payload.location}`
+    `/bpe/dashboard/component/componentSummaryReport?startDate=${payload.from}&endDate=${payload.to}&loc_out=${payload.location}&page=${payload.page}&limit=${payload.limit}`
   );
   return response;
 });
@@ -181,7 +184,7 @@ export const getBatteryQCReport = createAsyncThunk('totalDevice/getBatteryQCRepo
 });
 
 export const getTrcComponentReport = createAsyncThunk('totalDevice/getTrcComponentReport', async (payload) => {
-  const response = await axiosInstance.get(`/bpe/dashboard/component/trcConsumptionReport?from=${payload.from}&to=${payload.to}`);
+  const response = await axiosInstance.get(`/bpe/dashboard/component/trcConsumptionReport?from=${payload.from}&to=${payload.to}&page=${payload.page}&limit=${payload.limit}`);
   return response;
 });
 
@@ -209,7 +212,7 @@ export const getBpeIssue = createAsyncThunk('totalDevice/getBpeIssue', async (pa
 });
 
 export const getBpeIssueReport = createAsyncThunk('totalDevice/getBpeIssueReport', async (payload) => {
-  const response = await axiosInstance.get(`/bpeIssue/report?startDate=${payload.from}&endDate=${payload.to}`);
+  const response = await axiosInstance.get(`/bpeIssue/report?startDate=${payload.from}&endDate=${payload.to}&page=${payload.page}&limit=${payload.limit}`);
   return response;
 });
 
@@ -332,7 +335,7 @@ const reportSlice = createSlice({
       })
       .addCase(getWrongDeviceDetail.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.wrongDeviceDetail = action.payload.data.data;
+          state.wrongDeviceDetail = action.payload.data;
         }
         state.wrongDeviceDetailLoading = false;
       })
@@ -374,7 +377,7 @@ const reportSlice = createSlice({
       })
       .addCase(getBpeIssueReport.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.issueReportData = action.payload.data.data;
+          state.issueReportData = action.payload.data;
         }
         state.issueReportDataLoading = false;
       })
@@ -407,7 +410,7 @@ const reportSlice = createSlice({
       .addCase(getMINReport.fulfilled, (state, action) => {
         state.minReportLoading = false;
         if (action.payload.data.success) {
-          state.getMINReportData = action.payload.data.data;
+          state.getMINReportData = action.payload.data;
         }
       })
       .addCase(getMINReport.rejected, (state) => {
@@ -420,7 +423,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponent.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.totalComponent = action.payload.data.data;
+          state.totalComponent = action.payload.data;
         }
         state.totalComponentLoading = false;
       })
@@ -501,7 +504,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponentInBPE.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.totalComponentInBPE = action.payload.data.data;
+          state.totalComponentInBPE = action.payload.data;
         }
         state.totalComponentInBPELoading = false;
       })
@@ -515,7 +518,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponentInMSC.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.totalComponentInMSC = action.payload.data.data;
+          state.totalComponentInMSC = action.payload.data;
         }
         state.totalComponentInMSCLoading = false;
       })
@@ -571,7 +574,7 @@ const reportSlice = createSlice({
       })
       .addCase(getComponentSummary.fulfilled, (state, action) => {
         if (action.payload.data.success) {
-          state.componentSummary = action.payload.data.data;
+          state.componentSummary = action.payload.data;
         }
         state.componentSummaryLoading = false;
       })

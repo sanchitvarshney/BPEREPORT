@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import {getComponentSummary } from 'features/reports/reportSlice';
@@ -21,7 +21,20 @@ const TotalDispatchdevices = () => {
     to: null
   });
   const location = window.location.pathname.includes('assembly')? 'Assembly' : 'TRC';
-
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const pagination = componentSummary?.pagination || {}
+  const [records, setRecords] = useState([]);
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    dispatch(getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location, page: newPage + 1, limit: limit }));
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+    dispatch(getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location, page: 1, limit: parseInt(event.target.value, 10) }));
+  };
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px', mt: '10px'  }}>
@@ -48,7 +61,7 @@ const TotalDispatchdevices = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location })
+                getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location, page: 1, limit: 10   })
               );
             } else {
               showToast('Please select date', 'error');
@@ -74,6 +87,21 @@ const TotalDispatchdevices = () => {
         </Button>
       </Box>
       <ComponentSummaryTable  />
+      {componentSummary && <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <TablePagination
+        count={pagination.totalRecords || 0}
+        page={page}
+        onPageChange={handlePageChange}
+        color="primary"
+        showFirstButton
+        showLastButton
+        rowsPerPage={limit}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalRecords})`
+        }
+      />
+      </Box>}
     </LocalizationProvider>
   );
 };

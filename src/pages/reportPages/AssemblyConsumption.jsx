@@ -51,6 +51,24 @@ const AssemblyConsumption = () => {
     exportToExcel(dataForExport, 'Assembly Consumption');
   };
   console.log(componentReport);
+
+  const handleLimitChange = (event) => {
+    const newLimit = parseInt(event.target.value, 10);
+    setRowsPerPage(newLimit);
+    setPage(1);
+    if (dateRange.from && dateRange.to) {
+      dispatch(
+        getComponentReport({
+          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
+          page: 1,
+          limit: newLimit
+        })
+      );
+    }
+  };
+
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
@@ -86,7 +104,7 @@ const AssemblyConsumption = () => {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{ display: 'flex', gap: '10px', mt: '10px' }}>
+        <Box sx={{ display: 'flex', gap: '10px', mt: '10px', flexWrap: 'wrap' }}>
           <RangePicker
             format={'DD/MM/YYYY'}
             value={dateRange.from && dateRange.to ? [dateRange.from, dateRange.to] : null}
@@ -109,6 +127,7 @@ const AssemblyConsumption = () => {
             loading={componentReportLoading}
             onClick={() => {
               if (dateRange.from && dateRange.to) {
+                setPage(1); // Reset to first page when searching
                 dispatch(
                   getComponentReport({
                     from: dayjs(dateRange.from).format('YYYY-MM-DD'),
@@ -145,7 +164,7 @@ const AssemblyConsumption = () => {
         />
       </LocalizationProvider>
       {componentReport?.pagination && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <TablePagination
             count={componentReport?.pagination?.totalItems}
             page={page - 1}
@@ -155,6 +174,11 @@ const AssemblyConsumption = () => {
             showLastButton
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) => {
+              const currentPage = page;
+              const totalPages = Math.ceil(count / rowsPerPage);
+              return `${from}-${to} of ${count} (Page ${currentPage} of ${totalPages})`;
+            }}
           />
         </Box>
       )}

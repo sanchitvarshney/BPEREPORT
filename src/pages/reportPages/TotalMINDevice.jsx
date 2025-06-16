@@ -4,13 +4,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, InputLabel,Button } from '@mui/material';
+import { Box, InputLabel, Button, FormControl, Select, MenuItem, TablePagination, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getMINReport } from 'features/reports/reportSlice';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { DatePicker } from 'antd';
 import TotalMINDeviceTable from 'components/table/TotalMINDeviceTable';
 const { RangePicker } = DatePicker;
@@ -18,18 +15,58 @@ import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 
 const TotalMINDevice = () => {
-  const { wrongDeviceDetailLoading,getMINReportData } = useSelector((state) => state.report);
+  const { wrongDeviceDetailLoading, getMINReportData } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
   const [wrongDeviceDateRange, setWrongDeviceDateRange] = useState({
     from: null,
     to: null
   });
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+
+  // Extract data from the response structure - handle different possible structures
+  const pagination = getMINReportData?.pagination || getMINReportData?.data?.pagination || {};
+
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+      
+      dispatch(
+        getMINReport({
+          from: dayjs(wrongDeviceDateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(wrongDeviceDateRange.to).format('YYYY-MM-DD'),
+          partner,
+          page: newPage + 1, // API expects 1-based pagination
+          limit
+        })
+      );
+
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    const newLimit = parseInt(event.target.value, 10);
+    setLimit(newLimit);
+    setPage(0);
+    // Dispatch new API call with the new limit
+    if (wrongDeviceDateRange.from && wrongDeviceDateRange.to && partner) {
+      dispatch(
+        getMINReport({
+          from: dayjs(wrongDeviceDateRange.from).format('YYYY-MM-DD'),
+          to: dayjs(wrongDeviceDateRange.to).format('YYYY-MM-DD'),
+          partner,
+          page: 1,
+          limit: newLimit
+        })
+      );
+    }
+  };
+  console.log('pagination:', pagination);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className=''>
-        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px' }}>
+      <div className="">
+        <Box sx={{ display: 'flex', gap: '10px', paddingTop: '20px', flexWrap: 'wrap' }}>
           <RangePicker
             format={'DD/MM/YYYY'}
             value={wrongDeviceDateRange.from && wrongDeviceDateRange.to ? [wrongDeviceDateRange.from, wrongDeviceDateRange.to] : null}
@@ -64,11 +101,14 @@ const TotalMINDevice = () => {
             loading={wrongDeviceDetailLoading}
             onClick={() => {
               if (wrongDeviceDateRange.from && wrongDeviceDateRange.to && partner) {
+                setPage(0); // Reset to first page when searching
                 dispatch(
                   getMINReport({
                     from: dayjs(wrongDeviceDateRange.from).format('YYYY-MM-DD'),
                     to: dayjs(wrongDeviceDateRange.to).format('YYYY-MM-DD'),
-                    partner
+                    partner,
+                    page: 1,
+                    limit
                   })
                 );
               } else {
@@ -80,21 +120,51 @@ const TotalMINDevice = () => {
             <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
             Search
           </LoadingButton>
+
           <Button
-          disabled={!getMINReportData}
-          variant="contained"
-          color="success"
-          onClick={() => {
-            if (getMINReportData) {
-              exportToExcel(getMINReportData, `Device AWB Report (${partner})`,partner);
-            }
-          }}
-        >
-          <Download fontSize={'small'} sx={{ mr: '10px' }} />
-          Download
-        </Button>
+            disabled={!getMINReportData }
+            variant="contained"
+            color="success"
+            onClick={() => {
+              if (getMINReportData) {
+                exportToExcel(getMINReportData, `Device AWB Report (${partner})`, partner);
+              }
+            }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
         </Box>
+
         <TotalMINDeviceTable partner={partner}/>
+
+        {/* Show pagination when there are records */}
+        {getMINReportData && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <TablePagination
+              count={pagination?.totalRecords}
+              page={page}
+              onPageChange={handlePageChange}
+              color="primary"
+              showFirstButton
+              showLastButton
+              rowsPerPage={limit}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Box>
+        )}
+
+        {/* Display pagination info */}
+        {getMINReportData?.data?.length === 0 && getMINReportData && (
+          <Box sx={{ textAlign: 'center', mt: 4, p: 3 }}>
+            <Typography variant="h6" color="text.secondary">
+              No records found for the selected criteria
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Try adjusting your date range or partner selection
+            </Typography>
+          </Box>
+        )}
       </div>
     </LocalizationProvider>
   );
