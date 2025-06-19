@@ -144,7 +144,7 @@ export default function BPEIssueReport() {
           </Button>
         </Box>
 
-        <Box sx={{ height: 'calc(100vh - 190px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+        <Box sx={{ height: 'calc(100vh - 300px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
           <DataGrid
             loading={issueReportDataLoading}
             rows={rows || []}
@@ -172,6 +172,7 @@ export default function BPEIssueReport() {
             slots={{
               noRowsOverlay: CustomNoRowsOverlay
             }}
+            hideFooter={true}
             // pageSizeOptions={[20]}
           />
 
