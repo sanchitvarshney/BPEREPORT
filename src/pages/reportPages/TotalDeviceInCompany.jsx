@@ -28,7 +28,7 @@ const TotalDeviceInCompany = () => {
     from: null,
     to: null
   });
-  const { emitDeviceInWareHouseDownload, onDownloadReport } = useSocketContext();
+  const { emitDeviceInWareHouseDownload, onDownloadReport,isConnected } = useSocketContext();
 
   useEffect(() => {
     onDownloadReport(() => {
@@ -101,7 +101,7 @@ const TotalDeviceInCompany = () => {
           Download
         </Button>
         <Button
-          disabled={ !totalProduct}
+          disabled={ !isConnected}
           variant="contained"
           color="success"
           onClick={() => {

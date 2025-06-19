@@ -9,12 +9,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalComponentInBPE } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
+import { useSocketContext } from 'contexts/SocketContext';
 import TotalComponentInBPECompanyTable from 'components/table/TotalComponentInBPECompanyTable';
 const { RangePicker } = DatePicker;
 const TotalMaterialInBPECompany = () => {
   const { totalComponentInBPELoading, totalComponentInBPE } = useSelector((state) => state.report);
+  const {emitComponentInBPEDownload,isConnected} =   useSocketContext();
+
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -23,7 +25,7 @@ const TotalMaterialInBPECompany = () => {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
 const pagination = totalComponentInBPE?.pagination || {}
-  const [records, setRecords] = useState([]);
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
     dispatch(getTotalComponentInBPE({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: newPage + 1, limit: limit }));
@@ -32,6 +34,14 @@ const pagination = totalComponentInBPE?.pagination || {}
     setLimit(parseInt(event.target.value, 10));
     setPage(0);
     dispatch(getTotalComponentInBPE({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: 1, limit: parseInt(event.target.value, 10) })); 
+  };
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitComponentInBPEDownload({ startDate: dayjs(dateRange.from).format('DD-MM-YYYY'), endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),});
   };
   
   return (
@@ -72,13 +82,11 @@ const pagination = totalComponentInBPE?.pagination || {}
           Search
         </LoadingButton>
         <Button
-          disabled={!totalComponentInBPE}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            if (totalComponentInBPE) {
-              exportToExcel(totalComponentInBPE, 'Total Components In BPe ');
-            }
+           handleDownload();
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />

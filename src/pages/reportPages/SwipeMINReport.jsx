@@ -19,7 +19,7 @@ const SwipeMINReport = () => {
   const { swipeMachineReportLoading, swipeMachineReport, swipeMachineReportTotalPages } = useSelector(
     (state) => state.report
   );
-  const {swipeMachineInward} =   useSocketContext();
+  const {swipeMachineInward,isConnected} =   useSocketContext();
 
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
@@ -126,7 +126,7 @@ const SwipeMINReport = () => {
             Search
           </LoadingButton>
           <Button
-            disabled={!swipeMachineReport}
+            disabled={!isConnected}
             variant="contained"
             color="success"
             onClick={() => {

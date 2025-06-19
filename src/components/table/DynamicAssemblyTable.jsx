@@ -30,38 +30,39 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
   }));
 
   return (
-    <Box sx={{ height: isSwipe ? 'calc(100vh - 235px)' : 'calc(100vh - 285px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: isSwipe ? 'calc(100vh - 235px)' : 'calc(100vh - 300px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
       loading={loading}
         rows={rows || []}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        // pageSize={5}
+        // rowsPerPageOptions={[5]}
         disableSelectionOnClick
         slots={{
           noRowsOverlay: CustomNoRowsOverlay
         }}
-        sx={{
-          '& .MuiDataGrid-cell': {
-            borderBottom: '1px solid #ddd', // Horizontal row borders
-            borderRight: '1px solid #ddd' // Vertical column borders
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            borderBottom: '1px solid #ddd', // Header separator
-            background: '#1976d2 !important'
-          },
-          '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd' // Add a top border
-          }
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: rows.length || 100
-            }
-          }
-        }}
-        pageSizeOptions={[rows.length || 100]}
+        // sx={{
+        //   '& .MuiDataGrid-cell': {
+        //     borderBottom: '1px solid #ddd', // Horizontal row borders
+        //     borderRight: '1px solid #ddd' // Vertical column borders
+        //   },
+        //   '& .MuiDataGrid-columnHeaders': {
+        //     borderBottom: '1px solid #ddd', // Header separator
+        //     background: '#1976d2 !important'
+        //   },
+        //   '& .MuiDataGrid-footerContainer': {
+        //     borderTop: '1px solid #ddd' // Add a top border
+        //   }
+        // }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: rows.length || 100
+        //     }
+        //   }
+        // }}
+        // pageSizeOptions={[rows.length || 100]}
+        hideFooter={true}
       />
     </Box>
   );

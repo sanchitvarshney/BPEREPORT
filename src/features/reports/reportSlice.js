@@ -179,7 +179,7 @@ export const getAllComponentReport = createAsyncThunk('totalDevice/getAllCompone
 });
 
 export const getBatteryQCReport = createAsyncThunk('totalDevice/getBatteryQCReport', async (payload) => {
-  const response = await axiosInstance.get(`/report/r3BatteryQcReport?fromDate=${payload.from}&toDate=${payload.to}`);
+  const response = await axiosInstance.get(`/report/r3BatteryQcReport?fromDate=${payload.from}&toDate=${payload.to}&limit=${payload.limit}&page=${payload.page}`);
   return response;
 });
 
@@ -322,7 +322,7 @@ const reportSlice = createSlice({
       .addCase(getBatteryQCReport.fulfilled, (state, action) => {
         state.batteryQcLoading = false;
         if (action.payload.data.success) {
-          state.batteryQcData = action.payload.data.data;
+          state.batteryQcData = action.payload.data;
         }
       })
       .addCase(getBatteryQCReport.rejected, (state, action) => {
@@ -331,7 +331,7 @@ const reportSlice = createSlice({
       })
       .addCase(getWrongDeviceDetail.pending, (state) => {
         state.wrongDeviceDetailLoading = true;
-        state.wrongDeviceDetail = null;
+        // state.wrongDeviceDetail = null;
       })
       .addCase(getWrongDeviceDetail.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -341,7 +341,7 @@ const reportSlice = createSlice({
       })
       .addCase(getWrongDeviceDetail.rejected, (state) => {
         state.wrongDeviceDetailLoading = false;
-        state.wrongDeviceDetail = null;
+        // state.wrongDeviceDetail = null;
       })
       .addCase(getDeviceAnalysis.pending, (state) => {
         state.deviceAnalysisReportLoading = true;
@@ -405,7 +405,7 @@ const reportSlice = createSlice({
       })
       .addCase(getMINReport.pending, (state) => {
         state.minReportLoading = true;
-        state.getMINReportData = null;
+        // state.getMINReportData = null;
       })
       .addCase(getMINReport.fulfilled, (state, action) => {
         state.minReportLoading = false;
@@ -415,11 +415,11 @@ const reportSlice = createSlice({
       })
       .addCase(getMINReport.rejected, (state) => {
         state.minReportLoading = false;
-        state.getMINReportData = null;
+        // state.getMINReportData = null;
       })
       .addCase(getTotalComponent.pending, (state) => {
         state.totalComponentLoading = true;
-        state.totalComponent = null;
+        // state.totalComponent = null;
       })
       .addCase(getTotalComponent.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -429,7 +429,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponent.rejected, (state) => {
         state.totalComponentLoading = false;
-        state.totalComponent = null;
+        // state.totalComponent = null;
       })
       .addCase(getBpeIssue.pending, (state) => {
         state.bpeIssueLoading = true;
@@ -500,7 +500,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponentInBPE.pending, (state) => {
         state.totalComponentInBPELoading = true;
-        state.totalComponentInBPE = null;
+        // state.totalComponentInBPE = null;
       })
       .addCase(getTotalComponentInBPE.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -510,11 +510,11 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponentInBPE.rejected, (state) => {
         state.totalComponentInBPELoading = false;
-        state.totalComponentInBPE = null;
+        // state.totalComponentInBPE = null;
       })
       .addCase(getTotalComponentInMSC.pending, (state) => {
         state.totalComponentInMSCLoading = true;
-        state.totalComponentInMSC = null;
+        // state.totalComponentInMSC = null;
       })
       .addCase(getTotalComponentInMSC.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -524,7 +524,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTotalComponentInMSC.rejected, (state) => {
         state.totalComponentInMSCLoading = false;
-        state.totalComponentInMSC = null;
+        // state.totalComponentInMSC = null;
       })
       .addCase(getTotalDispatchDevices.pending, (state) => {
         state.dispatchDataReportLoading = true;
@@ -570,7 +570,7 @@ const reportSlice = createSlice({
       })
       .addCase(getComponentSummary.pending, (state) => {
         state.componentSummaryLoading = true;
-        state.componentSummary = null;
+        // state.componentSummary = null;
       })
       .addCase(getComponentSummary.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -580,7 +580,7 @@ const reportSlice = createSlice({
       })
       .addCase(getComponentSummary.rejected, (state) => {
         state.componentSummaryLoading = false;
-        state.componentSummary = null;
+        // state.componentSummary = null;
       })
       .addCase(getTotalBERDevices.pending, (state) => {
         state.totalBERReportLoading = true;
@@ -612,7 +612,7 @@ const reportSlice = createSlice({
       })
       .addCase(getComponentReport.pending, (state) => {
         state.componentReportLoading = true;
-        state.componentReport = null;
+        // state.componentReport = null;
       })
       .addCase(getComponentReport.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -622,7 +622,7 @@ const reportSlice = createSlice({
       })
       .addCase(getComponentReport.rejected, (state) => {
         state.componentReportLoading = false;
-        state.componentReport = null;
+        // state.componentReport = null;
       })
       .addCase(getAllComponentReport.pending, (state) => {
         state.allComponentReportLoading = true;
@@ -635,7 +635,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTrcComponentReport.pending, (state) => {
         state.trcReportLoading = true;
-        state.trcReport = null;
+        // state.trcReport = null;
       })
       .addCase(getTrcComponentReport.fulfilled, (state, action) => {
         if (action.payload.data.success) {
@@ -645,7 +645,7 @@ const reportSlice = createSlice({
       })
       .addCase(getTrcComponentReport.rejected, (state) => {
         state.trcReportLoading = false;
-        state.trcReport = null;
+        // state.trcReport = null;
       })
       .addCase(getSwipeMachineReport.pending, (state) => {
         state.swipeMachineReportLoading = true;

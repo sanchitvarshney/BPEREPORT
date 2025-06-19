@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTotalComponentInMSC } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
+import { useSocketContext } from 'contexts/SocketContext';
 import { DatePicker } from 'antd';
 import TotalComponentInMSCCompanyTable from 'components/table/TotalComponentInMSCCompanyTable';
 const { RangePicker } = DatePicker;
@@ -23,6 +23,7 @@ const TotalMaterialInMSCCompany = () => {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
  const pagination = totalComponentInMSC?.pagination 
+ const {emitComponentInMscDownload,isConnected} =   useSocketContext();
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -32,6 +33,14 @@ const TotalMaterialInMSCCompany = () => {
     setLimit(parseInt(event.target.value, 10));
     setPage(0);
     dispatch(getTotalComponentInMSC({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: 1, limit: parseInt(event.target.value, 10) }));
+  };
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitComponentInMscDownload({ startDate: dayjs(dateRange.from).format('DD-MM-YYYY'), endDate: dayjs(dateRange.to).format('DD-MM-YYYY') });
   };
   
   return (
@@ -72,13 +81,11 @@ const TotalMaterialInMSCCompany = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!totalComponentInMSC}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            if (totalComponentInMSC) {
-              exportToExcel(totalComponentInMSC, 'Total Material In MSC ');
-            }
+            handleDownload()
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />

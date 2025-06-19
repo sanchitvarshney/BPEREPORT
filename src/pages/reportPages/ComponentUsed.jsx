@@ -9,10 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import {getComponentSummary } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import ComponentSummaryTable from 'components/table/ComponentSummaryTable';
 const { RangePicker } = DatePicker;
+import {useSocketContext} from '../../contexts/SocketContext';
+
 const TotalDispatchdevices = () => {
   const { componentSummary, componentSummaryLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
@@ -20,11 +21,13 @@ const TotalDispatchdevices = () => {
     from: null,
     to: null
   });
+  const {emitComponentSummaryDownload,isConnected} =   useSocketContext();
   const location = window.location.pathname.includes('assembly')? 'Assembly' : 'TRC';
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const pagination = componentSummary?.pagination || {}
-  const [records, setRecords] = useState([]);
+  const isTrcModule = window.location.pathname.includes('trc')
+  
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
     dispatch(getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location, page: newPage + 1, limit: limit }));
@@ -33,6 +36,14 @@ const TotalDispatchdevices = () => {
     setLimit(parseInt(event.target.value, 10));
     setPage(0);
     dispatch(getComponentSummary({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD'),location, page: 1, limit: parseInt(event.target.value, 10) }));
+  };
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitComponentSummaryDownload({ startDate: dayjs(dateRange.from).format('YYYY-MM-DD'), endDate: dayjs(dateRange.to).format('YYYY-MM-DD'),loc_out:isTrcModule?"":"Assembly" });
   };
   
   return (
@@ -73,13 +84,11 @@ const TotalDispatchdevices = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!componentSummary}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            if (componentSummary) {
-              exportToExcel(componentSummary, 'Component Consumption');
-            }
+            handleDownload()
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />

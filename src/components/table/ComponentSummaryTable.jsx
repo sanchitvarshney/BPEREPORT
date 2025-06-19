@@ -28,35 +28,36 @@ export default function ComponentSummaryTable() {
   ];
 
   return (
-    <Box sx={{ height: 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 300px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={componentSummaryLoading}
         rows={rows || []}
         columns={columns}
-        sx={{
-          '& .MuiDataGrid-cell': {
-            borderBottom: '1px solid #ddd', 
-            borderRight: '1px solid #ddd'
-          },
-          '& .MuiDataGrid-columnHeaders': {
-            borderBottom: '1px solid #ddd', // Header separator
-            background: '#1976d2 !important'
-          },
-          '& .MuiDataGrid-footerContainer': {
-            borderTop: '1px solid #ddd' // Add a top border
-          }
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 30
-            }
-          }
-        }}
-        slots={{
-          noRowsOverlay: CustomNoRowsOverlay
-        }}
-        pageSizeOptions={[20]}
+        hideFooter={true}
+        // sx={{
+        //   '& .MuiDataGrid-cell': {
+        //     borderBottom: '1px solid #ddd', 
+        //     borderRight: '1px solid #ddd'
+        //   },
+        //   '& .MuiDataGrid-columnHeaders': {
+        //     borderBottom: '1px solid #ddd', // Header separator
+        //     background: '#1976d2 !important'
+        //   },
+        //   '& .MuiDataGrid-footerContainer': {
+        //     borderTop: '1px solid #ddd' // Add a top border
+        //   }
+        // }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: 30
+        //     }
+        //   }
+        // }}
+        // slots={{
+        //   noRowsOverlay: CustomNoRowsOverlay
+        // }}
+        // pageSizeOptions={[20]}
       />
     </Box>
   );

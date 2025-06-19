@@ -6,11 +6,13 @@ import { CustomNoRowsOverlay } from './CustomNoRowsOverlay';
 import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 export default function WrongDeviceDetailTable({ categoryFilter, records = [], header = [], loading = false }) {
   const [openImagePopup, setOpenImagePopup] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [loadingImage, setLoadingImage] = useState(true);
+  const { wrongDeviceDetailLoading } = useSelector((state) => state.report);
 
   // Create dynamic columns based on header
   const columns = useMemo(() => {
@@ -89,9 +91,10 @@ export default function WrongDeviceDetailTable({ categoryFilter, records = [], h
   return (
     <Box sx={{ height: 'calc(100vh - 300px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
-        loading={loading}
+        loading={loading || wrongDeviceDetailLoading}
         rows={filteredRows}
         columns={columns}
+        hideFooter={true}
         // sx={{
         //   '& .MuiDataGrid-cell': {
         //     borderBottom: '1px solid #ddd',
@@ -112,12 +115,11 @@ export default function WrongDeviceDetailTable({ categoryFilter, records = [], h
         //     }
         //   }
         // }}
-        // slots={{
-        //   noRowsOverlay: CustomNoRowsOverlay
-        // }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay
+        }}
         // pageSizeOptions={[20]}
         // disableRowSelectionOnClick
-        // pagination={false}
       />
 
       <Dialog open={openImagePopup} onClose={handleCloseImagePopup} maxWidth="sm" fullWidth>

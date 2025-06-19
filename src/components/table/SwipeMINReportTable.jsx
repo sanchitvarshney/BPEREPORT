@@ -29,7 +29,7 @@ export default function SwipeMINReportTable() {
     })) || [];
 
   return (
-    <Box sx={{ height: 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 250px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={swipeMachineReportLoading}
         rows={rows}
@@ -47,18 +47,19 @@ export default function SwipeMINReportTable() {
             borderTop: '1px solid #ddd'
           }
         }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: rows.length || 100
-            }
-          }
-        }}
-        pageSizeOptions={[rows.length || 100]}
-        slots={{
-          noRowsOverlay: CustomNoRowsOverlay
-        }}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: rows.length || 100
+        //     }
+        //   }
+        // }}
+        // pageSizeOptions={[rows.length || 100]}
+        // slots={{
+        //   noRowsOverlay: CustomNoRowsOverlay
+        // }}
         disableRowSelectionOnClick
+        hideFooter={true}
       />
     </Box>
   );

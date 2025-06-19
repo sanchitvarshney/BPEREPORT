@@ -13,6 +13,8 @@ import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import DynamicComponentTable from 'components/table/DynamicAssemblyTable';
 const { RangePicker } = DatePicker;
+import {useSocketContext} from '../../contexts/SocketContext';
+
 const AssemblyConsumption = () => {
   const { componentReport, componentReportLoading, allComponentReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
@@ -24,49 +26,39 @@ const AssemblyConsumption = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const isSwipe = window.location.pathname.includes('swipe');
+  const {emitComponentReportDownload,isConnected} =   useSocketContext();
 
+  // const handleDownload = () => {
+  //   if (dateRange.from && dateRange.to) {
+  //     dispatch(
+  //       getAllComponentReport({
+  //         from: dayjs(dateRange.from).format('YYYY-MM-DD'),
+  //         to: dayjs(dateRange.to).format('YYYY-MM-DD'),
+  //         type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox'
+  //       })
+  //     );
+  //   } else {
+  //     showToast('Please select date', 'error');
+  //   }
+  //   // Prepare data for export
+  //   // const dataForExport = componentReport?.data?.map((device) => ({
+  //   //   'IMEI No': device['IMEI No'],
+  //   //   'Serial No': device['Serial No'],
+  //   //   ...device.Components.reduce((acc, component) => {
+  //   //     acc[component['Part Name'] + ' (' + component['Part No'] + ')'] = component.Quantity;
+  //   //     return acc;
+  //   //   }, {})
+  //   // }));
+
+  //   // Call the exportToExcel function (pass data for export and filename)
+  //   exportToExcel(dataForExport, 'Assembly Consumption');
+  // };
   const handleDownload = () => {
-    if (dateRange.from && dateRange.to) {
-      dispatch(
-        getAllComponentReport({
-          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
-          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
-          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox'
-        })
-      );
-    } else {
-      showToast('Please select date', 'error');
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
     }
-    // Prepare data for export
-    // const dataForExport = componentReport?.data?.map((device) => ({
-    //   'IMEI No': device['IMEI No'],
-    //   'Serial No': device['Serial No'],
-    //   ...device.Components.reduce((acc, component) => {
-    //     acc[component['Part Name'] + ' (' + component['Part No'] + ')'] = component.Quantity;
-    //     return acc;
-    //   }, {})
-    // }));
-
-    // Call the exportToExcel function (pass data for export and filename)
-    exportToExcel(dataForExport, 'Assembly Consumption');
-  };
-  console.log(componentReport);
-
-  const handleLimitChange = (event) => {
-    const newLimit = parseInt(event.target.value, 10);
-    setRowsPerPage(newLimit);
-    setPage(1);
-    if (dateRange.from && dateRange.to) {
-      dispatch(
-        getComponentReport({
-          from: dayjs(dateRange.from).format('YYYY-MM-DD'),
-          to: dayjs(dateRange.to).format('YYYY-MM-DD'),
-          type: isSwipe ? 'SWIPE_MACHINE' : 'soundbox',
-          page: 1,
-          limit: newLimit
-        })
-      );
-    }
+    emitComponentReportDownload({ startDate: dayjs(dateRange.from).format('YYYY-MM-DD'), endDate: dayjs(dateRange.to).format('YYYY-MM-DD'),deviceType:isSwipe ? 'SWIPE_MACHINE' : 'SOUND_BOX', });
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -147,7 +139,7 @@ const AssemblyConsumption = () => {
             Search
           </LoadingButton>
           <LoadingButton
-            disabled={!dateRange.from || !dateRange.to}
+            disabled={!isConnected}
             variant="contained"
             color="success"
             onClick={handleDownload}
@@ -164,7 +156,7 @@ const AssemblyConsumption = () => {
         />
       </LocalizationProvider>
       {componentReport?.pagination && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', }}>
           <TablePagination
             count={componentReport?.pagination?.totalItems}
             page={page - 1}

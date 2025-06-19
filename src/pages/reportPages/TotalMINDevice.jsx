@@ -12,12 +12,13 @@ import { DatePicker } from 'antd';
 import TotalMINDeviceTable from 'components/table/TotalMINDeviceTable';
 const { RangePicker } = DatePicker;
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
+import {useSocketContext} from '../../contexts/SocketContext';
 
 const TotalMINDevice = () => {
   const { wrongDeviceDetailLoading, getMINReportData } = useSelector((state) => state.report);
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
+  const {emitDeviceInwardReport,isConnected} =   useSocketContext();
   const [wrongDeviceDateRange, setWrongDeviceDateRange] = useState({
     from: null,
     to: null
@@ -61,7 +62,14 @@ const TotalMINDevice = () => {
       );
     }
   };
-  console.log('pagination:', pagination);
+
+  const handleDownload = () => {
+    if (!wrongDeviceDateRange?.from || !wrongDeviceDateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitDeviceInwardReport({ fromDt: dayjs(wrongDeviceDateRange.from).format('YYYY-MM-DD'), toDt: dayjs(wrongDeviceDateRange.to).format('YYYY-MM-DD'),partner:partner });
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -122,13 +130,11 @@ const TotalMINDevice = () => {
           </LoadingButton>
 
           <Button
-            disabled={!getMINReportData }
+            disabled={!isConnected }
             variant="contained"
             color="success"
             onClick={() => {
-              if (getMINReportData) {
-                exportToExcel(getMINReportData, `Device AWB Report (${partner})`, partner);
-              }
+             handleDownload()
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
@@ -140,7 +146,7 @@ const TotalMINDevice = () => {
 
         {/* Show pagination when there are records */}
         {getMINReportData && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <TablePagination
               count={pagination?.totalRecords}
               page={page}

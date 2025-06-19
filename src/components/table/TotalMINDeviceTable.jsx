@@ -104,11 +104,12 @@ export default function ({ partner }) {
   const columns = partner === 'ALL' ? [...baseColumns, { headerName: 'Partner', field: 'partner', minWidth: 150 }] : baseColumns;
 
   return (
-    <Box sx={{ height: 'calc(100vh - 240px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
+    <Box sx={{ height: 'calc(100vh - 300px)', width: '100%', border: '1px solid #e0e0e0', mt: '10px' }}>
       <DataGrid
         loading={minReportLoading}
         rows={rows || []}
         columns={columns}
+        hideFooter={true}
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: '1px solid #ddd', // Horizontal row borders

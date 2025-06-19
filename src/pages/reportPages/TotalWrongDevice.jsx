@@ -8,10 +8,10 @@ import { Box, InputLabel, Button, FormControl, Select, MenuItem, TablePagination
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getWrongDeviceDetail } from 'features/reports/reportSlice';
-import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
 import WrongDeviceDetailTable from 'components/table/WrongDeviceDetailTable';
+import {useSocketContext} from '../../contexts/SocketContext';
 const { RangePicker } = DatePicker;
 
 const TotalWrongDevice = () => {
@@ -30,6 +30,15 @@ const TotalWrongDevice = () => {
   const records = wrongDeviceDetail?.data?.records || [];
   const pagination = wrongDeviceDetail?.data?.pagination || {};
   const header = wrongDeviceDetail?.data?.header || [];
+  const {emitFetchWrongDeviceDownload,isConnected} =   useSocketContext();
+
+  const handleDownload = () => {
+    if (!wrongDeviceDateRange?.from || !wrongDeviceDateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitFetchWrongDeviceDownload({ fromDate: dayjs(wrongDeviceDateRange.from).format('DD-MM-YYYY'), toDate: dayjs(wrongDeviceDateRange.to).format('DD-MM-YYYY'),deliveryPartner:partner});
+  };
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -144,13 +153,11 @@ const TotalWrongDevice = () => {
           </LoadingButton>
 
           <Button
-            disabled={!wrongDeviceDetail || records.length === 0}
+            disabled={!isConnected}
             variant="contained"
             color="success"
             onClick={() => {
-              if (wrongDeviceDetail && records.length > 0) {
-                exportDynamicDataToExcel(wrongDeviceDetail, 'Wrong Device Detail');
-              }
+              handleDownload();
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />

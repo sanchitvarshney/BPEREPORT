@@ -9,10 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getTrcComponentReport } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import DynamicComponentTable from 'components/table/DynamicAssemblyTable';
 const { RangePicker } = DatePicker;
+import {useSocketContext} from '../../contexts/SocketContext';
+
 const TrcConsumption = () => {
   const { trcReport, trcReportLoading } = useSelector((state) => state.report);
   const dispatch = useDispatch();
@@ -22,25 +23,15 @@ const TrcConsumption = () => {
   });
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [pagination, setPagination] = useState({
-    totalPages: 0,
-    totalRecords: 0,
-    currentPage: 1
-  });
-  const [records, setRecords] = useState([]);
-  const handleDownload = () => {
-    // Prepare data for export
-    const dataForExport = trcReport?.data?.map((device) => ({
-      "IMEI No": device["IMEI No"],
-      "Serial No": device["Serial No"],
-      ...device.Components.reduce((acc, component) => {
-      acc[trcReport?.components?.filter((componentData) => componentData["Part No"]===component["Part No"])[0]["Part Name"] + " (" + component["Part No"]+")"] = component.Quantity;
-        return acc;
-      }, {})
-    }));
+  const pagination = trcReport?.pagination||{}
 
-    // Call the exportToExcel function (pass data for export and filename)
-    exportToExcel(dataForExport, 'TRC Consumption');
+  const {emitTrcConsumptionReportDownload,isConnected} =   useSocketContext();
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitTrcConsumptionReportDownload({ fromDate: dayjs(dateRange.from).format('YYYY-MM-DD'), toDate: dayjs(dateRange.to).format('YYYY-MM-DD') });
   };
 
   const handlePageChange = (event, newPage) => {
@@ -91,7 +82,7 @@ const TrcConsumption = () => {
           Search
         </LoadingButton>
         <Button
-          disabled={!trcReport}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={handleDownload} 

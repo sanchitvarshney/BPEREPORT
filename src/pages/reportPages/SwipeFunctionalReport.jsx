@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 
 const SwipeFunctionalReport = () => {
   const { swipeFunctionalReportLoading, swipeFunctionalReportTotalRecords } = useSelector((state) => state.report);
-  const { emitSwipeFunctionalReport } = useSocketContext();
+  const { emitSwipeFunctionalReport,isConnected } = useSocketContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -144,13 +144,14 @@ const SwipeFunctionalReport = () => {
           </LoadingButton>
           <Button
             variant="contained"
-            color="info"
+            color="success"
             onClick={() => {
               handleDownload();
             }}
+            disabled={!isConnected}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download All
+            Download
           </Button>
         </Box>
         <SwipeFunctionalReportTable />

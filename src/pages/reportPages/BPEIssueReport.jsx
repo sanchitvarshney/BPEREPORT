@@ -5,7 +5,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { Button,TablePagination } from '@mui/material';
 import { CustomNoRowsOverlay } from '../../components/table/CustomNoRowsOverlay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,6 +15,7 @@ import UploadFileModal from 'reusable/UploadFileModal';
 import dayjs from 'dayjs';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
+import {useSocketContext} from '../../contexts/SocketContext';
 
 export default function BPEIssueReport() {
   const { issueReportData, issueReportDataLoading } = useSelector((state) => state.report);
@@ -39,7 +39,6 @@ export default function BPEIssueReport() {
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [openApproveModal, setOpenApproveModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false); // For File Upload Instructions Modal
-  const [modalData, setModalData] = useState(null);
   const [comment, setComment] = useState('');
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -48,6 +47,15 @@ export default function BPEIssueReport() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const pagination = issueReportData?.pagination || {}
+  const {emitBpeIssueReportDownload,isConnected} =   useSocketContext();
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitBpeIssueReportDownload({ startDate: dayjs(dateRange.from).format('YYYY-MM-DD'), endDate: dayjs(dateRange.to).format('YYYY-MM-DD')});
+  };
 
   const handleCloseModal = () => {
     setOpenRejectModal(false);
@@ -124,13 +132,11 @@ export default function BPEIssueReport() {
             Search
           </LoadingButton>
           <Button
-            disabled={!issueReportData}
+            disabled={!isConnected}
             variant="contained"
             color="success"
             onClick={() => {
-              if (issueReportData) {
-                exportToExcel(issueReportData, 'Issue Report');
-              }
+             handleDownload();
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />

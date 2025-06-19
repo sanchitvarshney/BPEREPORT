@@ -4,23 +4,79 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TablePagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getBatteryQCReport } from 'features/reports/reportSlice';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import BatteryQCReportTable from 'components/table/BatteryQCReportTable';
 const { RangePicker } = DatePicker;
+import { useSocketContext } from '../../contexts/SocketContext';
+
 const BatteryQCReport = () => {
-  const {batteryQcLoading, batteryQcData } = useSelector((state) => state.report);
-  
+  const { batteryQcLoading, batteryQcData } = useSelector((state) => state.report);
+
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
+  const [page , setPage] = useState(1);
+  const [limit , setLimit] = useState(10);
+  const pagination = batteryQcData?.pagination;
+  const { emitR3BatteryQcReportDownload,isConnected } = useSocketContext();
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitR3BatteryQcReportDownload({
+      fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+      toDate: dayjs(dateRange.to).format('DD-MM-YYYY')
+    });
+  };
+
+  const handleSearch = () => {
+    if (dateRange.from && dateRange.to) {
+      dispatch(
+        getBatteryQCReport({
+          from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+          to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+          page: 1, // API expects 1-based page numbers
+          limit: 10
+        })
+      );
+    } else {
+      showToast('Please select date', 'error');
+    }
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    dispatch(
+      getBatteryQCReport({
+        from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+        to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+        page: newPage + 1,
+        limit: limit
+      })
+    );
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setLimit(parseInt(event.target.value, 10));
+    setPage(0);
+    dispatch(
+      getBatteryQCReport({
+        from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+        to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+        page: 1,
+        limit: parseInt(event.target.value, 10)
+      })
+    );
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -43,30 +99,16 @@ const BatteryQCReport = () => {
           ]}
         />
 
-        <LoadingButton
-          loading={batteryQcLoading}
-          onClick={() => {
-            if (dateRange.from && dateRange.to) {
-              dispatch(
-                getBatteryQCReport({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') })
-              );
-            } else {
-              showToast('Please select date', 'error');
-            }
-          }}
-          variant="contained"
-        >
+        <LoadingButton loading={batteryQcLoading} onClick={handleSearch} variant="contained">
           <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
           Search
         </LoadingButton>
         <Button
-          disabled={!batteryQcData}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            if (batteryQcData) {
-              exportToExcel(batteryQcData, 'Battery QC Report');
-            }
+            handleDownload();
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
@@ -74,6 +116,23 @@ const BatteryQCReport = () => {
         </Button>
       </Box>
       <BatteryQCReportTable />
+      {batteryQcData && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <TablePagination
+            count={pagination.totalPages || 0}
+            page={page}
+            onPageChange={handlePageChange}
+            color="primary"
+            showFirstButton
+            showLastButton
+            rowsPerPage={limit}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalPages})`
+            }
+          />
+        </Box>
+      )}
     </LocalizationProvider>
   );
 };

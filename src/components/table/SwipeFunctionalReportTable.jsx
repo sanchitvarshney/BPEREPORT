@@ -87,14 +87,15 @@ export default function SwipeFunctionalReportTable() {
           noRowsOverlay: CustomNoRowsOverlay
         }}
         disableRowSelectionOnClick
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: rows.length || 100
-            }
-          }
-        }}
-        pageSizeOptions={[rows.length || 100]}
+        // initialState={{
+        //   pagination: {
+        //     paginationModel: {
+        //       pageSize: rows.length || 100
+        //     }
+        //   }
+        // }}
+        // pageSizeOptions={[rows.length || 100]}
+        hideFooter={true}
       />
     </Box>
   );

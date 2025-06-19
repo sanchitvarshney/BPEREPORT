@@ -34,6 +34,7 @@ export default function TotalComponentInCompanyTable() {
         loading={totalComponentLoading}
         rows={rows}
         columns={columns}
+        hideFooter={true}
         // sx={{
         //   '& .MuiDataGrid-cell': {
         //     borderBottom: '1px solid #ddd', // Horizontal row borders

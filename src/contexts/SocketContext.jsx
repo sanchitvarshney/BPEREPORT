@@ -65,6 +65,11 @@ export const SocketProvider = ({ children }) => {
     socketService.emit("swipeFunctionalReport", payload);
   }
 
+  const emitDeviceInwardReport = (payload) => {
+    console.log(payload)
+    socketService.emit("emitDeviceInwardReport", payload);
+  }
+
   const swipeMachineInward = (payload) => {
     console.log(payload)
     socketService.emit("swipeMachineInward", payload);
@@ -84,10 +89,50 @@ export const SocketProvider = ({ children }) => {
     console.log(payload)
     socketService.emit("swipeDispatchReport", payload);
   }
+  const emitComponentSummaryDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("componentSummaryDownload", payload);
+  }
+  const emitComponentReportDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("componentReportDownload", payload);
+  }
+  const emitTrcConsumptionReportDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("trcConsumptionReportDownload", payload);
+  }
+  const emitR3BatteryQcReportDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("r3BatteryQcReportDownload", payload);
+  }
+  const emitBpeIssueReportDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("bpeIssueReportDownload", payload);
+  }
+
+  const emitFetchWrongDeviceDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("fetchWrongDeviceDownload", payload);
+  }
+
+  const emitComponentInCompanyDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("componentInCompanyDownload", payload);
+  }
+  const emitComponentInBPEDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("componentInBPEDownload", payload);
+  }
+  
+  const emitComponentInMscDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("componentInMscDownload", payload);
+  }
+  
   
   const off = (event) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{emitDownloadSwipeReport,emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{emitComponentInMscDownload,emitComponentInBPEDownload,emitComponentInCompanyDownload,emitFetchWrongDeviceDownload,emitComponentReportDownload,emitBpeIssueReportDownload,emitR3BatteryQcReportDownload,emitTrcConsumptionReportDownload,emitComponentSummaryDownload,emitDeviceInwardReport,emitDownloadSwipeReport,emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch }}>{children}</SocketContext.Provider>;
 };

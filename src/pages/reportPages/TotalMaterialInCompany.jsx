@@ -10,11 +10,13 @@ import { showToast } from 'utils/ToastProvider';
 import { getTotalComponent } from 'features/reports/reportSlice';
 import TotalComponentInCompanyTable from 'components/table/TotalComponentInCompanyTable';
 import { Download } from '@mui/icons-material';
-import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
+import { useSocketContext } from 'contexts/SocketContext';
 const { RangePicker } = DatePicker;
+
 const TotalMaterialInCompany = () => {
   const { totalComponentLoading, totalComponent } = useSelector((state) => state.report);
+  const {emitComponentInCompanyDownload,isConnected} =   useSocketContext();
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -24,9 +26,6 @@ const TotalMaterialInCompany = () => {
   const [limit, setLimit] = useState(10);
 
   const pagination = totalComponent?.pagination || {};
-  console.log('pagination:', pagination);
-
-  const [records, setRecords] = useState([]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -38,7 +37,15 @@ const TotalMaterialInCompany = () => {
     setPage(0);
     dispatch(getTotalComponent({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), page: 1, limit: parseInt(event.target.value, 10) }));
   };
-console.log(pagination,totalComponent)
+
+  const handleDownload = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitComponentInCompanyDownload({ startDate: dayjs(dateRange.from).format('DD-MM-YYYY'), endDate: dayjs(dateRange.to).format('DD-MM-YYYY') });
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -82,13 +89,11 @@ console.log(pagination,totalComponent)
           Search
         </LoadingButton>
         <Button
-          disabled={!totalComponent}
+          disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            if (totalComponent) {
-              exportToExcel(totalComponent, 'Total Material In Company');
-            }
+            handleDownload()
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
