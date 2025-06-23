@@ -12,33 +12,33 @@ import { exportDynamicDataToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import { Download } from '@mui/icons-material';
 import SwipeMINReportTable from 'components/table/SwipeMINReportTable';
-import {useSocketContext} from '../../contexts/SocketContext';
+import { useSocketContext } from '../../contexts/SocketContext';
 const { RangePicker } = DatePicker;
 
 const SwipeMINReport = () => {
-  const { swipeMachineReportLoading, swipeMachineReport, swipeMachineReportTotalPages } = useSelector(
+  const { swipeMachineReportLoading, swipeMachineReport, swipeMachineReportTotalPages, swipeMachineReportTotalRecords } = useSelector(
     (state) => state.report
   );
-  const {swipeMachineInward,isConnected} =   useSocketContext();
+  const { swipeMachineInward, isConnected } = useSocketContext();
 
   const dispatch = useDispatch();
   const [partner, setPartner] = React.useState('eCOM');
-  const [page, setPage] = useState(1);
-  const [limit,setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
   const [dateRange, setDateRange] = useState({
     from: null,
     to: null
   });
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
     if (dateRange.from && dateRange.to && partner) {
       dispatch(
         getSwipeMachineReport({
           partnerValue: partner,
           fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
           toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
-          page: value,
+          page: newPage + 1,
           limit
         })
       );
@@ -50,13 +50,17 @@ const SwipeMINReport = () => {
       showToast('Please select a date range', 'error');
       return;
     }
-    swipeMachineInward({ fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'), toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),partner:partner });
+    swipeMachineInward({
+      fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+      toDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+      partner: partner
+    });
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     setLimit(newRowsPerPage);
-    setPage(1);
+    setPage(0);
     if (dateRange.from && dateRange.to) {
       dispatch(
         getSwipeMachineReport({
@@ -106,7 +110,7 @@ const SwipeMINReport = () => {
             loading={swipeMachineReportLoading}
             onClick={() => {
               if (dateRange.from && dateRange.to && partner) {
-                setPage(1);
+                setPage(0);
                 dispatch(
                   getSwipeMachineReport({
                     partnerValue: partner,
@@ -130,7 +134,7 @@ const SwipeMINReport = () => {
             variant="contained"
             color="success"
             onClick={() => {
-                handleDownload()
+              handleDownload();
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
@@ -138,10 +142,10 @@ const SwipeMINReport = () => {
           </Button>
         </Box>
         <SwipeMINReportTable />
-        {swipeMachineReportTotalPages > 1 && (
+        {swipeMachineReportTotalRecords > 0 && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <TablePagination
-              count={swipeMachineReportTotalPages}
+              count={swipeMachineReportTotalRecords}
               page={page}
               onPageChange={handlePageChange}
               color="primary"
