@@ -67,7 +67,7 @@ export const SocketProvider = ({ children }) => {
 
   const emitDeviceInwardReport = (payload) => {
     console.log(payload)
-    socketService.emit("emitDeviceInwardReport", payload);
+    socketService.emit("deviceInwardReport", payload);
   }
 
   const swipeMachineInward = (payload) => {
