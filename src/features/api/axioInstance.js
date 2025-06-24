@@ -20,7 +20,6 @@ axiosInstance.interceptors.request.use(async (config) => {
     config.headers['authorization'] = token;
     config.headers['session'] = '2024-2025';
     config.headers['x-click-token'] = uniqueid;
-    // config.headers["ngrok-skip-browser-warning"] = "69420";
   }
   return config;
 });
