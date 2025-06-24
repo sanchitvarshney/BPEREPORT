@@ -258,7 +258,7 @@ export const getr5Report = createAsyncThunk('report/getr5Report', async (query) 
   const response = await axiosInstance.get(
     query.type === 'DEVICE'
       ? `/report/r5/DEVICE?deviceId=${query.device}`
-      : `/report/r5/DATE?from=${query.from}&to=${query.to}&type=${query.type}`
+      : `/report/r5/DATE?from=${query.from}&to=${query.to}&type=${query.type}&page=${query.page}&limit=${query.limit}`
   );
   return response;
 });
@@ -308,7 +308,7 @@ const reportSlice = createSlice({
       .addCase(getr5Report.fulfilled, (state, action) => {
         state.dispatchreportLoading = false;
         if (action.payload.data.success) {
-          state.dispatchreport = action.payload.data.data;
+          state.dispatchreport = action.payload.data;
         }
       })
       .addCase(getr5Report.rejected, (state) => {

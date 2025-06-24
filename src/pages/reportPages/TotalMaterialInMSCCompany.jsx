@@ -104,7 +104,7 @@ const TotalMaterialInMSCCompany = () => {
         rowsPerPage={limit}
         onRowsPerPageChange={handleChangeRowsPerPage}
         labelDisplayedRows={({ from, to, count }) =>
-          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalItems})`
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalPages})`
         }
       />
       </Box>}
