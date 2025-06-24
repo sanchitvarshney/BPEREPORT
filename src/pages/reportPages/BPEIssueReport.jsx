@@ -190,7 +190,7 @@ export default function BPEIssueReport() {
         rowsPerPage={limit}
         onRowsPerPageChange={handleChangeRowsPerPage}
         labelDisplayedRows={({ from, to, count }) =>
-          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalRecords})`
+          `${from}-${to} of ${count} (Page ${pagination.currentPage} of ${pagination.totalPages})`
         }
       />
       </Box>}

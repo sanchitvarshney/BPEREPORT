@@ -94,7 +94,7 @@ const TrcConsumption = () => {
       <DynamicComponentTable data={trcReport?.data || []} components={trcReport?.components || []} loading={trcReportLoading} />
       {trcReport && <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <TablePagination
-        count={pagination.totalPages || 0}
+        count={pagination.totalRecords || 0}
         page={page}
         onPageChange={handlePageChange}
         color="primary"
