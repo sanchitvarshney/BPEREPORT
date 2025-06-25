@@ -20,7 +20,7 @@ const SwipeFunctionalReport = () => {
   const { swipeFunctionalReportLoading, swipeFunctionalReportTotalRecords } = useSelector((state) => state.report);
   const { emitSwipeFunctionalReport,isConnected } = useSocketContext();
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [type, setType] = useState('DEVICE');
   const [device, setDevice] = useState(null);
@@ -121,8 +121,8 @@ const SwipeFunctionalReport = () => {
           <LoadingButton
             loading={swipeFunctionalReportLoading}
             onClick={() => {
-              if (dateRange.from && dateRange.to) {
-                setPage(1);
+              if (dateRange.from && dateRange.to && device) {
+                setPage(0);
                 dispatch(
                   getSwipeFunctionalReport({
                     fromDate: dayjs(dateRange.from).format('DD-MM-YYYY'),

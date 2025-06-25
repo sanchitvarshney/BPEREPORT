@@ -22,10 +22,10 @@ const BatteryQCReport = () => {
     from: null,
     to: null
   });
-  const [page , setPage] = useState(1);
-  const [limit , setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
   const pagination = batteryQcData?.pagination;
-  const { emitR3BatteryQcReportDownload,isConnected } = useSocketContext();
+  const { emitR3BatteryQcReportDownload, isConnected } = useSocketContext();
 
   const handleDownload = () => {
     if (!dateRange?.from || !dateRange?.to) {
@@ -40,6 +40,7 @@ const BatteryQCReport = () => {
 
   const handleSearch = () => {
     if (dateRange.from && dateRange.to) {
+      setPage(0);
       dispatch(
         getBatteryQCReport({
           from: dayjs(dateRange.from).format('DD-MM-YYYY'),
