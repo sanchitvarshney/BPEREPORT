@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -78,6 +78,40 @@ const PreQCReport = () => {
       })
     );
   };
+
+  const rows = useMemo(
+    () =>
+      (preQcData?.data?.data || preQcData?.data || []).map((item, index) => {
+        // Flatten qA array into a single object for fast lookup
+        const qaMap = {};
+        (item.qA || []).forEach((qaObj) => {
+          Object.entries(qaObj).forEach(([key, value]) => {
+            qaMap[key] = value;
+          });
+        });
+        return {
+          id: item.id || index,
+          imei: item.imei,
+          serial: item.serial,
+          insert_dt: item.insert_dt,
+          insert_by: item.insert_by,
+          remark: item.remark,
+          txnId: item.txnId,
+          qaMap
+        };
+      }),
+    [preQcData]
+  );
+
+  const qaKeys = useMemo(() => {
+    const keys = new Set();
+    (preQcData?.data?.data || preQcData?.data || []).forEach((row) => {
+      (row.qA || []).forEach((qaObj) => {
+        Object.keys(qaObj).forEach((key) => keys.add(key));
+      });
+    });
+    return Array.from(keys);
+  }, [preQcData]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

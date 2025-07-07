@@ -22,7 +22,7 @@ export default function PreQCReportTable() {
   // 2. Columns definition
   const columns = useMemo(
     () => [
-      { field: 'id', headerName: '#', width: 90, },
+      { field: 'id', headerName: '#', width: 90 },
       {
         field: 'imei',
         headerName: 'IMEI',
@@ -37,11 +37,6 @@ export default function PreQCReportTable() {
         field: 'insert_dt',
         headerName: 'Insert Date',
         minWidth: 180
-        // valueGetter: (params) => {
-        //   if (!params.row.insert_dt) return '--';
-        //   const date = new Date(params.row.insert_dt);
-        //   return date.toLocaleString();
-        // }
       },
       {
         field: 'insert_by',
@@ -63,7 +58,7 @@ export default function PreQCReportTable() {
         field: `qa_${qaKey}`,
         headerName: qaKey,
         minWidth: 170,
-        valueGetter: (params) => {
+        renderCell: (params) => {
           if (!params || !params.row || !Array.isArray(params.row.qA)) return 'No';
           const qA = params.row.qA;
           const found = qA.find((qaObj) => Object.prototype.hasOwnProperty.call(qaObj, qaKey));
@@ -74,11 +69,11 @@ export default function PreQCReportTable() {
     [qaKeys]
   );
 
-  // 3. Rows mapping (keep original qA array for valueGetter)
+  // 3. Rows mapping (keep original qA array for renderCell)
   const rows = useMemo(
     () =>
       (preQcData?.data?.data || preQcData?.data || []).map((item, index) => ({
-        id: item.id || index, // Use a unique id if available
+        id: item.id || index,
         imei: item.imei,
         serial: item.serial,
         insert_dt: item.insert_dt,
