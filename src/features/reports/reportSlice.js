@@ -57,7 +57,9 @@ const initialState = {
   swipeFunctionalReportTotalRecords: 0,
   allComponentReportLoading: false,
   totalRecords: 0,
-  totalPages: 0
+  totalPages: 0,
+  preQcData: null,
+  preQcLoading: false
 };
 
 export const getTotalProduct = createAsyncThunk('totalDevice/gettotaldevice', async (payload) => {
@@ -180,6 +182,11 @@ export const getAllComponentReport = createAsyncThunk('totalDevice/getAllCompone
 
 export const getBatteryQCReport = createAsyncThunk('totalDevice/getBatteryQCReport', async (payload) => {
   const response = await axiosInstance.get(`/report/r3BatteryQcReport?fromDate=${payload.from}&toDate=${payload.to}&limit=${payload.limit}&page=${payload.page}`);
+  return response;
+});
+
+export const getPreQCReport = createAsyncThunk('totalDevice/getPreQCReport', async (payload) => {
+  const response = await axiosInstance.get(`/report/preQcReport?from=${payload.from}&to=${payload.to}&limit=${payload.limit}&page=${payload.page}`);
   return response;
 });
 
@@ -328,6 +335,18 @@ const reportSlice = createSlice({
       .addCase(getBatteryQCReport.rejected, (state, action) => {
         state.batteryQcLoading = false;
         state.batteryQcData = null;
+      })
+      .addCase(getPreQCReport.pending, (state) => {
+        state.preQcLoading = true;
+        state.preQcData = null;
+      })
+      .addCase(getPreQCReport.fulfilled, (state, action) => {
+        state.preQcLoading = false;
+          state.preQcData = action.payload.data;
+      })
+      .addCase(getPreQCReport.rejected, (state, action) => {
+        state.preQcLoading = false;
+        state.preQcData = null;
       })
       .addCase(getWrongDeviceDetail.pending, (state) => {
         state.wrongDeviceDetailLoading = true;

@@ -132,12 +132,15 @@ export const SocketProvider = ({ children }) => {
     socketService.emit("componentInMscDownload", payload);
   }
 
-
+  const emitPreQCReportDownload = (payload) => {
+    console.log(payload)
+    socketService.emit("preQcReportDownload", payload);
+  }
   
   
   const off = (event) => {
     socketService.off(event);
   };
 
-  return <SocketContext.Provider value={{emitComponentInMscDownload,emitComponentInBPEDownload,emitComponentInCompanyDownload,emitFetchWrongDeviceDownload,emitComponentReportDownload,emitBpeIssueReportDownload,emitR3BatteryQcReportDownload,emitTrcConsumptionReportDownload,emitComponentSummaryDownload,emitDeviceInwardReport,emitDownloadSwipeReport,emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch,emitR5ReportDownload  }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{emitPreQCReportDownload,emitComponentInMscDownload,emitComponentInBPEDownload,emitComponentInCompanyDownload,emitFetchWrongDeviceDownload,emitComponentReportDownload,emitBpeIssueReportDownload,emitR3BatteryQcReportDownload,emitTrcConsumptionReportDownload,emitComponentSummaryDownload,emitDeviceInwardReport,emitDownloadSwipeReport,emitSwipeFunctionalReport, swipeMachineInward, emitDeviceInWareHouseDownload,emitDownloadWrongDeviceReport,emitDownloadr5Report, onDownloadReport, isConnected, refreshConnection, isLoading, off, onnotification,emitGetNotification,emitDeviceOnLocation,emitBERDeviceReport,emitFGDispatch,emitR5ReportDownload  }}>{children}</SocketContext.Provider>;
 };

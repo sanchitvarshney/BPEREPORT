@@ -33,6 +33,7 @@ const TotalComponentsOnCompanyLocation = Loadable(lazy(() => import('pages/repor
 const DeviceAnalysis = Loadable(lazy(() => import('pages/reportPages/DeviceAnalysis')));
 const SwipeMINReport = Loadable(lazy(() => import('pages/reportPages/SwipeMINReport')));
 const SwipeFunctionalReport = Loadable(lazy(() => import('pages/reportPages/SwipeFunctionalReport')));
+const PreQCReport = Loadable(lazy(() => import('pages/reportPages/PreQCReport')));
 
 const MainRoutes = {
   path: '/',
@@ -195,6 +196,10 @@ const MainRoutes = {
           <BPEIssueReport />
         </BPEIssueLayout>
       )
+    },
+    {
+      path: '/pre-qc-report',
+      element: <PreQCReport />
     },
     {
       path: '*',

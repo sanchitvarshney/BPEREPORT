@@ -37,6 +37,15 @@ const Other = {
       icon: icons.SyncProblemOutlinedIcon,
       target: false,
       breadcrumbs: false
+    },
+    {
+      id: 'pre-qc-report',
+      title: 'Pre QC Report',
+      type: 'item',
+      url: '/pre-qc-report',
+      icon: icons.SyncProblemOutlinedIcon,
+      target: false,
+      breadcrumbs: false
     }
   ]
 };
