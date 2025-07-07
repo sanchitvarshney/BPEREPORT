@@ -100,7 +100,8 @@ const TotalMINDevice = () => {
               <MenuItem value="eCOM">eCOM</MenuItem>
               <MenuItem value="DTDC">DTDC</MenuItem>
               <MenuItem value="dVery">Delhivery</MenuItem>
-              <MenuItem value="expb">XpressBees</MenuItem>
+              <MenuItem value="XPRESSBEES">XpressBees</MenuItem>
+              <MenuItem value="NANDAN">Nandan</MenuItem>
               <MenuItem value="ALL">All</MenuItem>
               {/* Add other partners as required */}
             </Select>
