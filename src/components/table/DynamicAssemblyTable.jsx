@@ -8,6 +8,7 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
   const columns = [
     { field: 'IMEI No', headerName: 'IMEI No', width: 150 },
     { field: 'Serial No', headerName: 'Serial No', width: 150 },
+    { field: 'Model Name', headerName: 'Model Name', width: 150 },
     ...components?.map((component) => ({
       field: component['Part No'],
       headerName: component['Part Name']+' ('+component['Part No']+')',
@@ -26,6 +27,7 @@ const DynamicAssemblyTable = ({ data, components,loading }) => {
     id: index + 1,
     'IMEI No': device['IMEI No'],
     'Serial No': device['Serial No'],
+    'Model Name': device['Model Name'],
     Components: device.Components || []
   }));
 
