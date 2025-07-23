@@ -31,7 +31,7 @@ const TrcConsumption = () => {
       showToast('Please select a date range', 'error');
       return;
     }
-    emitTrcConsumptionReportDownload({ fromDate: dayjs(dateRange.from).format('YYYY-MM-DD'), toDate: dayjs(dateRange.to).format('YYYY-MM-DD') });
+    emitTrcConsumptionReportDownload({ from: dayjs(dateRange.from).format('YYYY-MM-DD'), to: dayjs(dateRange.to).format('YYYY-MM-DD') });
   };
 
   const handlePageChange = (event, newPage) => {
