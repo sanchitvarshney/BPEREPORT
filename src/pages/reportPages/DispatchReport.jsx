@@ -12,13 +12,13 @@ import { Download } from '@mui/icons-material';
 import { exportToExcel } from 'helper/excelExport';
 import { DatePicker } from 'antd';
 import DispatchReportTable from 'components/table/DispatchReportTable';
-import {useSocketContext} from '../../contexts/SocketContext';
+import { useSocketContext } from '../../contexts/SocketContext';
 const { RangePicker } = DatePicker;
 const DispatchReport = () => {
   const { dispatchreport, dispatchreportLoading } = useSelector((state) => state.report);
   const isSwipeModule = window.location.pathname.includes('swipe');
-  const {emitR5ReportDownload,isConnected} =   useSocketContext();
-  
+  const { emitR5ReportDownload, isConnected,emitDownloadr5Report } = useSocketContext();
+
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -32,9 +32,24 @@ const DispatchReport = () => {
       showToast('Please select a date range', 'error');
       return;
     }
-      emitR5ReportDownload({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'),productType:isSwipeModule ? 'swipeMachine' : 'soundBox',type:"DATE" });
+    emitR5ReportDownload({
+      from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+      to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+      productType: isSwipeModule ? 'swipeMachine' : 'soundBox',
+      type: 'DATE'
+    });
   };
-
+  const handleDownloadAll = () => {
+    if (!dateRange?.from || !dateRange?.to) {
+      showToast('Please select a date range', 'error');
+      return;
+    }
+    emitDownloadr5Report({
+      from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+      to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+      type: 'All'
+    });
+  };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
@@ -67,7 +82,7 @@ const DispatchReport = () => {
       );
     }
   };
-  console.log(dispatchreport)
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -94,7 +109,13 @@ const DispatchReport = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getr5Report({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'),type:isSwipeModule ? 'swipeMachine' : 'soundBox',page:1,limit:10 })
+                getr5Report({
+                  from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                  to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                  type: isSwipeModule ? 'swipeMachine' : 'soundBox',
+                  page: 1,
+                  limit: 10
+                })
               );
             } else {
               showToast('Please select date', 'error');
@@ -105,38 +126,49 @@ const DispatchReport = () => {
           <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
           Search
         </LoadingButton>
-        <Button
+          <Button
+            disabled={!isConnected}
+            variant="contained"
+            color="success"
+            onClick={() => {
+              handleDownload();
+            }}
+          >
+            <Download fontSize={'small'} sx={{ mr: '10px' }} />
+            Download
+          </Button>
+        {!isSwipeModule&&  <Button
           disabled={!isConnected}
           variant="contained"
           color="success"
           onClick={() => {
-            handleDownload()
+            handleDownloadAll();
           }}
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
-          Download
-        </Button>
+          Download All
+        </Button>}
       </Box>
       <DispatchReportTable />
-     {dispatchreport?.pagination && (
-      <Box sx={{ display: 'flex', justifyContent: 'center', }}>
-        <TablePagination
-          count={dispatchreport?.pagination?.totalRecords}
-          page={page - 1}
-          onPageChange={handlePageChange}
-          color="primary"
-          showFirstButton
-          showLastButton
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => {
-            const currentPage = page;
-            const totalPages = Math.ceil(count / rowsPerPage);
-            return `${from}-${to} of ${count} (Page ${currentPage} of ${totalPages})`;
-          }}
-        />
-      </Box>
-    )}
+      {dispatchreport?.pagination && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <TablePagination
+            count={dispatchreport?.pagination?.totalRecords}
+            page={page - 1}
+            onPageChange={handlePageChange}
+            color="primary"
+            showFirstButton
+            showLastButton
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) => {
+              const currentPage = page;
+              const totalPages = Math.ceil(count / rowsPerPage);
+              return `${from}-${to} of ${count} (Page ${currentPage} of ${totalPages})`;
+            }}
+          />
+        </Box>
+      )}
     </LocalizationProvider>
   );
 };
