@@ -17,7 +17,7 @@ const { RangePicker } = DatePicker;
 const DispatchReport = () => {
   const { dispatchreport, dispatchreportLoading } = useSelector((state) => state.report);
   const isSwipeModule = window.location.pathname.includes('swipe');
-  const { emitR5ReportDownload, isConnected,emitDownloadr5Report } = useSocketContext();
+  const { emitR5ReportDownload, isConnected, emitDownloadr5Report } = useSocketContext();
 
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
@@ -44,9 +44,20 @@ const DispatchReport = () => {
       showToast('Please select a date range', 'error');
       return;
     }
+
+    // Check if date range is more than 1 month
+    const fromDate = dayjs(dateRange.from);
+    const toDate = dayjs(dateRange.to);
+    const diffInMonths = toDate.diff(fromDate, 'month', true);
+
+    if (diffInMonths > 1) {
+      showToast('Date range cannot exceed 1 month for Download All', 'error');
+      return;
+    }
+
     emitDownloadr5Report({
-      from: dayjs(dateRange.from).format('DD-MM-YYYY'),
-      to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+      from: fromDate.format('DD-MM-YYYY'),
+      to: toDate.format('DD-MM-YYYY'),
       type: 'All'
     });
   };
@@ -126,28 +137,30 @@ const DispatchReport = () => {
           <FilterAltOutlinedIcon fontSize={'small'} sx={{ mr: '10px' }} />
           Search
         </LoadingButton>
+        <Button
+          disabled={!isConnected}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            handleDownload();
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download
+        </Button>
+        {!isSwipeModule && (
           <Button
             disabled={!isConnected}
             variant="contained"
             color="success"
             onClick={() => {
-              handleDownload();
+              handleDownloadAll();
             }}
           >
             <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download
+            Download All
           </Button>
-        {!isSwipeModule&&  <Button
-          disabled={!isConnected}
-          variant="contained"
-          color="success"
-          onClick={() => {
-            handleDownloadAll();
-          }}
-        >
-          <Download fontSize={'small'} sx={{ mr: '10px' }} />
-          Download All
-        </Button>}
+        )}
       </Box>
       <DispatchReportTable />
       {dispatchreport?.pagination && (
