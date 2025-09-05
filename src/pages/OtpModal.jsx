@@ -45,7 +45,8 @@ const OtpModal = ({ open, handleClose }) => {
 
   const handleOtpSubmit = () => {
     if (!otp) return showToast('Please enter the OTP', 'error');
-    dispatch(verifyOtpAsync({ otp, secret: secretKey })).then((res) => {
+    const username = localStorage.getItem("username");
+    dispatch(verifyOtpAsync({ otp, secret: secretKey,username: username  })).then((res) => {
       if (res.payload.data.success) {
         showToast('OTP Verified Successfully', 'success');
         navigate('/dashboard');
@@ -124,7 +125,7 @@ const OtpModal = ({ open, handleClose }) => {
 
         <Typography variant="body2" fontSize={16} className="mt-4 text-gray-600">
           {!isShowQr
-            ? 'Enter the OTP from your authentication app.'
+            ? 'Enter the OTP from your registered email address.'
             : 'Scan the QR code with your app to enable 2FA, then enter the OTP.'}
         </Typography>
 

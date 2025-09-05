@@ -60,6 +60,7 @@ const authSlice = createSlice({
         if (action.payload.data.success) {
           setToken(action.payload.data.data?.token);
           localStorage.setItem('loggedinUser', btoa(JSON.stringify(action.payload.data.data)));
+          localStorage.setItem("username", action?.payload?.data?.username);
           showToast(action?.payload?.data?.message, 'success');
         }
         if(!action.payload.data.data){
