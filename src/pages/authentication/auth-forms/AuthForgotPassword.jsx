@@ -9,6 +9,8 @@ import { showToast } from 'utils/ToastProvider';
 import { useNavigate } from 'react-router';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ReCAPTCHA from 'react-google-recaptcha';
+
 export default function AuthForgotPassword() {
   const dispatch = useDispatch();
   const { resetPasswordLoading, sendVarificationcodeloading } = useSelector((state) => state.auth);
@@ -16,6 +18,9 @@ export default function AuthForgotPassword() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [recaptchaValue, setRecaptchaValue] = React.useState(null);
+  const [recaptchaKey, setRecaptchaKey] = React.useState(Math.random());
+
   const handleSendCode = async (values, { setSubmitting, setErrors }) => {
     try {
       dispatch(sendVerificationCodeAsync({ emailId: values.email })).then((response) => {
@@ -33,6 +38,10 @@ export default function AuthForgotPassword() {
     }
   };
   const handleResetPassword = async (values, { setSubmitting, setErrors }) => {
+    if (!recaptchaValue) {
+      showToast('Please verify the reCAPTCHA', 'error');
+      return;
+    }
     try {
       dispatch(resetPasswordAsync({ emailId: values.email, otp: values.code, password: values.newPassword })).then((response) => {
         if (response.payload?.data?.success) {
@@ -41,12 +50,18 @@ export default function AuthForgotPassword() {
         } else {
           showToast(response.payload.message, 'error');
         }
+        setRecaptchaValue(null);
+        setRecaptchaKey(Math.random());
       });
     } catch (error) {
       setErrors({ submit: 'Failed to reset password. Try again.' });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
   };
 
   return (
@@ -175,6 +190,9 @@ export default function AuthForgotPassword() {
                   >
                     Resend Verification Code
                   </LoadingButton>
+                </Grid>
+                <Grid item xs={12}>
+                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange} key={recaptchaKey} />
                 </Grid>
               </>
             )}
