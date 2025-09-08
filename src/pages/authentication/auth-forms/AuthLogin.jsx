@@ -180,7 +180,7 @@ export default function AuthLogin() {
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   {/* <div className="mt-[30px] flex justify-center items-center"> */}
-                  <ReCAPTCHA sitekey="6Lc1yucqAAAAAFHqKikBw7GpigsYVEVQ7kySahcD" onChange={handleRecaptchaChange}  key={recaptchaKey} />
+                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange}  key={recaptchaKey} />
                   {/* </div> */}
                 </Stack>
               </Grid>
