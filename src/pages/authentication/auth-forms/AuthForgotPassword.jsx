@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +20,7 @@ export default function AuthForgotPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [recaptchaValue, setRecaptchaValue] = React.useState(null);
   const [recaptchaKey, setRecaptchaKey] = React.useState(Math.random());
+  const recaptchaRef = useRef<any>(null);
 
   const handleSendCode = async (values, { setSubmitting, setErrors }) => {
     try {
@@ -192,7 +193,8 @@ export default function AuthForgotPassword() {
                   </LoadingButton>
                 </Grid>
                 <Grid item xs={12}>
-                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange} key={recaptchaKey} />
+                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange} key={recaptchaKey} 
+                      ref={recaptchaRef}/>
                 </Grid>
               </>
             )}
