@@ -20,7 +20,7 @@ export default function AuthForgotPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [recaptchaValue, setRecaptchaValue] = React.useState(null);
   const [recaptchaKey, setRecaptchaKey] = React.useState(Math.random());
-  const recaptchaRef = useRef<any>(null);
+  const recaptchaRef = useRef(null);
 
   const handleSendCode = async (values, { setSubmitting, setErrors }) => {
     try {
