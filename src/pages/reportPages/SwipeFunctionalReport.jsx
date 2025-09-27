@@ -50,7 +50,7 @@ const SwipeFunctionalReport = () => {
       showToast('Please select a date range', 'error');
       return;
     }
-    emitSwipeFunctionalReport({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY') });
+    emitSwipeFunctionalReport({ from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), device: device?.id, type: type });
   };
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
