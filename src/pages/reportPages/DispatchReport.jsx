@@ -54,12 +54,20 @@ const DispatchReport = () => {
       showToast('Date range cannot exceed 1 month for Download All', 'error');
       return;
     }
-
-    emitDownloadr5Report({
-      from: fromDate.format('DD-MM-YYYY'),
-      to: toDate.format('DD-MM-YYYY'),
-      type: 'All'
-    });
+    if (isSwipeModule) {
+      emitDownloadr5Report({
+        from: fromDate.format('DD-MM-YYYY'),
+        to: toDate.format('DD-MM-YYYY'),
+        type: 'All',
+        deviceType:"SWIPE"
+      });
+    } else {
+      emitDownloadr5Report({
+        from: fromDate.format('DD-MM-YYYY'),
+        to: toDate.format('DD-MM-YYYY'),
+        type: 'All'
+      });
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -148,19 +156,17 @@ const DispatchReport = () => {
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
           Download
         </Button>
-        {!isSwipeModule && (
-          <Button
-            disabled={!isConnected}
-            variant="contained"
-            color="success"
-            onClick={() => {
-              handleDownloadAll();
-            }}
-          >
-            <Download fontSize={'small'} sx={{ mr: '10px' }} />
-            Download All
-          </Button>
-        )}
+        <Button
+          disabled={!isConnected}
+          variant="contained"
+          color="success"
+          onClick={() => {
+            handleDownloadAll();
+          }}
+        >
+          <Download fontSize={'small'} sx={{ mr: '10px' }} />
+          Download All
+        </Button>
       </Box>
       <DispatchReportTable />
       {dispatchreport?.pagination && (
