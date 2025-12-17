@@ -77,7 +77,7 @@ const DynamicTable = ({ rowdata }) => {
   }));
 
   return (
-    <Box sx={{ width: '100%', width: '100%', mt: 2, border: '1px solid #ddd' }}>
+    <Box sx={{ width: '100%', mt: 2, border: '1px solid #ddd' }}>
       <DataGrid
         sx={{
           '& .MuiDataGrid-cell': {
