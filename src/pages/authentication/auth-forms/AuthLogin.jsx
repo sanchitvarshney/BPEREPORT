@@ -24,7 +24,7 @@ import { loginUserAsync } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
 import ReCAPTCHA from 'react-google-recaptcha';
 import OtpModal from 'pages/OtpModal';
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
 
 export default function AuthLogin() {
   const dispatch = useDispatch();
