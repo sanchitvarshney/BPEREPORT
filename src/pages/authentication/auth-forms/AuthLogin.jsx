@@ -20,10 +20,11 @@ import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUserAsync } from 'features/auth/authSlice';
+import { loginUserAsync, loginUserGoogle } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
 import ReCAPTCHA from 'react-google-recaptcha';
 import OtpModal from 'pages/OtpModal';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function AuthLogin() {
   const dispatch = useDispatch();
@@ -48,10 +49,25 @@ export default function AuthLogin() {
     setRecaptchaValue(value);
   };
 
+  const handleLoginWithGoogle = (googleResponse) => {
+    const data = {
+      credential: googleResponse.credential
+    };
+    dispatch(loginUserGoogle(data)).then((response) => {
+      if (response.payload?.data?.success) {
+        showToast(response.payload?.data?.message, 'success');
+        navigate('/dashboard');
+      } else {
+        response.payload?.message
+          ? showToast(response.payload?.message, 'error')
+          : showToast('Your account has been deactivated for 3hrs due to (3) consecutive unsuccessful attempts', 'error');
+      }
+    });
+  };
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     if (!recaptchaValue) {
-      showToast("Please verify the reCAPTCHA", "error");
+      showToast('Please verify the reCAPTCHA', 'error');
       return;
     }
     try {
@@ -64,9 +80,8 @@ export default function AuthLogin() {
         if (res.payload.data.success) {
           if (res.payload.data.isTwoStep === 'Y') {
             setIsOtpPage(true);
-          }
-          else{
-          navigate('/dashboard');
+          } else {
+            navigate('/dashboard');
           }
         } else {
           showToast(res?.payload?.data?.message, 'error');
@@ -96,7 +111,7 @@ export default function AuthLogin() {
       >
         {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="email-login">Username</InputLabel>
@@ -152,7 +167,6 @@ export default function AuthLogin() {
                   </FormHelperText>
                 )}
               </Grid>
-
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   <FormControlLabel
@@ -180,7 +194,7 @@ export default function AuthLogin() {
               <Grid item xs={12} sx={{ mt: -1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   {/* <div className="mt-[30px] flex justify-center items-center"> */}
-                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange}  key={recaptchaKey} />
+                  <ReCAPTCHA sitekey="6LdmVcArAAAAAOb1vljqG4DTEEi2zP1TIjDd_0wR" onChange={handleRecaptchaChange} key={recaptchaKey} />
                   {/* </div> */}
                 </Stack>
               </Grid>
@@ -198,6 +212,31 @@ export default function AuthLogin() {
                     Login
                   </LoadingButton>
                 </AnimateButton>
+              </Grid>{' '}
+              {!loading && (
+                <Grid item xs={12}>
+                  <Typography textAlign={'center'} variant="subtitle2">
+                    OR
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <div className="flex justify-center w-full items-center ">
+                  {!loading && (
+                    <>
+                      <GoogleLogin
+                        onSuccess={(credentialResponse) => {
+                          handleLoginWithGoogle(credentialResponse);
+                        }}
+                        onError={() => {
+                          showToast('Login failed', 'error');
+                        }}
+                        shape="circle"
+                        logo_alignment="center"
+                      />
+                    </>
+                  )}
+                </div>
               </Grid>
             </Grid>
           </form>
