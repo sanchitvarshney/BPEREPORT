@@ -85,7 +85,7 @@ export default function AuthLogin() {
             navigate('/dashboard');
           }
         } else {
-          showToast(res?.payload?.data?.message, 'error');
+          showToast(res?.payload?.message, 'error');
           setRecaptchaValue(null);
           setRecaptchaKey(Math.random());
         }
