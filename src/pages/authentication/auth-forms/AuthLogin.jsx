@@ -234,6 +234,7 @@ export default function AuthLogin() {
                         }}
                         shape="circle"
                         logo_alignment="center"
+                        
                       />
                     </>
                   )}
