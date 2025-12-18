@@ -17,6 +17,11 @@ export const loginUserAsync = createAsyncThunk('auth/loginUser', async (loginCre
   return response;
 });
 
+export const loginUserGoogle = createAsyncThunk('auth/loginGoogle', async (loginCredential) => {
+  const response = await axiosInstance.post('/auth/auth/google', loginCredential);
+  return response;
+});
+
 export const resetPasswordAsync = createAsyncThunk('auth/updatePassword', async (paylaod) => {
   const response = await axiosInstance.put('/user/update-password', paylaod);
   return response;
