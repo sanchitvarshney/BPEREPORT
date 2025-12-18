@@ -54,6 +54,7 @@ export default function AuthLogin() {
       credential: googleResponse.credential
     };
     dispatch(loginUserGoogle(data)).then((response) => {
+      console.log(response,"response")
       if (response.payload?.data?.success) {
         showToast(response.payload?.data?.message, 'success');
         navigate('/dashboard');

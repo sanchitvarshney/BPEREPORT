@@ -77,6 +77,25 @@ const authSlice = createSlice({
       .addCase(loginUserAsync.rejected, (state) => {
         state.loading = false;
       })
+       .addCase(loginUserGoogle.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUserGoogle.fulfilled, (state, action) => {
+        if (action.payload.data.success) {
+          setToken(action.payload.data.data?.token);
+          localStorage.setItem('loggedinUser', btoa(JSON.stringify(action.payload.data.data)));
+          localStorage.setItem("username", action?.payload?.data?.username);
+          showToast(action?.payload?.data?.message, 'success');
+        }
+        if(!action.payload.data.data){
+          state.qrStatus = action.payload.data;
+          localStorage.setItem('qrStatus', (JSON.stringify(action.payload.data)));
+        }
+        state.loading = false;
+      })
+      .addCase(loginUserGoogle.rejected, (state) => {
+        state.loading = false;
+      })
       .addCase(verifyOtpAsync.pending, (state) => {
         state.qrCodeLoading = true;
       })
