@@ -156,7 +156,7 @@ const DispatchReport = () => {
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
           Download
         </Button>
-        {/* <Button
+      {!isSwipeModule &&     <Button
           disabled={!isConnected}
           variant="contained"
           color="success"
@@ -166,7 +166,7 @@ const DispatchReport = () => {
         >
           <Download fontSize={'small'} sx={{ mr: '10px' }} />
           Download All
-        </Button> */}
+        </Button>}
       </Box>
       <DispatchReportTable />
       {dispatchreport?.pagination && (
