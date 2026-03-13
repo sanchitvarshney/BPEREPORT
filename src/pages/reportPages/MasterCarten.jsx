@@ -7,10 +7,8 @@ import { showToast } from 'utils/ToastProvider';
 import { Download } from '@mui/icons-material';
 import { DatePicker } from 'antd';
 import { useSocketContext } from '../../contexts/SocketContext';
-import SelectSku from 'reusable/SelectSku';
 const { RangePicker } = DatePicker;
 const MasterCarten = ({ isSwipe = false }) => {
-  const [sku, setSku] = useState('');
   const { emitCartonReportDownload, isConnected } = useSocketContext();
 
   const [dateRange, setDateRange] = useState({
@@ -27,7 +25,6 @@ const MasterCarten = ({ isSwipe = false }) => {
       from: dayjs(dateRange.from).format('DD-MM-YYYY'),
       to: dayjs(dateRange.to).format('DD-MM-YYYY'),
       type: isSwipe ? 'SWIPE' : 'SOUNDBOX',
-      sku:sku?.sku
     });
   };
 
@@ -62,10 +59,6 @@ const MasterCarten = ({ isSwipe = false }) => {
                 { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] }
               ]}
             />
-
-            <FormControl fullWidth sx={{ width: '100%' }}>
-              <SelectSku varient="outlined" onChange={(e) => setSku(e)} value={sku} />
-            </FormControl>
 
             <Button disabled={!isConnected} variant="contained" color="success" onClick={handleDownload}>
               <Download fontSize={'small'} sx={{ mr: '10px' }} />
