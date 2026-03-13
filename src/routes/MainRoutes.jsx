@@ -7,13 +7,14 @@ import DeviceInCompanyLayout from 'layout/WarehouseLayout/DispatchLayout';
 import BPEIssueLayout from 'layout/BPEIssueLayout/BPEIssueLayout';
 import ErrorBoundary from 'components/ErrorBoundary';
 import SwipeTotalDeviceInCompanylocation from 'pages/reportPages/SwipeTotalDeviceInCompanylocation';
+import DispatchReport from 'pages/reportPages/DispatchReport';
 
 const TotalDeviceInCompany = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompany')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const TotalMaterialInCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInCompany')));
 const TotalDeviceInCompanylocation = Loadable(lazy(() => import('pages/reportPages/TotalDeviceInCompanylocation')));
 const TotalMaterialInBPECompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInBPECompany')));
-const DispatchReport = Loadable(lazy(() => import('pages/reportPages/DispatchReport')));
+const MasterCarten = Loadable(lazy(() => import('pages/reportPages/MasterCarten')));
 const BatteryQCReport = Loadable(lazy(() => import('pages/reportPages/BatteryQCReport')));
 const TotalMaterialInMSCCompany = Loadable(lazy(() => import('pages/reportPages/TotalMaterialInMSCCompany')));
 const TotalDispatchdevices = Loadable(lazy(() => import('pages/reportPages/TotalDispatchdevices')));
@@ -129,9 +130,21 @@ const MainRoutes = {
       path: '/total-dispatch-swipe-device',
       element: <TotalDispatchdevices />
     },
-    {
+        {
       path: '/dispatch-report-swipe-device',
       element: <DispatchReport />
+    },
+       {
+      path: '/total-dispatch-swipe-device',
+      element: <TotalDispatchdevices />
+    },
+    {
+      path: '/device/sound-box/master-cartons',
+      element: <MasterCarten />
+    },
+       {
+      path: '/device/swipe/master-cartons',
+      element: <MasterCarten isSwipe={true} />
     },
     {
       path: '/assembly-consumption',

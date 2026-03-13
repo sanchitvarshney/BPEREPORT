@@ -64,7 +64,17 @@ const Device = {
       icon: icons.DockOutlinedIcon,
       target: false,
       breadcrumbs: false
-    }
+    },
+       {
+      id: 'master-cartond',
+      title: 'Master Carton',
+      type: 'item',
+      url: '/device/sound-box/master-cartons',
+      icon: icons.DockOutlinedIcon,
+      target: false,
+      breadcrumbs: false
+    },
+   
   ]
 };
 

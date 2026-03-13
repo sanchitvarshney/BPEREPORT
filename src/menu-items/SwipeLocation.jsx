@@ -30,6 +30,15 @@ const SwipeLocation = {
       icon: icons.LocationOnOutlinedIcon,
       target: false,
       breadcrumbs: false
+    },
+    {
+      id: 'master-cartond-swipe',
+      title: 'Master Carton',
+      type: 'item',
+      url: '/device/swipe/master-cartons',
+      icon: icons.DockOutlinedIcon,
+      target: false,
+      breadcrumbs: false
     }
     // {
     //   id: 'functional-report',
