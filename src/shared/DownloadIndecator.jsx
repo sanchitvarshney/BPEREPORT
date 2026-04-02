@@ -134,7 +134,7 @@ const DownloadIndecator = () => {
                           color="primary"
                                onClick={() => {
                           const baseUrl =
-                            import.meta.env.VITE_SOKET_URL.replace(/:\d+$/, "");
+                            import.meta.env.VITE_SOCKET_URL?.replace(/:\d+$/, "");
                           const fileUrl = JSON.parse(item.other_data)?.fileUrl;
 
                       
