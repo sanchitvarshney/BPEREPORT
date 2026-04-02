@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from 'helper/getToken';
+import { getFinancialSessionForRequest } from 'helper/indianFinancialYear';
 import { showToast } from 'utils/ToastProvider';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,7 +19,7 @@ axiosInstance.interceptors.request.use(async (config) => {
     const uniqueid = uuidv4();
     config.headers.Authorization = `Bearer ${token}`;
     config.headers['authorization'] = token;
-    config.headers['session'] = '2024-2025';
+    config.headers['session'] = getFinancialSessionForRequest();
     config.headers['x-click-token'] = uniqueid;
     // config.headers["ngrok-skip-browser-warning"] = "69420";
   }
