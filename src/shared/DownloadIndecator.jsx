@@ -132,15 +132,20 @@ const DownloadIndecator = () => {
                         <IconButton
                           size="small"
                           color="primary"
-                          onClick={() => {
-                            // window.open(`https://bpe.apisite.in/${JSON.parse(item.other_data)?.fileUrl}`, "_blank");
-                            const fileUrl = JSON.parse(item.other_data)?.fileUrl;
-                            if (fileUrl) {
-                              window.open(`${import.meta.env.VITE_SOCKET_URL}/${fileUrl}`, '_blank'); // Open in new tab
-                            } else {
-                              console.log('File URL not found');
-                            }
-                          }}
+                               onClick={() => {
+                          const baseUrl =
+                            import.meta.env.VITE_SOKET_URL.replace(/:\d+$/, "");
+                          const fileUrl = JSON.parse(item.other_data)?.fileUrl;
+
+                      
+                          const finalUrl = new URL(fileUrl, baseUrl).href;
+
+                          window.open(
+                            finalUrl,
+                            "_blank",
+                            "noopener,noreferrer",
+                          );
+                        }}
                         >
                           <DownloadIcon fontSize="small" />
                         </IconButton>
