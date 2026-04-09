@@ -2,6 +2,7 @@ import Loader from 'components/Loader';
 import useAuth from 'hooks/useAuth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { storeReturnTo } from 'utils/authRedirect';
 
 const Protected = ({ children, authentication = true }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +14,8 @@ const Protected = ({ children, authentication = true }) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (authentication && authStatus !== authentication) {
-        navigate('/login');
+        storeReturnTo(`${globalThis.location.pathname}${globalThis.location.search}`);
+        navigate('/login', { replace: true });
         setIsLoading(false);
         return;
       } else if (!authentication && authStatus !== authentication) {

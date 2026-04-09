@@ -14,6 +14,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { consumeReturnTo, DEFAULT_POST_LOGIN_ROUTE } from 'utils/authRedirect';
 
 const OtpModal = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const OtpModal = ({ open, handleClose }) => {
     dispatch(verifyOtpAsync({ otp, secret: secretKey,username: username  })).then((res) => {
       if (res.payload.data.success) {
         showToast('OTP Verified Successfully', 'success');
-        navigate('/dashboard');
+        navigate(consumeReturnTo() || DEFAULT_POST_LOGIN_ROUTE, { replace: true });
       } else {
         showToast('Invalid OTP, please try again', 'error');
       }

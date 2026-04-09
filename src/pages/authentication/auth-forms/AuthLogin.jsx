@@ -25,6 +25,7 @@ import { showToast } from 'utils/ToastProvider';
 import ReCAPTCHA from 'react-google-recaptcha';
 import OtpModal from 'pages/OtpModal';
 import { GoogleLogin } from '@react-oauth/google'
+import { consumeReturnTo, DEFAULT_POST_LOGIN_ROUTE } from 'utils/authRedirect';
 
 export default function AuthLogin() {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ export default function AuthLogin() {
       console.log(response,"response")
       if (response.payload?.data?.success) {
         showToast(response.payload?.data?.message, 'success');
-        navigate('/dashboard');
+        navigate(consumeReturnTo() || DEFAULT_POST_LOGIN_ROUTE, { replace: true });
       } else {
         response.payload?.message
           ? showToast(response.payload?.message, 'error')
@@ -82,7 +83,7 @@ export default function AuthLogin() {
           if (res.payload.data.isTwoStep === 'Y') {
             setIsOtpPage(true);
           } else {
-            navigate('/dashboard');
+            navigate(consumeReturnTo() || DEFAULT_POST_LOGIN_ROUTE, { replace: true });
           }
         } else {
           showToast(res?.payload?.message, 'error');

@@ -3,6 +3,7 @@ import { getToken } from 'helper/getToken';
 import { getFinancialSessionForRequest } from 'helper/indianFinancialYear';
 import { showToast } from 'utils/ToastProvider';
 import { v4 as uuidv4 } from 'uuid';
+import { storeReturnTo } from 'utils/authRedirect';
 
 
 const axiosInstance = axios.create({
@@ -32,8 +33,9 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
+      storeReturnTo(`${globalThis.location.pathname}${globalThis.location.search}`);
       localStorage.clear();
-      window.location.href = '/login';
+      globalThis.location.href = '/login';
     }
     showToast(error.response?.data?.message?.msg ? error.response?.data?.message?.msg : error.response?.data?.message || "Something went wrong", 'error');
     return Promise.reject(error);
