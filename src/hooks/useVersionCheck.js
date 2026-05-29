@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function useVersionCheck(intervalMs = 60 * 1000) {
-  const [updateAvailable, setUpdateAvailable] = useState<boolean>(false);
+  const [updateAvailable, setUpdateAvailable] = useState(false);
 
   useEffect(() => {
     let latestVersion = null;
