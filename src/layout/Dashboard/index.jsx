@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-// material-ui
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 
@@ -13,7 +11,7 @@ import navigation from 'menu-items';
 import Loader from 'components/Loader';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
-import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
+import {  useGetMenuMaster } from 'api/menu';
 import UpdateVersionPopup from 'components/UpdateVersionPopup';
 import useVersionCheck from 'hooks/useVersionCheck';
 
