@@ -19,6 +19,14 @@ import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
 
 export default function DashboardLayout() {
   const { menuMasterLoading } = useGetMenuMaster();
+  const { updateAvailable } = useVersionCheck();
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+
+  useEffect(() => {
+    if (updateAvailable) {
+      setShowUpdatePopup(true);
+    }
+  }, [updateAvailable]);
   // const downXL = useMediaQuery((theme) => theme.breakpoints.down('xl'));
 
   // useEffect(() => {
@@ -37,6 +45,7 @@ export default function DashboardLayout() {
         <Breadcrumbs navigation={navigation} title />
         <Outlet />
       </Box>
+      <UpdateVersionPopup open={showUpdatePopup} onRefresh={() => window.location.reload()} />
     </Box>
   );
 }

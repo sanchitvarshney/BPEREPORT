@@ -101,6 +101,9 @@ const DynamicTable = ({ rowdata, dateRange }) => {
     });
   }, [onDownloadReport]);
 
+
+
+
   // Download handler
   const handleDownloadClick = (data) => {
     if (dateRange.from && dateRange.to) {
