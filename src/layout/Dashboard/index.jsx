@@ -14,6 +14,8 @@ import Loader from 'components/Loader';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
 import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
+import UpdateVersionPopup from 'components/UpdateVersionPopup';
+import useVersionCheck from 'hooks/useVersionCheck';
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
