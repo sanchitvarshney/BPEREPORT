@@ -35,6 +35,7 @@ const DeviceAnalysis = Loadable(lazy(() => import('pages/reportPages/DeviceAnaly
 const SwipeMINReport = Loadable(lazy(() => import('pages/reportPages/SwipeMINReport')));
 const SwipeFunctionalReport = Loadable(lazy(() => import('pages/reportPages/SwipeFunctionalReport')));
 const PreQCReport = Loadable(lazy(() => import('pages/reportPages/PreQCReport')));
+const Settings = Loadable(lazy(() => import('pages/extra-pages/Settings')));
 
 const MainRoutes = {
   path: '/',
@@ -213,6 +214,10 @@ const MainRoutes = {
     {
       path: '/pre-qc-report',
       element: <PreQCReport />
+    },
+    {
+      path: '/settings',
+      element: <Settings />
     },
     {
       path: '*',

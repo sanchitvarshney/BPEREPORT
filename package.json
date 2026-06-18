@@ -3,8 +3,7 @@
   "version": "1.3.0",
   "private": true,
   "author": {
-    "name": "Sachin Maurya",
-    "email": "sachin.maurya@mscorpres.com"
+    "name": ""
   },
   "scripts": {
     "start": "vite",
