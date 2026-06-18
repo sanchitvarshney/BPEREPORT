@@ -12,21 +12,12 @@ import Loader from 'components/Loader';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
 import {  useGetMenuMaster } from 'api/menu';
-import UpdateVersionPopup from 'components/UpdateVersionPopup';
-import useVersionCheck from 'hooks/useVersionCheck';
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
 export default function DashboardLayout() {
   const { menuMasterLoading } = useGetMenuMaster();
-  const { updateAvailable } = useVersionCheck();
-  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
-  useEffect(() => {
-    if (updateAvailable) {
-      setShowUpdatePopup(true);
-    }
-  }, [updateAvailable]);
   // const downXL = useMediaQuery((theme) => theme.breakpoints.down('xl'));
 
   // useEffect(() => {
@@ -45,7 +36,6 @@ export default function DashboardLayout() {
         <Breadcrumbs navigation={navigation} title />
         <Outlet />
       </Box>
-      <UpdateVersionPopup open={showUpdatePopup} onRefresh={() => window.location.reload()} />
     </Box>
   );
 }
