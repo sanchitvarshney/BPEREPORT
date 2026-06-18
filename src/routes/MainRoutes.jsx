@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
 import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 import Protected from 'components/shared/Protected';
@@ -36,6 +37,15 @@ const SwipeMINReport = Loadable(lazy(() => import('pages/reportPages/SwipeMINRep
 const SwipeFunctionalReport = Loadable(lazy(() => import('pages/reportPages/SwipeFunctionalReport')));
 const PreQCReport = Loadable(lazy(() => import('pages/reportPages/PreQCReport')));
 const Settings = Loadable(lazy(() => import('pages/extra-pages/Settings')));
+
+function isDeveloper() {
+  try {
+    const user = JSON.parse(atob(localStorage.getItem('loggedinUser') || ''));
+    return user?.crn_type === 'developer';
+  } catch {
+    return false;
+  }
+}
 
 const MainRoutes = {
   path: '/',
@@ -217,7 +227,7 @@ const MainRoutes = {
     },
     {
       path: '/settings',
-      element: <Settings />
+      element: isDeveloper() ? <Settings /> : <Navigate to="/" replace />
     },
     {
       path: '*',

@@ -10,6 +10,15 @@ import { useDispatch } from 'react-redux';
 import { logout } from 'features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
+function isDeveloper() {
+  try {
+    const user = JSON.parse(atob(localStorage.getItem('loggedinUser') || ''));
+    return user?.crn_type === 'developer';
+  } catch {
+    return false;
+  }
+}
+
 export default function ProfileTab() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,18 +26,20 @@ export default function ProfileTab() {
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
-      <ListItemButton
-        selected={selectedIndex === 1}
-        onClick={() => {
-          setSelectedIndex(1);
-          navigate('/settings');
-        }}
-      >
-        <ListItemIcon>
-          <SettingOutlined />
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItemButton>
+      {isDeveloper() && (
+        <ListItemButton
+          selected={selectedIndex === 1}
+          onClick={() => {
+            setSelectedIndex(1);
+            navigate('/settings');
+          }}
+        >
+          <ListItemIcon>
+            <SettingOutlined />
+          </ListItemIcon>
+          <ListItemText primary="Settings" />
+        </ListItemButton>
+      )}
       <ListItemButton onClick={() => dispatch(logout())} selected={selectedIndex === 2}>
         <ListItemIcon>
           <LogoutOutlined />
