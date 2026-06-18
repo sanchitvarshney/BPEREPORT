@@ -1,17 +1,17 @@
 import { showToast } from "utils/ToastProvider";
 import { getToken } from "../../utils/tokenUtills";
 import { io, Socket } from "socket.io-client";
+import { getSocketUrl } from "utils/socketSettings";
 
 
 class SocketService {
   socket= null;
   isLoading = false;
-  constructor(url) { this.url = url;}
 
   connect() {
     if (this.socket?.connected) return;
-    this.isLoading = true; 
-    this.socket = io(this.url, {
+    this.isLoading = true;
+    this.socket = io(getSocketUrl(), {
       transports: ["websocket"],
       auth: { authorization: getToken() },
     });
@@ -62,4 +62,4 @@ class SocketService {
   }
 }
 
-export const socketService = new SocketService(import.meta.env.VITE_SOCKET_URL);
+export const socketService = new SocketService();

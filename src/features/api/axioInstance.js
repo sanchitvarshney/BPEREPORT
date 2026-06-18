@@ -4,6 +4,7 @@ import { getFinancialSessionForRequest } from 'helper/indianFinancialYear';
 import { showToast } from 'utils/ToastProvider';
 import { v4 as uuidv4 } from 'uuid';
 import { storeReturnTo } from 'utils/authRedirect';
+import { getApiBaseUrl } from 'utils/apiSettings';
 
 
 const axiosInstance = axios.create({
@@ -14,6 +15,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (config) => {
+  config.baseURL = getApiBaseUrl();
   const token = getToken();
 
   if (token) {
