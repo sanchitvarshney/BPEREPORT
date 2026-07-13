@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getdeviceOnLocation } from 'features/reports/reportSlice';
@@ -151,6 +151,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
 };
 
 export function LocationAccordion({ data, dateRange }) {
+    const { emitDeviceOnLocation } = useSocketContext();
   // Define the order of locations
   const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MsC', 'Assembly-MsC', 'Finish Goods store-MsC'];
 
@@ -170,6 +171,21 @@ export function LocationAccordion({ data, dateRange }) {
     // Return the sorted result, places unknown locations after known ones
     return (aIndex !== -1 ? aIndex : defaultIndex) - (bIndex !== -1 ? bIndex : defaultIndex);
   });
+  const handleDownloadlocation = (e,data) => {
+    e.stopPropagation();
+  
+    if (dateRange.from && dateRange.to) {
+      const skuId = data?.products?.map(item => item?.SKUKEY); 
+      emitDeviceOnLocation({
+        startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+        endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+        device_key: skuId,
+        type: 'both',
+        location: data?.locationCode, 
+        deviceType: "soundBox"
+      });
+    }
+  };
 
   return (
     <div>
@@ -179,10 +195,28 @@ export function LocationAccordion({ data, dateRange }) {
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`panel-${location.locationCode}-content`}
             id={`panel-${location.locationCode}-header`}
+            sx={{
+              '& .MuiAccordionSummary-content': {
+                justifyContent: 'space-between',
+                alignItems: 'center',
+             
+              },
+           
+            }}
           >
             <Typography component="h5" fontWeight={700}>
               {location.locationName}
             </Typography>
+       
+        <Tooltip title="Report of location">
+              <IconButton
+              onClick={(e) => handleDownloadlocation(e,location)}
+              color="primary"
+              size="small"
+            >
+              <Download fontSize="small" />
+            </IconButton>
+        </Tooltip>
           </AccordionSummary>
           <AccordionDetails>
             <DynamicTable
@@ -202,6 +236,7 @@ export function LocationAccordion({ data, dateRange }) {
 
 const TotalDeviceInCompanylocation = () => {
   const { deviceOnLocationLoading, deviceOnLocation } = useSelector((state) => state.report);
+  
   const dispatch = useDispatch();
   const [dateRange, setDateRange] = useState({
     from: null,
@@ -234,7 +269,7 @@ const TotalDeviceInCompanylocation = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({url:"/deviceLocation", from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"soundBox" })
+                getdeviceOnLocation({url:"deviceLocation", from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"soundBox" })
               );
             } else {
               showToast('Please select date', 'error');

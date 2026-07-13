@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from 'utils/ToastProvider';
 import { getdeviceOnLocation } from 'features/reports/reportSlice';
@@ -63,7 +63,7 @@ export const exportToExcel = (jsonData) => {
 };
 
 const DynamicTable = ({ rowdata, dateRange }) => {
-  const { emitDeviceOnLocation,onDownloadReport } = useSocketContext(); // Access the socket context
+  const { emitDeviceOnLocation, onDownloadReport } = useSocketContext(); // Access the socket context
 
   const columns = rowdata?.length
     ? Object.keys(rowdata[0]).map((key) => ({
@@ -71,7 +71,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
         flex: 1,
         type: typeof rowdata[0][key] === 'number' ? 'number' : 'string',
-        hide: key === 'SKUKEY' || key === 'locationCode', // Hide SKUKEY and locationCode columns
+        hide: key === 'SKUKEY' || key === 'locationCode' // Hide SKUKEY and locationCode columns
       }))
     : [];
 
@@ -88,7 +88,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
       );
     }
   });
-  const visibleColumns = columns.filter((col) => !col.hide);  // Manually filter out hidden columns
+  const visibleColumns = columns.filter((col) => !col.hide); // Manually filter out hidden columns
 
   const rows = rowdata?.map((item, index) => ({
     id: index + 1,
@@ -97,12 +97,9 @@ const DynamicTable = ({ rowdata, dateRange }) => {
 
   useEffect(() => {
     onDownloadReport(() => {
-      showToast("Report downloaded successfully", "success");
+      showToast('Report downloaded successfully', 'success');
     });
   }, [onDownloadReport]);
-
-
-
 
   // Download handler
   const handleDownloadClick = (data) => {
@@ -112,8 +109,8 @@ const DynamicTable = ({ rowdata, dateRange }) => {
         endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
         device_key: data?.SKUKEY,
         type: 'both',
-        location: data?.locationCode, // or any other type you want,
-        deviceType: "swipeMachine"
+        location: data?.locationCode,
+        deviceType: 'swipeMachine'
       });
     }
   };
@@ -156,6 +153,7 @@ const DynamicTable = ({ rowdata, dateRange }) => {
 export function LocationAccordion({ data, dateRange }) {
   // Define the order of locations
   const locationsOrder = ['Inward Store (MsC)', 'Total Repairing Centre (TRC)- MsC', 'Assembly-MsC', 'Finish Goods store-MsC'];
+  const { emitDeviceOnLocation } = useSocketContext();
 
   // If 'data' is not provided or is empty, return nothing
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -174,6 +172,22 @@ export function LocationAccordion({ data, dateRange }) {
     return (aIndex !== -1 ? aIndex : defaultIndex) - (bIndex !== -1 ? bIndex : defaultIndex);
   });
 
+  const handleDownloadlocation = (e, data) => {
+    e.stopPropagation();
+
+    if (dateRange.from && dateRange.to) {
+      const skuId = data?.products?.map((item) => item?.SKUKEY);
+      emitDeviceOnLocation({
+        startDate: dayjs(dateRange.from).format('DD-MM-YYYY'),
+        endDate: dayjs(dateRange.to).format('DD-MM-YYYY'),
+        device_key: skuId,
+        type: 'both',
+        location: data?.locationCode,
+        deviceType: 'swipeMachine'
+      });
+    }
+  };
+
   return (
     <div>
       {sortedData?.map((location, i) => (
@@ -182,10 +196,21 @@ export function LocationAccordion({ data, dateRange }) {
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`panel-${location.locationCode}-content`}
             id={`panel-${location.locationCode}-header`}
+            sx={{
+              '& .MuiAccordionSummary-content': {
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }
+            }}
           >
             <Typography component="h5" fontWeight={700}>
               {location.locationName}
             </Typography>
+            <Tooltip title="Report of location">
+              <IconButton onClick={(e) => handleDownloadlocation(e, location)} color="primary" size="small">
+                <Download fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </AccordionSummary>
           <AccordionDetails>
             <DynamicTable
@@ -237,7 +262,12 @@ const SwipeTotalDeviceInCompanylocation = () => {
           onClick={() => {
             if (dateRange.from && dateRange.to) {
               dispatch(
-                getdeviceOnLocation({url:"/swipeDeviceLocation", from: dayjs(dateRange.from).format('DD-MM-YYYY'), to: dayjs(dateRange.to).format('DD-MM-YYYY'), type:"swipeMachine" })
+                getdeviceOnLocation({
+                  url: '/swipeDeviceLocation',
+                  from: dayjs(dateRange.from).format('DD-MM-YYYY'),
+                  to: dayjs(dateRange.to).format('DD-MM-YYYY'),
+                  type: 'swipeMachine'
+                })
               );
             } else {
               showToast('Please select date', 'error');
