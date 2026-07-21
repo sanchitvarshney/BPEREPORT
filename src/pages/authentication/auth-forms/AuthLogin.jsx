@@ -24,7 +24,7 @@ import { loginUserAsync, loginUserGoogle } from 'features/auth/authSlice';
 import { showToast } from 'utils/ToastProvider';
 import ReCAPTCHA from 'react-google-recaptcha';
 import OtpModal from 'pages/OtpModal';
-import { GoogleLogin } from '@react-oauth/google'
+import { GoogleLogin } from '@react-oauth/google';
 import { consumeReturnTo, DEFAULT_POST_LOGIN_ROUTE } from 'utils/authRedirect';
 
 export default function AuthLogin() {
@@ -55,7 +55,6 @@ export default function AuthLogin() {
       credential: googleResponse.credential
     };
     dispatch(loginUserGoogle(data)).then((response) => {
-      console.log(response,"response")
       if (response.payload?.data?.success) {
         showToast(response.payload?.data?.message, 'success');
         navigate(consumeReturnTo() || DEFAULT_POST_LOGIN_ROUTE, { replace: true });
@@ -86,7 +85,7 @@ export default function AuthLogin() {
             navigate(consumeReturnTo() || DEFAULT_POST_LOGIN_ROUTE, { replace: true });
           }
         } else {
-          showToast(res?.payload?.message, 'error');
+          showToast(res?.payload?.data?.message, 'error');
           setRecaptchaValue(null);
           setRecaptchaKey(Math.random());
         }
@@ -235,8 +234,7 @@ export default function AuthLogin() {
                         }}
                         shape="circle"
                         logo_alignment="center"
-                        
-                      />
+                       />
                     </>
                   )}
                 </div>
